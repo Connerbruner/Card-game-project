@@ -5,7 +5,10 @@ import java.util.Collections;
 public class Deck {
     private ArrayList<Card> deck;
     public Deck(Card[] cards) {
-        deck= (ArrayList<Card>) Arrays.stream(cards).toList();
+        deck= new ArrayList<>();
+        for(int i=0; i<cards.length; i++) {
+            deck.add(cards[i]);
+        }
     }
     public Card getTopCard() {
         return get(0);

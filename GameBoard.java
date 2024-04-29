@@ -6,27 +6,25 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GameBoard {
     Thread print;
     static int tSpeed;
-    static final int SYSTEM_WIDTH = 400;
-    static final int SYSTEM_HEIGHT = 640;
-    static final int SYSTEM_BORDER = SYSTEM_WIDTH / 10;
-    static final int MAX_CHAR = SYSTEM_WIDTH / 10;
     static final JLabel LABEL = new JLabel();
     static final JTextPane TEXT1 = new JTextPane();
     static final JTextField INPUT = new JTextField(10);
     static final JFrame SYSTEM = new JFrame("NBES (Non Binary Entertainment System)");
-
+    static final ImageIcon UI = new ImageIcon("ui_images/ui.png");
     String lastsPrint = "";
     volatile boolean keyButton = false;
 
     private Deck deck;
     private Character[] team = new Character[3];
 
-    public GameBoard(Deck cards) {
+    public GameBoard(Deck cards) throws MalformedURLException {
         deck = cards;
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -43,8 +41,7 @@ public class GameBoard {
         TEXT1.setBorder(null);
         TEXT1.setOpaque(false);
         TEXT1.setForeground(Color.BLACK);
-        TEXT1.setSize(SYSTEM_WIDTH - SYSTEM_BORDER * 2, SYSTEM_HEIGHT);
-
+        TEXT1.setSize(UI.getIconWidth() , UI.getIconHeight());
         LABEL.add(TEXT1);
         INPUT.setEditable(false);
         SYSTEM.setResizable(false);
@@ -52,7 +49,7 @@ public class GameBoard {
         SYSTEM.add(LABEL);
         SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         SYSTEM.setVisible(true);
-        LABEL.setIcon(new ImageIcon(new BufferedImage(SYSTEM_WIDTH, SYSTEM_HEIGHT, BufferedImage.TYPE_INT_ARGB)));
+        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
         SYSTEM.pack();
     }
     public void sPrintln(String str) {
@@ -85,7 +82,7 @@ public class GameBoard {
         for (char c : charArr) {
             if ((c + "").equals("\n")) {
                 reset = 0;
-            } else if (reset == MAX_CHAR) {
+            } else if (reset == UI.getIconWidth()/10) {
                 string.append("\n");
                 reset = 0;
             }
