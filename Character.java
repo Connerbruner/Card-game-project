@@ -10,8 +10,18 @@ public class Character extends Card {
     private int agility;
     private boolean isPlayer = false;
 
-    public Character(String n,String p, boolean r, Effect[] e,boolean b,int d,int a, int s) {
+    public Character(String n,String p, boolean r, Effect[] e,int d,int a, int s) {
         super(n,p, r,1);
+        effects=e;
+        isBoss=false;
+        defense=d;
+        agility=a;
+        strength=s;
+        items.clear();
+
+    }
+    public Character(String n,String p, boolean r,boolean b, Effect[] e,int d,int a, int s) {
+        super(n,p, r,2);
         effects=e;
         isBoss=b;
         defense=d;
@@ -20,6 +30,7 @@ public class Character extends Card {
         items.clear();
 
     }
+
 
     public void setPlayerControlled(boolean player) {
         isPlayer = player;

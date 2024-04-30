@@ -28,6 +28,7 @@ public class Main {
         gameBoard.sPrintln("I contracted the rest of those guys so you might have some run-ins with them");
         gameBoard.addRemainingPartyMembers();
         gameBoard.getDeck().shuffle();
+        gameBoard.sPrintln("Good Luck Yall I will see you later");
 
 
 

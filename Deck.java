@@ -26,13 +26,21 @@ public class Deck {
         }
         return temp;
     }
+    public ArrayList<Card> getRange(int max) {
+        return getRange(0,max);
+    }
 
     public void shuffle() {
         Collections.shuffle(deck);
     }
 
-    public void discard(int i) {
+    public void remove(int i) {
         deck.remove(i);
+    }
+    public void removeRange(int min,int max) {
+        for (int i = min; i < max; i++) {
+            deck.remove(min);
+        }
     }
 
     public void addToBottom(Card card) {
