@@ -3,35 +3,38 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GameBoard {
-    Thread print;
-    static int tSpeed;
     static final JLabel LABEL = new JLabel();
     static final JTextPane TEXT1 = new JTextPane();
+    static final JTextPane SCORE = new JTextPane();
     static final JTextField INPUT = new JTextField(10);
-    static final JFrame SYSTEM = new JFrame("NBES (Non Binary Entertainment System)");
+    static final JFrame SYSTEM = new JFrame("");
     static final ImageIcon UI = new ImageIcon("ui_images/ui.png");
-    String lastsPrint = "";
-    volatile boolean keyButton = false;
+    private final Character[] AVIBLE_PARTY_MEMBERS = new Character[] {
 
+    };
     private Deck deck;
     private Character[] team = new Character[3];
+    private String partyName = "";
+    private int score = 0;
 
-    public GameBoard(Deck cards) throws MalformedURLException {
+    public GameBoard(Deck cards)  {
         deck = cards;
-        try {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Files/Retro Gaming.ttf")));
-            TEXT1.setFont(new Font("Retro Gaming", Font.BOLD, 12));
-        } catch (IOException | FontFormatException ignored) {
-        }
+        TEXT1.setFont(new Font("Arial", Font.BOLD, 20));
+        SCORE.setFont(new Font("Arial", Font.BOLD, 12));
+        //Score Setup
+        StyledDocument styleScore = SCORE.getStyledDocument();
+        SimpleAttributeSet alignScore = new SimpleAttributeSet();
+        StyleConstants.setAlignment(alignScore, StyleConstants.ALIGN_RIGHT);
+        styleScore.setParagraphAttributes(0, styleScore.getLength(), alignScore, false);
+        SCORE.setEditable(true);
+        SCORE.setBorder(null);
+        SCORE.setOpaque(false);
+        SCORE.setForeground(Color.BLACK);
+        SCORE.setSize(UI.getIconWidth() , UI.getIconHeight());
+        LABEL.add(SCORE);
+        //Text 1 setup
         LABEL.setLayout(new FlowLayout(FlowLayout.CENTER));
         StyledDocument style = TEXT1.getStyledDocument();
         SimpleAttributeSet align = new SimpleAttributeSet();
@@ -43,6 +46,8 @@ public class GameBoard {
         TEXT1.setForeground(Color.BLACK);
         TEXT1.setSize(UI.getIconWidth() , UI.getIconHeight());
         LABEL.add(TEXT1);
+
+
         INPUT.setEditable(false);
         SYSTEM.setResizable(false);
         SYSTEM.add(INPUT, BorderLayout.SOUTH);
@@ -53,49 +58,20 @@ public class GameBoard {
         SYSTEM.pack();
     }
     public void sPrintln(String str) {
-        TEXT1.setText("");
-        AtomicReference<String> text = new AtomicReference<>("");
-        String finalStr = textFormat(str);;
-        print = new Thread(() -> {
-            for (int i = 0; i < finalStr.length(); i++) {
-                int finalI = i;
-                text.updateAndGet(v -> v + finalStr.charAt(finalI));
-                TEXT1.setText(text.get());
-            }
-            TEXT1.setText(text + "\n>Click<");
-        });
+        INPUT.setText(" ");
+        INPUT.setEditable(true);
+        INPUT.requestFocus();
+        TEXT1.setText(str + "\n>Press any key<");
 
+        while (INPUT.getText().equals(" ")) ;
+        INPUT.setEditable(false);
         SYSTEM.requestFocusInWindow();
-        keyButton = false;
-        print.start();
-        while (!keyButton) ;
-        print.stop();
+    }
 
-        keyButton = false;
-        TEXT1.setText("");
-        lastsPrint = "";
-    }
-    public String textFormat(String str) {
-        StringBuilder string = new StringBuilder();
-        char[] charArr = str.toCharArray();
-        int reset = 0;
-        for (char c : charArr) {
-            if ((c + "").equals("\n")) {
-                reset = 0;
-            } else if (reset == UI.getIconWidth()/10) {
-                string.append("\n");
-                reset = 0;
-            }
-            string.append(c);
-            reset++;
-        }
-        return string.toString();
-    }
     public int choice(String str) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
-        keyButton = false;
         TEXT1.setText(str+" (Press number on your keyboard corresponding to the number you want 2 times");
         while(formatInput(INPUT.getText())==0);
         TEXT1.setText("");
@@ -117,4 +93,54 @@ public class GameBoard {
         }
     }
 
+    public void setTeam() {
+        for(int i=0; i<team.length; i++) {
+            int choice=choice("Pick a team member (0-9)");
+            boolean inParty = false;
+            for(int j=0; j<team.length; j++) {
+                if(team[j].equals(AVIBLE_PARTY_MEMBERS[choice])) {
+                    inParty=true;
+                }
+            }
+            if(inParty) {
+                sPrintln("You already have this member in the party");
+            } else {
+                team[i]=(AVIBLE_PARTY_MEMBERS[choice]);
+                sPrintln(team[i].getName()+" joined the party");
+            }
+        }
+    }
+    public void addRemainingPartyMembers() {
+        for (int i=0; i<AVIBLE_PARTY_MEMBERS.length; i++) {
+            boolean inTeam=false;
+            for (int j=0; i<team.length; j++) {
+                if(AVIBLE_PARTY_MEMBERS[i].equals(team[j])) {
+                    inTeam=true;
+                }
+            }
+            if(!inTeam) {
+                deck.add(AVIBLE_PARTY_MEMBERS[i]);
+            }
+        }
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setPartyName() {
+        INPUT.setText("");
+        INPUT.setEditable(true);
+        INPUT.requestFocus();
+        while(INPUT.getText().length()<4) {
+            TEXT1.setText("Type out a 4 letter name for your team\n"+INPUT.getText());
+        }
+        TEXT1.setText("");
+        this.partyName = INPUT.getText();
+    }
+
+    public void addScore(int add) {
+        this.score +=add;
+        SCORE.setText("Score: "+score);
+    }
 }

@@ -1,9 +1,10 @@
 public class Item extends Card {
     private int power;
     private Effect effect;
-    public Item(String p, boolean r,int p1,Effect e) {
-        super(p, r,2);
-        power=p1;
+    private boolean isEvent;
+    public Item(String n,String p, boolean r,boolean event,Effect e) {
+        super(n,p, r,2);
+        isEvent=event;
         effect=e;
 
     }

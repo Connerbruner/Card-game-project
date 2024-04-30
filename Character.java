@@ -1,15 +1,17 @@
 import java.util.ArrayList;
 
 public class Character extends Card {
+    private ArrayList<StatChange> statChanges = new ArrayList<>();
     private Effect[] effects;
     private ArrayList<Item> items= new ArrayList<>();
     private boolean isBoss;
     private int strength;
     private int defense;
     private int agility;
+    private boolean isPlayer = false;
 
-    public Character(String p, boolean r, Effect[] e,boolean b,int d,int a, int s) {
-        super(p, r,1);
+    public Character(String n,String p, boolean r, Effect[] e,boolean b,int d,int a, int s) {
+        super(n,p, r,1);
         effects=e;
         isBoss=b;
         defense=d;
@@ -18,6 +20,11 @@ public class Character extends Card {
         items.clear();
 
     }
+
+    public void setPlayerControlled(boolean player) {
+        isPlayer = player;
+    }
+
     public void attack() {
         //needs to finish
     }
@@ -44,5 +51,9 @@ public class Character extends Card {
 
     public boolean isBoss() {
         return isBoss;
+    }
+
+    public ArrayList<StatChange> getStatChanges() {
+        return statChanges;
     }
 }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Deck {
@@ -26,11 +25,14 @@ public class Deck {
     public void shuffle() {
         Collections.shuffle(deck);
     }
-    public void remove(int i) {
+    public void discard(int i) {
         deck.remove(i);
     }
-    public void discard(Card card) {
+    public void addToBottom(Card card) {
         deck.add(deck.size()-1,card);
+    }
+    public void add(Card card) {
+        deck.add(card);
     }
     public boolean areRaresLeft() {
         for(int i=0; i<deck.size(); i++) {
