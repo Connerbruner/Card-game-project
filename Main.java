@@ -7,13 +7,14 @@ public class Main {
     public static void main(String[] args) {
         GameBoard gameBoard = new GameBoard(deck);
         //explain the idea
-        gameBoard.sPrintln("Welcome to the Dark Forest");
-        gameBoard.sPrintln("Your goal is to rid this forest of dangerous monsters with your group of 3");
-        gameBoard.sPrintln("");
+        gameBoard.sPrintln("Welcome to Lockheed Martin HQ");
+        gameBoard.sPrintln("I contracted you to steal some important documents for us and take out some higher-ups");
+        gameBoard.sPrintln("Dont worry about the money Boeing will pay you handsomely");
+        gameBoard.sPrintln("The Goal is to get Boeing all the goods you can get without dying");
         gameBoard.addScore(0);
 
         //Explaining the game
-        gameBoard.sPrintln("Before we Get started Let me explain the basics");
+        gameBoard.sPrintln("Before we Get started Let me explain the how we plan to handle this");
         gameBoard.sPrintln("This is a character. Characters can be both friend or foe");
         gameBoard.sPrintln("You can see the stats of the Character on the card Strength is the percent of damage they deal when attacking");
         gameBoard.sPrintln("They also have 2 abilities that they can use during their turn");
@@ -22,9 +23,9 @@ public class Main {
         gameBoard.sPrintln("When a boss is killed you will receive bonus rewards and they are discarded");
         gameBoard.sPrintln("Finally we have events cards. When these cards go into play they are triggered. They effect is on the text");
         //Game Setup
-        gameBoard.sPrintln("Lets Pick Your Team Now");
+        gameBoard.sPrintln("Alright now that you understand the goal lets pick your team");
         gameBoard.setTeam();
-        gameBoard.sPrintln("The Party Members you did not chose you will have to face");
+        gameBoard.sPrintln("I contracted the rest of those guys so you might have some run-ins with them");
         gameBoard.addRemainingPartyMembers();
         gameBoard.getDeck().shuffle();
 
