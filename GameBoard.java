@@ -1,14 +1,52 @@
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class GameBoard {
     static final JLabel LABEL = new JLabel();
-    static final JTextPane TEXT1 = new JTextPane();
-    static final JTextPane SCORE = new JTextPane();
+    static final JLabel TEXT1 = new JLabel();
+    static final JLabel SCORE = new JLabel();
+    static final JLabel[] INDEX_LABELS = {
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+    };
+
+    static final JLabel[] CARD_IMAGES = {
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+            new JLabel(),
+    };
+    static final int[][] INDEX_POSITIONS = {
+            {180,450},
+            {550,450},
+            {950,450},
+            {1350,450},
+            {1750,450},
+            {540,575},
+            {930,575},
+            {1330,575},
+    };
+    static final int[][] CARD_POSITIONS = {
+            {40,0},
+            {410,0},
+            {820,0},
+            {1200,0},
+            {1600,0},
+            {410,620},
+            {800,620},
+            {1200,620},
+    };
     static final JTextField INPUT = new JTextField(10);
     static final JFrame SYSTEM = new JFrame("");
     static final ImageIcon UI = new ImageIcon("ui_images/ui.png");
@@ -17,38 +55,28 @@ public class GameBoard {
     };
     private final int[] ESCAPE_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
 
-    private Deck deck;
-    private Character[] team = new Character[3];
-    private String partyName = "";
+    public static Deck deck;
+    private ArrayList<Character> team = new ArrayList<>();
     private int score = 0;
 
     public GameBoard(Deck cards) {
         deck = cards;
         TEXT1.setFont(new Font("Arial", Font.BOLD, 20));
         SCORE.setFont(new Font("Arial", Font.BOLD, 12));
-        //Score Setup
-        StyledDocument styleScore = SCORE.getStyledDocument();
-        SimpleAttributeSet alignScore = new SimpleAttributeSet();
-        StyleConstants.setAlignment(alignScore, StyleConstants.ALIGN_RIGHT);
-        styleScore.setParagraphAttributes(0, styleScore.getLength(), alignScore, false);
-        SCORE.setEditable(true);
-        SCORE.setBorder(null);
-        SCORE.setOpaque(false);
-        SCORE.setForeground(Color.BLACK);
-        SCORE.setSize(UI.getIconWidth(), UI.getIconHeight());
-        LABEL.add(SCORE);
-        //Text 1 setup
-        LABEL.setLayout(new FlowLayout(FlowLayout.CENTER));
-        StyledDocument style = TEXT1.getStyledDocument();
-        SimpleAttributeSet align = new SimpleAttributeSet();
-        StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
-        style.setParagraphAttributes(0, style.getLength(), align, false);
-        TEXT1.setEditable(false);
-        TEXT1.setBorder(null);
-        TEXT1.setOpaque(false);
-        TEXT1.setForeground(Color.BLACK);
-        TEXT1.setSize(UI.getIconWidth(), UI.getIconHeight());
-        LABEL.add(TEXT1);
+        for(int i=0; i<CARD_IMAGES.length; i++) {
+            SYSTEM.add(CARD_IMAGES[i]);
+            CARD_IMAGES[i].setIcon(new ImageIcon("Cards/mir.png"));
+            Dimension size = CARD_IMAGES[i].getPreferredSize();
+            CARD_IMAGES[i].setBounds(CARD_POSITIONS[i][0], CARD_POSITIONS[i][1], size.width, size.height);
+        }
+        for(int i=0; i<INDEX_LABELS.length; i++) {
+            SYSTEM.add(INDEX_LABELS[i]);
+            INDEX_LABELS[i].setText("Test");
+            Dimension size = INDEX_LABELS[i].getPreferredSize();
+            INDEX_LABELS[i].setBounds(INDEX_POSITIONS[i][0], INDEX_POSITIONS[i][1], size.width, size.height);
+        }
+
+
 
 
         INPUT.setEditable(false);
@@ -72,7 +100,7 @@ public class GameBoard {
         SYSTEM.requestFocusInWindow();
     }
 
-    public int choice(String str) {
+    public static int choice(String str) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
@@ -82,7 +110,7 @@ public class GameBoard {
         return formatInput(INPUT.getText());
     }
 
-    public int formatInput(String str) {
+    public static int formatInput(String str) {
         char[] chars = str.toCharArray();
         if (str.length() > 2 && strIsInt(str) && chars[chars.length - 1] == chars[chars.length - 2]) {
             return chars[chars.length - 1];
@@ -100,19 +128,19 @@ public class GameBoard {
     }
 
     public void setTeam() {
-        for (int i = 0; i < team.length; i++) {
+        for (int i = 0; i < 3; i++) {
             int choice = choice("Pick a team member (0-9)");
             boolean inParty = false;
-            for (int j = 0; j < team.length; j++) {
-                if (team[j].equals(AVAILABLE_PARTY_MEMBERS[choice])) {
+            for (int j = 0; j < team.size(); j++) {
+                if (team.get(j).equals(AVAILABLE_PARTY_MEMBERS[choice])) {
                     inParty = true;
                 }
             }
             if (inParty) {
                 sPrintln("You already have this member in the party");
             } else {
-                team[i] = (AVAILABLE_PARTY_MEMBERS[choice]);
-                sPrintln(team[i].getName() + " joined the party");
+                team.set(i, (AVAILABLE_PARTY_MEMBERS[choice]));
+                sPrintln(team.get(i).getName() + " joined the party");
             }
         }
     }
@@ -120,8 +148,8 @@ public class GameBoard {
     public void addRemainingPartyMembers() {
         for (int i = 0; i < AVAILABLE_PARTY_MEMBERS.length; i++) {
             boolean inTeam = false;
-            for (int j = 0; i < team.length; j++) {
-                if (AVAILABLE_PARTY_MEMBERS[i].equals(team[j])) {
+            for (int j = 0; i < team.size(); j++) {
+                if (AVAILABLE_PARTY_MEMBERS[i].equals(team.get(j))) {
                     inTeam = true;
                 }
             }
@@ -135,16 +163,6 @@ public class GameBoard {
         return deck;
     }
 
-    public void setPartyName() {
-        INPUT.setText("");
-        INPUT.setEditable(true);
-        INPUT.requestFocus();
-        while (INPUT.getText().length() < 4) {
-            TEXT1.setText("Type out a 4 letter name for your team\n" + INPUT.getText());
-        }
-        TEXT1.setText("");
-        this.partyName = INPUT.getText();
-    }
 
     public void addScore(int add) {
         this.score += add;
@@ -157,10 +175,10 @@ public class GameBoard {
         for (int i = 0; i < loot.size(); i++) {
             if (loot.get(i).getType() == 4) {
                 bossFight = true;
-                enemies.add(loot.get(i));
+                enemies.add((Character) loot.get(i));
             }
             if (loot.get(i).getType() == 3) {
-                ((Item) (loot.get(i))).runEffect();
+                ((Item) (loot.get(i))).runEvent();
                 deck.addToBottom(loot.get(i));
                 deck.remove(i);
             }
@@ -169,18 +187,34 @@ public class GameBoard {
             if (loot.get(i).getType() == 1) {
                 if (bossFight) {
                     deck.addToBottom(loot.get(i));
-
                 } else {
-                    enemies.add(loot.get(i));
+                    enemies.add((Character) loot.get(i));
                 }
             }
         }
-        if (!emenyIndex.isEmpty()) {
-
+        if (!enemies.isEmpty()) {
+            int j=0;
+            for(int i=0; i<loot.size(); i++) {
+                if(enemies.size()<j) {
+                    j=0;
+                }
+                enemies.get(j).addItem((Item) loot.get(i));
+                j++;
+            }
+            new Battle(team,enemies);
+        }
+        int j=0;
+        for(int i=0; i<loot.size(); i++) {
+            if(team.size()<j) {
+                j=0;
+            }
+            team.get(j).addItem((Item) loot.get(i));
+            j++;
         }
 
         return loot;
     }
+
 
     public ArrayList<Card> getLoot() {
         ArrayList<Card> loot = deck.getRange(0, 5);

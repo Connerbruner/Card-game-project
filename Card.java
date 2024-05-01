@@ -17,6 +17,7 @@ public class Card {
         name=n;
 
     }
+
     public void trigger() {
 
     }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Effect {
     private int type;
     private Void effectVoid;
@@ -10,10 +12,14 @@ public class Effect {
         return type;
     }
 
-    public void EffectVoid() {
+    public void run() {
         effectVoid.run();
+    }
+    public void attack(ArrayList<Character> team,ArrayList<Character> enemies) {
+        effectVoid.attack(team, enemies);
     }
 }
 interface Void {
     void run();
+    void attack(ArrayList<Character> team,ArrayList<Character> enemies);
 }

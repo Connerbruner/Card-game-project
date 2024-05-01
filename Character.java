@@ -2,31 +2,34 @@ import java.util.ArrayList;
 
 public class Character extends Card {
     private ArrayList<StatChange> statChanges = new ArrayList<>();
-    private Effect[] effects;
+    private Effect[] abilities;
     private ArrayList<Item> items= new ArrayList<>();
     private boolean isBoss;
     private int strength;
     private int defense;
     private int agility;
+    private int hp;
     private boolean isPlayer = false;
 
     public Character(String n,String p, boolean r, Effect[] e,int d,int a, int s) {
         super(n,p, r,1);
-        effects=e;
+        abilities =e;
         isBoss=false;
         defense=d;
         agility=a;
         strength=s;
+        hp=defense;
         items.clear();
 
     }
     public Character(String n,String p, boolean r,boolean b, Effect[] e,int d,int a, int s) {
         super(n,p, r,2);
-        effects=e;
+        abilities =e;
         isBoss=b;
         defense=d;
         agility=a;
         strength=s;
+        hp=defense;
         items.clear();
 
     }
@@ -36,8 +39,26 @@ public class Character extends Card {
         isPlayer = player;
     }
 
-    public void attack() {
-        //needs to finish
+    public void attack(ArrayList<Character> team,ArrayList<Character> enemies) {
+        int attackIndex;
+        if(isPlayer) {
+             attackIndex = GameBoard.choice("Chose a Attack");
+        } else {
+             attackIndex = Main.random(0,items.size()+abilities.length);
+
+        }
+        if(attackIndex>items.size()) {
+            abilities[attackIndex].attack(team,enemies);
+        } else {
+            Item item = items.get(attackIndex);
+            item.attack(team,enemies);
+            if(item.isDiscardAfter()) {
+                GameBoard.deck.addToBottom(item);
+                items.remove(item);
+            }
+
+        }
+
     }
 
     public int getAgility() {
@@ -56,8 +77,8 @@ public class Character extends Card {
         return items;
     }
 
-    public Effect[] getEffects() {
-        return effects;
+    public Effect[] getAbilities() {
+        return abilities;
     }
 
     public boolean isBoss() {
@@ -66,5 +87,16 @@ public class Character extends Card {
 
     public ArrayList<StatChange> getStatChanges() {
         return statChanges;
+    }
+    public void addItem(Item item) {
+        if(items.size()<1) {
+            items.add(item);
+        } else {
+            if(isPlayer) {
+                //needs finish
+            } else {
+                items.set(0,item);
+            }
+        }
     }
 }

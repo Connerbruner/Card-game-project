@@ -33,4 +33,8 @@ public class Main {
 
 
     }
+    public static int random(int low, int high) {
+        int range = high - low + 1;
+        return (int) (Math.random() * range) + low;
+    }
 }
