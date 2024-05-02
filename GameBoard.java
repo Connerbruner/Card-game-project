@@ -5,7 +5,13 @@ import java.util.ArrayList;
 public class GameBoard {
     static final JLabel LABEL = new JLabel();
     static final JLabel TEXT1 = new JLabel();
-    static final JLabel SCORE = new JLabel();
+    static final JLabel TEXT2 = new JLabel();
+    static final JLabel[] INFO_PANNEL = {
+            new JLabel("Paycheck:"),
+            new JLabel("Floor:"),
+            new JLabel("Next Rest Floor:"),
+            new JLabel(""),
+    };
     static final JLabel[] INDEX_LABELS = {
             new JLabel(),
             new JLabel(),
@@ -28,14 +34,14 @@ public class GameBoard {
             new JLabel(),
     };
     static final int[][] INDEX_POSITIONS = {
-            {180,450},
-            {550,450},
-            {950,450},
-            {1350,450},
-            {1750,450},
-            {540,575},
-            {930,575},
-            {1330,575},
+            {190,425},
+            {555,425},
+            {957,425},
+            {1350,425},
+            {1745,425},
+            {555,925},
+            {957,925},
+            {1340,925},
     };
     static final int[][] CARD_POSITIONS = {
             {40,0},
@@ -43,17 +49,17 @@ public class GameBoard {
             {820,0},
             {1200,0},
             {1600,0},
-            {410,620},
-            {800,620},
-            {1200,620},
+            {410,500},
+            {820,500},
+            {1200,500},
     };
     static final JTextField INPUT = new JTextField(10);
     static final JFrame SYSTEM = new JFrame("");
-    static final ImageIcon UI = new ImageIcon("ui_images/ui.png");
-    private final Character[] AVAILABLE_PARTY_MEMBERS = new Character[]{
+    private final Character[] AVAILABLE_PARTY_MEMBERS = new Character[] {
 
     };
     private final int[] ESCAPE_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
+    private int currentFloor = 0;
 
     public static Deck deck;
     private ArrayList<Character> team = new ArrayList<>();
@@ -61,8 +67,20 @@ public class GameBoard {
 
     public GameBoard(Deck cards) {
         deck = cards;
+        //text 1 2 setup
+
+        SYSTEM.add(TEXT1);
         TEXT1.setFont(new Font("Arial", Font.BOLD, 20));
-        SCORE.setFont(new Font("Arial", Font.BOLD, 12));
+        TEXT1.setHorizontalAlignment(0);
+        TEXT1.setBounds(0,1000, 1920, 20);
+
+        SYSTEM.add(TEXT2);
+        TEXT2.setFont(new Font("Arial", Font.BOLD, 20));
+        TEXT2.setHorizontalAlignment(0);
+        TEXT2.setBounds(0,1020, 1920, 20);
+
+
+        //card system setup
         for(int i=0; i<CARD_IMAGES.length; i++) {
             SYSTEM.add(CARD_IMAGES[i]);
             CARD_IMAGES[i].setIcon(new ImageIcon("Cards/mir.png"));
@@ -71,14 +89,18 @@ public class GameBoard {
         }
         for(int i=0; i<INDEX_LABELS.length; i++) {
             SYSTEM.add(INDEX_LABELS[i]);
-            INDEX_LABELS[i].setText("Test");
+            INDEX_LABELS[i].setText(i+1+"");
             Dimension size = INDEX_LABELS[i].getPreferredSize();
+            INDEX_LABELS[i].setFont(new Font("Arial", Font.BOLD, 12));
             INDEX_LABELS[i].setBounds(INDEX_POSITIONS[i][0], INDEX_POSITIONS[i][1], size.width, size.height);
         }
-
-
-
-
+        //INFO_PANNEL setup
+        for(int i=0; i<INFO_PANNEL.length; i++) {
+            SYSTEM.add(INFO_PANNEL[i]);
+            INFO_PANNEL[i].setFont(new Font("Arial", Font.BOLD, 20));
+            INFO_PANNEL[i].setBounds(1600, CARD_POSITIONS[i][1], 200,20);
+        }
+        //final setup
         INPUT.setEditable(false);
         SYSTEM.setResizable(false);
         SYSTEM.add(INPUT, BorderLayout.SOUTH);
@@ -93,7 +115,8 @@ public class GameBoard {
         INPUT.setText(" ");
         INPUT.setEditable(true);
         INPUT.requestFocus();
-        TEXT1.setText(str + "\n>Press any key<");
+        TEXT1.setText(str);
+        TEXT2.setText(">Press any key<");
 
         while (INPUT.getText().equals(" ")) ;
         INPUT.setEditable(false);
@@ -166,7 +189,7 @@ public class GameBoard {
 
     public void addScore(int add) {
         this.score += add;
-        SCORE.setText("Score: " + score);
+        INFO_PANNEL[0].setText("Score: " + score);
     }
 
     public ArrayList<Card> resolveLootEffects(ArrayList<Card> loot) {
