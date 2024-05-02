@@ -34,24 +34,24 @@ public class GameBoard {
             new JLabel(),
     };
     static final int[][] INDEX_POSITIONS = {
-            {190,425},
-            {555,425},
-            {957,425},
-            {1350,425},
-            {1745,425},
-            {555,925},
-            {957,925},
-            {1340,925},
+            {170,100},
+            {555,100},
+            {960,100},
+            {1350,100},
+            {1740,100},
+            {555,580},
+            {960,580},
+            {1340,580},
     };
     static final int[][] CARD_POSITIONS = {
-            {40,0},
-            {410,0},
-            {820,0},
-            {1200,0},
-            {1600,0},
-            {410,500},
-            {820,500},
-            {1200,500},
+            {30,120},
+            {410,120},
+            {820,120},
+            {1200,120},
+            {1590,120},
+            {410,600},
+            {820,600},
+            {1200,600},
     };
     static final JTextField INPUT = new JTextField(10);
     static final JFrame SYSTEM = new JFrame("");
@@ -72,12 +72,12 @@ public class GameBoard {
         SYSTEM.add(TEXT1);
         TEXT1.setFont(new Font("Arial", Font.BOLD, 20));
         TEXT1.setHorizontalAlignment(0);
-        TEXT1.setBounds(0,1000, 1920, 20);
+        TEXT1.setBounds(0,30, 1920, 20);
 
         SYSTEM.add(TEXT2);
         TEXT2.setFont(new Font("Arial", Font.BOLD, 20));
         TEXT2.setHorizontalAlignment(0);
-        TEXT2.setBounds(0,1020, 1920, 20);
+        TEXT2.setBounds(0,50, 1920, 20);
 
 
         //card system setup
@@ -98,7 +98,7 @@ public class GameBoard {
         for(int i=0; i<INFO_PANNEL.length; i++) {
             SYSTEM.add(INFO_PANNEL[i]);
             INFO_PANNEL[i].setFont(new Font("Arial", Font.BOLD, 20));
-            INFO_PANNEL[i].setBounds(1600, CARD_POSITIONS[i][1], 200,20);
+            INFO_PANNEL[i].setBounds(1600, 600+(i*20), 200,20);
         }
         //final setup
         INPUT.setEditable(false);
@@ -190,6 +190,10 @@ public class GameBoard {
     public void addScore(int add) {
         this.score += add;
         INFO_PANNEL[0].setText("Score: " + score);
+    }
+    public void setFloor(int floor) {
+        this.currentFloor = floor;
+        INFO_PANNEL[0].setText("Score: " + currentFloor);
     }
 
     public ArrayList<Card> resolveLootEffects(ArrayList<Card> loot) {
