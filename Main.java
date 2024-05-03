@@ -1,4 +1,3 @@
-
 public class Main {
     static Deck deck = new Deck(
             new Card[] {new Card("",false)}
@@ -7,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         GameBoard gameBoard = new GameBoard(deck);
         //explain the idea
-        gameBoard.sPrintln("Welcome to Shadow Government HQ");
+        gameBoard.sPrintln("Welcome to Maddox Merc HQ");
         gameBoard.sPrintln("I contracted you to steal some important documents for us and take out some higher-ups");
         gameBoard.sPrintln("Dont worry about the money I will pay you handsomely");
         gameBoard.sPrintln("The Goal is to get me all the goods you can get without dying");

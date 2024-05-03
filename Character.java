@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Character extends Card {
     private ArrayList<StatChange> statChanges = new ArrayList<>();
-    private Effect[] abilities;
+    private CharacterVoid[] abilities;
     private ArrayList<Item> items= new ArrayList<>();
     private boolean isBoss;
     private int strength;
@@ -11,7 +11,7 @@ public class Character extends Card {
     private int hp;
     private boolean isPlayer = false;
 
-    public Character(String n,String p, boolean r, Effect[] e,int d,int a, int s) {
+    public Character(String n,String p, boolean r, CharacterVoid[] e,int s,int d,int a) {
         super(n,p, r,1);
         abilities =e;
         isBoss=false;
@@ -22,7 +22,7 @@ public class Character extends Card {
         items.clear();
 
     }
-    public Character(String n,String p, boolean r,boolean b, Effect[] e,int d,int a, int s) {
+    public Character(String n,String p, boolean r,boolean b, CharacterVoid[] e,int d,int a, int s) {
         super(n,p, r,2);
         abilities =e;
         isBoss=b;
@@ -48,10 +48,10 @@ public class Character extends Card {
 
         }
         if(attackIndex>items.size()) {
-            abilities[attackIndex].attack(team,enemies);
+            abilities[attackIndex].run(this,team,enemies);
         } else {
             Item item = items.get(attackIndex);
-            item.attack(team,enemies);
+            item.attack(this,team,enemies);
             if(item.isDiscardAfter()) {
                 GameBoard.deck.addToBottom(item);
                 items.remove(item);
@@ -77,7 +77,7 @@ public class Character extends Card {
         return items;
     }
 
-    public Effect[] getAbilities() {
+    public CharacterVoid[] getAbilities() {
         return abilities;
     }
 
@@ -99,4 +99,14 @@ public class Character extends Card {
             }
         }
     }
+
+    public void changeHp(int change) {
+        hp-=change;
+        if(hp>defense) {
+            hp=defense;
+        }
+    }
+}
+interface CharacterVoid  {
+    void run(Character user, ArrayList<Character> team, ArrayList<Character> enemies );
 }
