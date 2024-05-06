@@ -42,18 +42,26 @@ public class Character extends Card {
     public void attack(ArrayList<Character> team,ArrayList<Character> enemies) {
         int attackIndex;
         if(isPlayer) {
-             attackIndex = GameBoard.choice("Chose a Attack");
+            Card[] currentDisplay = GameBoard.getCardsInDisplay();
+
+            Card[] itemDisplay = new Card[]{currentDisplay[0],currentDisplay[1],currentDisplay[2],currentDisplay[3],currentDisplay[4],GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,this};
+            for(int i=0; i<items.size(); i++) {
+                itemDisplay[i+5]=items.get(i);
+            }
+            GameBoard.setCardsInDisplay(itemDisplay);
+            GameBoard.setChoices(new int[]{5,6,7,8});
+             attackIndex = GameBoard.choice("Chose a Attack")-1;
         } else {
              attackIndex = Main.random(0,items.size()+abilities.length);
 
         }
         if(attackIndex>items.size()) {
-            abilities[attackIndex].run(this,team,enemies);
+            abilities[attackIndex-2].run(this,team,enemies);
         } else {
             Item item = items.get(attackIndex);
             item.attack(this,team,enemies);
             if(item.isDiscardAfter()) {
-                GameBoard.deck.addToBottom(item);
+                GameBoard.getDeck().addToBottom(item);
                 items.remove(item);
             }
 
@@ -62,16 +70,16 @@ public class Character extends Card {
     }
 
     public int getAgility() {
-        return agility;
+        return agility+statChangeDiff(2);
     }
 
     public int getDefense() {
-        return defense;
+        return defense+statChangeDiff(1);
+    }
+    public void addStatChange(StatChange s) {
+        statChanges.add(s);
     }
 
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
 
     public ArrayList<Item> getItems() {
         return items;
@@ -85,15 +93,19 @@ public class Character extends Card {
         return isBoss;
     }
 
-    public ArrayList<StatChange> getStatChanges() {
-        return statChanges;
-    }
     public void addItem(Item item) {
-        if(items.size()<1) {
+        if(items.size()<2) {
             items.add(item);
         } else {
             if(isPlayer) {
-                //needs finish
+                displayItems(item);
+                GameBoard.setChoices(new int[]{5,6,7});
+                int index = GameBoard.choice("Which item would you like to remove: "+item.getName()+", "+items.get(0).getName()+", "+items.get(1).getName());
+                if(index<2) {
+                    items.remove(index);
+                    items.add(item);
+                }
+                GameBoard.setDisplayToDefault();
             } else {
                 items.set(0,item);
             }
@@ -105,6 +117,54 @@ public class Character extends Card {
         if(hp>defense) {
             hp=defense;
         }
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getStrength() {
+        return strength+statChangeDiff(0);
+    }
+    public boolean evadeCheck() {
+        return agility<Main.random(0,100);
+    }
+    public void displayItems(Card place6) {
+        Card[] currentDisplay = GameBoard.getCardsInDisplay();
+        Card[] itemDisplay = new Card[]{currentDisplay[0],currentDisplay[1],currentDisplay[2],currentDisplay[3],currentDisplay[4],place6, null, null};
+        for(int i=0; i<items.size(); i++) {
+            itemDisplay[i+6]=items.get(i);
+        }
+        GameBoard.setCardsInDisplay(itemDisplay);
+    }
+    public void removeItem(int i) {
+        items.remove(i);
+    }
+    public void removeItem(Item i) {
+        items.remove(i);
+    }
+    public double getMul() {
+        return  getStrength()/100;
+    }
+    public int statChangeDiff(int index) {
+        int diff=0;
+        for(int i=0; i<statChanges.size();) {
+            diff+=statChanges.get(i).getStats()[index];
+        }
+        return diff;
+
+    }
+    public void tickDownStats() {
+        for(int i=0; i<statChanges.size();) {
+            statChanges.get(i).tickDown();
+            if(statChanges.get(i).hasRunout()) {
+                statChanges.remove(i);
+            }
+        }
+    }
+
+    public boolean isPlayer() {
+        return isPlayer;
     }
 }
 interface CharacterVoid  {
