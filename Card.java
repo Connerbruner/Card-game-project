@@ -1,18 +1,15 @@
 public class Card {
     private String path;
-    private boolean rare;
     private int type;
     private String name;
 
-    public Card(String p,boolean r) {
+    public Card(String p) {
         path=p;
-        rare=r;
         type=0;
 
     }
-    public Card(String n,String p,boolean r,int t) {
+    public Card(String n,String p,int t) {
         path=p;
-        rare=r;
         type=t;
         name=n;
 
@@ -24,10 +21,6 @@ public class Card {
 
     public int getType() {
         return type;
-    }
-
-    public boolean isRare() {
-        return rare;
     }
 
     public String getPath() {

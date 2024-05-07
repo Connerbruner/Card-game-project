@@ -11,8 +11,8 @@ public class Character extends Card {
     private int damage=0;
     private boolean isPlayer = false;
 
-    public Character(String n,String p, boolean r, CharacterVoid[] e,int s,int d,int a) {
-        super(n,p, r,1);
+    public Character(String n,String p, CharacterVoid[] e,int s,int d,int a) {
+        super(n,p,1);
         abilities =e;
         isBoss=false;
         defense=d;
@@ -21,8 +21,8 @@ public class Character extends Card {
         items.clear();
 
     }
-    public Character(String n,String p, boolean r,boolean b, CharacterVoid[] e,int d,int a, int s) {
-        super(n,p, r,2);
+    public Character(String n,String p,boolean b, CharacterVoid[] e,int d,int a, int s) {
+        super(n,p,2);
         abilities =e;
         isBoss=b;
         defense=d;
@@ -32,7 +32,7 @@ public class Character extends Card {
 
     }
     public Character(Character c) {
-        super(c.getName(),c.getPath(), c.isRare(),2);
+        super(c.getName(),c.getPath(),2);
         abilities=c.abilities;
         isBoss=c.isBoss;
         defense=c.defense;
@@ -56,7 +56,7 @@ public class Character extends Card {
             }
             GameBoard.setCardsInDisplay(itemDisplay);
             GameBoard.setChoices(new int[]{5,6,7,8});
-             attackIndex = GameBoard.choice("Chose a Attack")-1;
+             attackIndex = GameBoard.choice("Chose a Attack",4)-1;
         } else {
              attackIndex = Main.random(0,items.size()+abilities.length);
 
@@ -67,7 +67,6 @@ public class Character extends Card {
             Item item = items.get(attackIndex);
             item.attack(this,team,enemies);
             if(item.isDiscardAfter()) {
-                GameBoard.getDeck().addToBottom(item);
                 items.remove(item);
             }
 
@@ -106,7 +105,7 @@ public class Character extends Card {
             if(isPlayer) {
                 displayItems(item);
                 GameBoard.setChoices(new int[]{5,6,7});
-                int index = GameBoard.choice("Which item would you like to remove: "+item.getName()+", "+items.get(0).getName()+", "+items.get(1).getName());
+                int index = GameBoard.choice("Which item would you like to remove: "+item.getName()+", "+items.get(0).getName()+", "+items.get(1).getName(),3);
                 if(index<2) {
                     items.remove(index);
                     items.add(item);

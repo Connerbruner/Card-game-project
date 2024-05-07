@@ -1,11 +1,14 @@
 public class Event extends Card{
     EventVoid effect;
-    public Event(String n, String p, boolean r, EventVoid e) {
-        super(n, p, r, 4);
+    public Event(String n, String p, EventVoid e) {
+        super(n, p, 4);
         effect = e;
     }
     public void runEffect() {
         effect.run();
+    }
+    public void setEffect(EventVoid e) {
+        effect=e;
     }
 }
 interface EventVoid {

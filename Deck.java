@@ -43,22 +43,11 @@ public class Deck {
         }
     }
 
-    public void addToBottom(Card card) {
-        deck.add(deck.size() - 1, card);
-    }
 
     public void add(Card card) {
         deck.add(card);
     }
 
-    public boolean areRaresLeft() {
-        for (int i = 0; i < deck.size(); i++) {
-            if (get(i).isRare()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public ArrayList<Card> search(int count,String target) {
         ArrayList<Card> found = new ArrayList<>();
