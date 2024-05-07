@@ -74,6 +74,9 @@ public class Deck {
     }
     public ArrayList<Card> search(int count,int type) {
         ArrayList<Card> found = new ArrayList<>();
+        if(count>deck.size()) {
+            count=deck.size();
+        }
         for(int i=0; i<count; i++) {
             if(deck.get(i).getType()==type) {
                 found.add(deck.get(i));
@@ -100,6 +103,9 @@ public class Deck {
             }
         }
         return found;
+    }
+    public int size() {
+        return deck.size();
     }
 
 }

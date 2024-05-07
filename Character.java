@@ -8,7 +8,7 @@ public class Character extends Card {
     private int strength;
     private int defense;
     private int agility;
-    private int hp;
+    private int damage=0;
     private boolean isPlayer = false;
 
     public Character(String n,String p, boolean r, CharacterVoid[] e,int s,int d,int a) {
@@ -18,7 +18,6 @@ public class Character extends Card {
         defense=d;
         agility=a;
         strength=s;
-        hp=defense;
         items.clear();
 
     }
@@ -29,9 +28,17 @@ public class Character extends Card {
         defense=d;
         agility=a;
         strength=s;
-        hp=defense;
         items.clear();
 
+    }
+    public Character(Character c) {
+        super(c.getName(),c.getPath(), c.isRare(),2);
+        abilities=c.abilities;
+        isBoss=c.isBoss;
+        defense=c.defense;
+        agility=c.agility;
+        strength=c.strength;
+        items.clear();
     }
 
 
@@ -43,7 +50,6 @@ public class Character extends Card {
         int attackIndex;
         if(isPlayer) {
             Card[] currentDisplay = GameBoard.getCardsInDisplay();
-
             Card[] itemDisplay = new Card[]{currentDisplay[0],currentDisplay[1],currentDisplay[2],currentDisplay[3],currentDisplay[4],GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,this};
             for(int i=0; i<items.size(); i++) {
                 itemDisplay[i+5]=items.get(i);
@@ -55,8 +61,8 @@ public class Character extends Card {
              attackIndex = Main.random(0,items.size()+abilities.length);
 
         }
-        if(attackIndex>items.size()) {
-            abilities[attackIndex-2].run(this,team,enemies);
+        if(attackIndex>=items.size()) {
+            abilities[attackIndex%2].run(this,team,enemies);
         } else {
             Item item = items.get(attackIndex);
             item.attack(this,team,enemies);
@@ -113,14 +119,14 @@ public class Character extends Card {
     }
 
     public void changeHp(int change) {
-        hp-=change;
-        if(hp>defense) {
-            hp=defense;
+        damage+=change;
+        if(damage<0) {
+            damage=0;
         }
     }
 
-    public int getHp() {
-        return hp;
+    public int getDamage() {
+        return damage;
     }
 
     public int getStrength() {
@@ -148,7 +154,7 @@ public class Character extends Card {
     }
     public int statChangeDiff(int index) {
         int diff=0;
-        for(int i=0; i<statChanges.size();) {
+        for(int i=0; i<statChanges.size(); i++) {
             diff+=statChanges.get(i).getStats()[index];
         }
         return diff;
@@ -165,6 +171,10 @@ public class Character extends Card {
 
     public boolean isPlayer() {
         return isPlayer;
+    }
+
+    public ArrayList<StatChange> getStatChanges() {
+        return statChanges;
     }
 }
 interface CharacterVoid  {
