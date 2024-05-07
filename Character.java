@@ -1,43 +1,49 @@
 import java.util.ArrayList;
 
+interface CharacterVoid {
+    void run(Character user, ArrayList<Character> team, ArrayList<Character> enemies);
+}
+
 public class Character extends Card {
-    private ArrayList<StatChange> statChanges = new ArrayList<>();
-    private CharacterVoid[] abilities;
-    private ArrayList<Item> items= new ArrayList<>();
-    private boolean isBoss;
-    private int strength;
-    private int defense;
-    private int agility;
-    private int damage=0;
+    private final ArrayList<StatChange> statChanges = new ArrayList<>();
+    private final CharacterVoid[] abilities;
+    private final ArrayList<Item> items = new ArrayList<>();
+    private final boolean isBoss;
+    private final int strength;
+    private final int defense;
+    private final int agility;
+    private int damage = 0;
     private boolean isPlayer = false;
 
-    public Character(String n,String p, CharacterVoid[] e,int s,int d,int a) {
-        super(n,p,1);
-        abilities =e;
-        isBoss=false;
-        defense=d;
-        agility=a;
-        strength=s;
+    public Character(String n, String p, CharacterVoid[] e, int s, int d, int a) {
+        super(n, p, 1);
+        abilities = e;
+        isBoss = false;
+        defense = d;
+        agility = a;
+        strength = s;
         items.clear();
 
     }
-    public Character(String n,String p,boolean b, CharacterVoid[] e,int d,int a, int s) {
-        super(n,p,2);
-        abilities =e;
-        isBoss=b;
-        defense=d;
-        agility=a;
-        strength=s;
+
+    public Character(String n, String p, boolean b, CharacterVoid[] e, int d, int a, int s) {
+        super(n, p, 1);
+        abilities = e;
+        isBoss = b;
+        defense = d;
+        agility = a;
+        strength = s;
         items.clear();
 
     }
+
     public Character(Character c) {
-        super(c.getName(),c.getPath(),2);
-        abilities=c.abilities;
-        isBoss=c.isBoss;
-        defense=c.defense;
-        agility=c.agility;
-        strength=c.strength;
+        super(c.getName(), c.getPath(), 2);
+        abilities = c.abilities;
+        isBoss = c.isBoss;
+        defense = c.defense;
+        agility = c.agility;
+        strength = c.strength;
         items.clear();
     }
 
@@ -46,27 +52,26 @@ public class Character extends Card {
         isPlayer = player;
     }
 
-    public void attack(ArrayList<Character> team,ArrayList<Character> enemies) {
+    public void attack(ArrayList<Character> team, ArrayList<Character> enemies) {
         int attackIndex;
-        if(isPlayer) {
+        if (isPlayer) {
             Card[] currentDisplay = GameBoard.getCardsInDisplay();
-            Card[] itemDisplay = new Card[]{currentDisplay[0],currentDisplay[1],currentDisplay[2],currentDisplay[3],currentDisplay[4],GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,this};
-            for(int i=0; i<items.size(); i++) {
-                itemDisplay[i+5]=items.get(i);
+            Card[] itemDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, this};
+            for (int i = 0; i < items.size(); i++) {
+                itemDisplay[i + 5] = items.get(i);
             }
             GameBoard.setCardsInDisplay(itemDisplay);
-            GameBoard.setChoices(new int[]{5,6,7,8});
-             attackIndex = GameBoard.choice("Chose a Attack",4)-1;
+            GameBoard.setChoices(new int[]{5, 6, 7, 8});
+            attackIndex = (int) GameBoard.choice("Chose a Attack", new Object[]{0, 1, 2, 3});
         } else {
-             attackIndex = Main.random(0,items.size()+abilities.length);
-
+            attackIndex = Main.random(0, items.size() - 1 + abilities.length - 1);
         }
-        if(attackIndex>=items.size()) {
-            abilities[attackIndex%2].run(this,team,enemies);
+        if (attackIndex >= items.size()) {
+            abilities[attackIndex % 2].run(this, team, enemies);
         } else {
             Item item = items.get(attackIndex);
-            item.attack(this,team,enemies);
-            if(item.isDiscardAfter()) {
+            item.attack(this, team, enemies);
+            if (item.isDiscardAfter()) {
                 items.remove(item);
             }
 
@@ -75,12 +80,13 @@ public class Character extends Card {
     }
 
     public int getAgility() {
-        return agility+statChangeDiff(2);
+        return agility + statChangeDiff(2);
     }
 
     public int getDefense() {
-        return defense+statChangeDiff(1);
+        return defense + statChangeDiff(1);
     }
+
     public void addStatChange(StatChange s) {
         statChanges.add(s);
     }
@@ -99,28 +105,25 @@ public class Character extends Card {
     }
 
     public void addItem(Item item) {
-        if(items.size()<2) {
+        if (items.size() < 2) {
             items.add(item);
         } else {
-            if(isPlayer) {
+            if (isPlayer) {
                 displayItems(item);
-                GameBoard.setChoices(new int[]{5,6,7});
-                int index = GameBoard.choice("Which item would you like to remove: "+item.getName()+", "+items.get(0).getName()+", "+items.get(1).getName(),3);
-                if(index<2) {
-                    items.remove(index);
-                    items.add(item);
-                }
-                GameBoard.setDisplayToDefault();
+                GameBoard.setChoices(new int[]{5, 6, 7});
+                items.add(item);
+                items.remove((Item) GameBoard.choice("Which item would you like to remove: " + item.getName() + ", " + items.get(0).getName() + ", " + items.get(1).getName(), items.toArray()));
+                GameBoard.setCardsInDisplay(1);
             } else {
-                items.set(0,item);
+                items.set(0, item);
             }
         }
     }
 
     public void changeHp(int change) {
-        damage+=change;
-        if(damage<0) {
-            damage=0;
+        damage += change;
+        if (damage < 0) {
+            damage = 0;
         }
     }
 
@@ -129,40 +132,47 @@ public class Character extends Card {
     }
 
     public int getStrength() {
-        return strength+statChangeDiff(0);
+        return strength + statChangeDiff(0);
     }
+
     public boolean evadeCheck() {
-        return agility<Main.random(0,100);
+        return agility < Main.random(0, 100);
     }
+
     public void displayItems(Card place6) {
         Card[] currentDisplay = GameBoard.getCardsInDisplay();
-        Card[] itemDisplay = new Card[]{currentDisplay[0],currentDisplay[1],currentDisplay[2],currentDisplay[3],currentDisplay[4],place6, null, null};
-        for(int i=0; i<items.size(); i++) {
-            itemDisplay[i+6]=items.get(i);
+        Card[] itemDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], place6, null, null};
+        for (int i = 0; i < items.size(); i++) {
+            itemDisplay[i + 6] = items.get(i);
         }
         GameBoard.setCardsInDisplay(itemDisplay);
     }
+
     public void removeItem(int i) {
         items.remove(i);
     }
+
     public void removeItem(Item i) {
         items.remove(i);
     }
+
     public double getMul() {
-        return  getStrength()/100;
+        return getStrength() / 100;
     }
+
     public int statChangeDiff(int index) {
-        int diff=0;
-        for(int i=0; i<statChanges.size(); i++) {
-            diff+=statChanges.get(i).getStats()[index];
+        int diff = 0;
+        for (int i = 0; i < statChanges.size(); i++) {
+            diff += statChanges.get(i).getStats()[index];
         }
         return diff;
 
     }
+
     public void tickDownStats() {
-        for(int i=0; i<statChanges.size();) {
+        for (int i = 0; i < statChanges.size(); ) {
             statChanges.get(i).tickDown();
-            if(statChanges.get(i).hasRunout()) {
+            if (statChanges.get(i).hasRunout()) {
                 statChanges.remove(i);
             }
         }
@@ -175,7 +185,4 @@ public class Character extends Card {
     public ArrayList<StatChange> getStatChanges() {
         return statChanges;
     }
-}
-interface CharacterVoid  {
-    void run(Character user, ArrayList<Character> team, ArrayList<Character> enemies );
 }

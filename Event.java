@@ -4,7 +4,7 @@ public class Event extends Card{
         super(n, p, 4);
         effect = e;
     }
-    public void runEffect() {
+    public void trigger() {
         effect.run();
     }
     public void setEffect(EventVoid e) {

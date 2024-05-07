@@ -19,11 +19,13 @@ public class GameBoard {
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
     private static final JTextField INPUT = new JTextField(10);
     private static final JFrame SYSTEM = new JFrame("");
+
     private static final ArrayList<Character> team = new ArrayList<>();
     private static int currentFloor = 0;
     private static int currentRestIndex = 0;
     private static int score = 0;
     private static ArrayList<Card> currentLoot = new ArrayList<>();
+    private static final ArrayList<Character> currentEnemies = new ArrayList<>();
     private static Card[] cardsInDisplay = new Card[8];
 
 
@@ -88,7 +90,6 @@ public class GameBoard {
         }
         //final setup
         INPUT.setEditable(false);
-        SYSTEM.setResizable(false);
         SYSTEM.add(INPUT, BorderLayout.SOUTH);
         SYSTEM.add(LABEL);
         SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -111,18 +112,18 @@ public class GameBoard {
         SYSTEM.requestFocusInWindow();
     }
 
-    public static Object choice(String str,Object[] o) {
+    public static Object choice(String str, Object[] o) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
         Object o1 = null;
         boolean noError = false;
-        while (!noError || o1==null) {
+        while (!noError || o1 == null) {
             try {
-                o1=o[formatInput(INPUT.getText())-1];
-                noError=true;
-            } catch (ArrayIndexOutOfBoundsException e) {
+                o1 = o[formatInput(INPUT.getText()) - 1];
+                noError = true;
+            } catch (ArrayIndexOutOfBoundsException ignored) {
 
             }
         }
@@ -131,8 +132,8 @@ public class GameBoard {
     }
 
     public static void setChoices(int[] choices) {
-        for (int i = 0; i < INDEX_LABELS.length; i++) {
-            INDEX_LABELS[i].setText("");
+        for (JLabel indexLabel : INDEX_LABELS) {
+            indexLabel.setText("");
         }
         for (int i = 0; i < choices.length; i++) {
             INDEX_LABELS[choices[i]].setText((i + 1) + "");
@@ -140,8 +141,8 @@ public class GameBoard {
     }
 
     public static void setChoices(ArrayList<Integer> choices) {
-        for (int i = 0; i < INDEX_LABELS.length; i++) {
-            INDEX_LABELS[i].setText("");
+        for (JLabel indexLabel : INDEX_LABELS) {
+            indexLabel.setText("");
         }
         for (int i = 0; i < choices.size(); i++) {
             INDEX_LABELS[choices.get(i)].setText((i + 1) + "");
@@ -176,9 +177,6 @@ public class GameBoard {
         return team;
     }
 
-    public static int getScore() {
-        return score;
-    }
 
     public static Card[] getCardsInDisplay() {
         return cardsInDisplay;
@@ -187,35 +185,30 @@ public class GameBoard {
     public static void setCardsInDisplay(Card[] cardsInDisplay) {
         GameBoard.cardsInDisplay = cardsInDisplay;
         for (int i = 0; i < cardsInDisplay.length; i++) {
-            if (cardsInDisplay[i] == null || cardsInDisplay[i] == BLANK_CARD) {
-                HP_DISPLAYS[i].setVisible(false);
-                STAT_DISPLAYS[i].setVisible(false);
+            if (cardsInDisplay[i] == null || cardsInDisplay[i].getType() == 0) {
                 CARD_IMAGES[i].setIcon(new ImageIcon(BLANK_CARD.getPath()));
             } else {
-                if (cardsInDisplay[i].getType() == 1 || cardsInDisplay[i].getType() == 2) {
-                    updateCharacterDisplays((Character) cardsInDisplay[i]);
-                }
                 CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay[i].getPath()));
             }
         }
     }
 
-    public static void setCardsInDisplay(ArrayList<Card> cardsInDisplay) {
-        GameBoard.cardsInDisplay = cardsInDisplay.toArray(Card[]::new);
-        for (int i = 0; i < cardsInDisplay.size(); i++) {
-            CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay.get(i).getPath()));
-        }
-    }
 
-    public static void setDisplayToDefault() {
-        Card[] cards = new Card[8];
+    public static void setCardsInDisplay(int type) {
+        ArrayList<Card> cards = new ArrayList<>();
+
         for (int i = 0; i < currentLoot.size(); i++) {
-            cards[i] = currentLoot.get(i);
+            if (currentLoot.get(i).getType() == type) {
+                cards.add(currentLoot.get(i));
+            }
+        }
+        while (cards.size() < 5) {
+            cards.add(BLANK_CARD);
         }
         for (int i = 0; i < team.size(); i++) {
-            cards[i + 5] = team.get(i);
+            cards.add(team.get(i));
         }
-        setCardsInDisplay(cards);
+        setCardsInDisplay(cards.toArray(new Card[cards.size()]));
     }
 
     public static void setChoicesToTeam() {
@@ -230,7 +223,7 @@ public class GameBoard {
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < currentLoot.size(); i++) {
             if (currentLoot.get(i) != null) {
-                if (currentLoot.get(i).getType() == 1 || currentLoot.get(i).getType()  == 2) {
+                if (currentLoot.get(i).getType() == 1 || currentLoot.get(i).getType() == 2) {
                     indexes.add(i);
                 }
             }
@@ -252,10 +245,10 @@ public class GameBoard {
     public static void setTeam() {
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
-            Character character = (Character) choice("Pick a team member (1-8)",Cards.AvailablePartyMembers);
+            Character character = (Character) choice("Pick a team member (1-8)", Cards.AvailablePartyMembers);
             boolean inParty = false;
-            for (int j = 0; j < team.size(); j++) {
-                if (team.get(j).equals(character)) {
+            for (Character value : team) {
+                if (value.equals(character)) {
                     inParty = true;
                     break;
                 }
@@ -280,70 +273,53 @@ public class GameBoard {
         INFO_PANEL[1].setText("Current Floor: " + currentFloor);
     }
 
-    public static void resolveLootEffects() {
-        boolean bossFight = false;
-        getLoot();
-        ArrayList<Character> enemies = new ArrayList<>();
-        setCardsInDisplay(new Card[]{currentLoot.get(0), currentLoot.get(1), currentLoot.get(2), currentLoot.get(3), currentLoot.get(4), team.get(0), team.get(1), team.get(2)});
+    public static void loot() {
+        currentLoot = Cards.deck.getRange(0, 5);
+        Cards.deck.removeRange(0, 5);
         for (int i = 0; i < currentLoot.size(); i++) {
-            if (currentLoot.get(i).getType() == 2) {
-                bossFight = true;
-                enemies.add((Character) currentLoot.get(i));
-            } else if (currentLoot.get(i).getType() == 4) {
-                ((Event) (currentLoot.get(i))).runEffect();
-                currentLoot.remove(i);
-            } else if (currentLoot.get(i).getType() == 0) {
-                currentLoot.remove(i);
-            }
-
-        }
-        for (int i = 0; i < currentLoot.size(); i++) {
+            setCardsInDisplay(4);
             if (currentLoot.get(i).getType() == 1) {
-                if (bossFight) {
-                    Cards.deck.add(currentLoot.get(i));
-                    Cards.deck.shuffle();
-                } else {
-                    enemies.add((Character) currentLoot.get(i));
-                }
+                currentEnemies.add((Character) currentLoot.get(i));
+                System.out.println("found");
+            }
+            if (currentLoot.get(i).getType() == 4) {
+                (currentLoot.get(i)).trigger();
             }
 
         }
-        if (!enemies.isEmpty()) {
+        System.out.println(currentEnemies.size());
+        setCardsInDisplay(1);
+        if (!currentEnemies.isEmpty()) {
             int j = 0;
-            for (int i = 0; i < currentLoot.size(); i++) {
-                if (currentLoot.get(i).getType() == 3) {
-                    if (enemies.size() <= j) {
+            for (Card card : currentLoot) {
+                if (card.getType() == 3) {
+                    if (currentEnemies.size() <= j) {
                         j = 0;
                     }
-                    enemies.get(j).addItem((Item) currentLoot.get(i));
+                    currentEnemies.get(j).addItem((Item) card);
                     j++;
                 }
 
             }
-            new Battle(team, enemies);
+            new Battle(team, currentEnemies);
         }
-        setChoicesToTeam();
-        for (int i = 0; i < currentLoot.size(); i++) {
-            if (currentLoot.get(i).getType() == 3) {
-                Character target = (Character) choice("Which party member should get the " + currentLoot.get(i).getName(),team.toArray());
-                target.addItem((Item) currentLoot.get(i));
-                sPrintln(target.getName() + " got a " + currentLoot.get(i).getName());
+        for (Card card : currentLoot) {
+            setCardsInDisplay(3);
+            setChoicesToTeam();
+            if (card.getType() == 3) {
+                Character target = (Character) choice("Which party member should get the " + card.getName(), team.toArray());
+                target.addItem((Item) card);
+                sPrintln(target.getName() + " got a " + card.getName());
             }
         }
     }
 
-    public static ArrayList<Card> getLoot() {
-        ArrayList<Card> loot = Cards.deck.getRange(0, 5);
-        Cards.deck.removeRange(0, 5);
-        currentLoot = loot;
-        return loot;
-    }
 
     public static void gameLoop() {
-        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Cards.deck.size()>5; currentFloor++) {
+        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Cards.deck.size() > 5; currentFloor++) {
             setFloor(currentFloor);
-            resolveLootEffects();
-            if(currentFloor>=REST_FLOORS[currentRestIndex]) {
+            loot();
+            if (currentFloor >= REST_FLOORS[currentRestIndex]) {
                 rest();
             }
         }
@@ -356,7 +332,6 @@ public class GameBoard {
 
                 index = i;
             }
-
         }
         if (character.getDamage() == 0) {
             HP_DISPLAYS[index].setVisible(false);
@@ -364,7 +339,7 @@ public class GameBoard {
             HP_DISPLAYS[index].setVisible(true);
             HP_DISPLAYS[index].setText(character.getDamage() + "");
         }
-        if (character.getStatChanges().size() == 0) {
+        if (character.getStatChanges().isEmpty()) {
             STAT_DISPLAYS[index].setVisible(false);
         } else {
             STAT_DISPLAYS[index].setVisible(true);
@@ -378,10 +353,6 @@ public class GameBoard {
         currentLoot.remove(c);
     }
 
-    public static void setRestFloor(int index) {
-        currentFloor = REST_FLOORS[index];
-        INFO_PANEL[2].setText("Next Rest Floor: " + currentFloor);
-    }
     public static void nextRestFloor() {
         currentRestIndex++;
         INFO_PANEL[2].setText("Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
@@ -393,8 +364,12 @@ public class GameBoard {
 
     public static void rest() {
 
+        nextRestFloor();
     }
 
+    public void updateCharacterDisplay(Character character) {
+
+    }
 
 
 }

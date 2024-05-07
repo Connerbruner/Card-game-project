@@ -18,14 +18,41 @@ public class Item extends Card {
         super(n, p, 3);
         discardAfter = d;
         effect = (user, team, enemies) -> {
-            int index = Main.random(0, enemies.size() - 1);
+            Character enemy = enemies.get(Main.random(0, enemies.size() - 1));
             if (user.isPlayer()) {
                 GameBoard.setChoicesToEnemies();
-                enemy = GameBoard.choice("Who would you like to attack",enemies.toArray());
+                 enemy = (Character) GameBoard.choice("Who would you like to attack",enemies.toArray());
             }
             int damage = Main.random(low, high);
-            enemies.get(index).changeHp(damage);
-            GameBoard.sPrintln(enemies.get(index).getName() + " took " + d + " damage");
+            if(enemy.evadeCheck()) {
+                enemy.changeHp(damage);
+                GameBoard.sPrintln(enemy.getName() + " took " + damage + " damage");
+            } else {
+               GameBoard.sPrintln("Missed");
+            }
+
+        };
+
+    }
+    public Item(String n, String p,int times,int high,int low, boolean d) {
+        super(n, p, 3);
+        discardAfter = d;
+        effect = (user, team, enemies) -> {
+            Character enemy = enemies.get(Main.random(0, enemies.size() - 1));
+            if (user.isPlayer()) {
+                GameBoard.setChoicesToEnemies();
+                enemy = (Character) GameBoard.choice("Who would you like to attack",enemies.toArray());
+            }
+            for(int i=0; i<times; i++) {
+                int damage = Main.random(low, high);
+                if(enemy.evadeCheck()) {
+                    enemy.changeHp(damage);
+                    GameBoard.sPrintln(enemy.getName() + " took " + damage + " damage");
+                } else {
+                    GameBoard.sPrintln("Missed");
+                }
+            }
+
         };
 
     }
