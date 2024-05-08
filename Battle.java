@@ -10,7 +10,7 @@ public class Battle {
             for(int i=0; i<team.size(); i++) {
                 updateHP();
                 GameBoard.setChoices(new ArrayList<>());
-                GameBoard.setCardsInDisplay(1);
+                GameBoard.setCardsInDisplay(2);
                 if(!team.isEmpty() && !enemies.isEmpty()) {
                     team.get(i).tickDownStats();
                     GameBoard.sPrintln(team.get(i).getName()+" Turn");
@@ -24,7 +24,7 @@ public class Battle {
             for(int i=0; i<enemies.size(); i++) {
                 updateHP();
                 GameBoard.setChoices(new ArrayList<>());
-                GameBoard.setCardsInDisplay(1);
+                GameBoard.setCardsInDisplay(2);
                 if(!team.isEmpty() && !enemies.isEmpty()) {
                     enemies.get(i).tickDownStats();
                     GameBoard.sPrintln(enemies.get(i).getName()+" Turn");

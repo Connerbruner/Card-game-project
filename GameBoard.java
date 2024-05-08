@@ -21,11 +21,11 @@ public class GameBoard {
     private static final JFrame SYSTEM = new JFrame("");
 
     private static final ArrayList<Character> team = new ArrayList<>();
+    private static final ArrayList<Character> currentEnemies = new ArrayList<>();
     private static int currentFloor = 0;
     private static int currentRestIndex = 0;
     private static int score = 0;
     private static ArrayList<Card> currentLoot = new ArrayList<>();
-    private static final ArrayList<Character> currentEnemies = new ArrayList<>();
     private static Card[] cardsInDisplay = new Card[8];
 
 
@@ -184,19 +184,40 @@ public class GameBoard {
 
     public static void setCardsInDisplay(Card[] cardsInDisplay) {
         GameBoard.cardsInDisplay = cardsInDisplay;
+
         for (int i = 0; i < cardsInDisplay.length; i++) {
+            HP_DISPLAYS[i].setVisible(false);
+            STAT_DISPLAYS[i].setVisible(false);
             if (cardsInDisplay[i] == null || cardsInDisplay[i].getType() == 0) {
                 CARD_IMAGES[i].setIcon(new ImageIcon(BLANK_CARD.getPath()));
+
             } else {
                 CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay[i].getPath()));
+                if(cardsInDisplay[i].getType()==2) {
+                    Character character = (Character) cardsInDisplay[i];
+
+                    if(character.getDamage()<0) {
+                        HP_DISPLAYS[i].setVisible(true);
+                    }
+                    if(!character.getStatChanges().isEmpty()) {
+                        STAT_DISPLAYS[i].setVisible(true);
+                    }
+                }
             }
         }
+
     }
+
 
 
     public static void setCardsInDisplay(int type) {
         ArrayList<Card> cards = new ArrayList<>();
-
+        if(type != 2) {
+            for (int i = 0; i < 5; i++) {
+                HP_DISPLAYS[i].setVisible(false);
+                STAT_DISPLAYS[i].setVisible(false);
+            }
+        }
         for (int i = 0; i < currentLoot.size(); i++) {
             if (currentLoot.get(i).getType() == type) {
                 cards.add(currentLoot.get(i));
@@ -220,14 +241,9 @@ public class GameBoard {
     }
 
     public static void setChoicesToEnemies() {
-        ArrayList<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < currentLoot.size(); i++) {
-            if (currentLoot.get(i) != null) {
-                if (currentLoot.get(i).getType() == 1 || currentLoot.get(i).getType() == 2) {
-                    indexes.add(i);
-                }
-            }
-
+        int[] indexes = new int[currentEnemies.size()];
+        for (int i = 0; i < indexes.length; i++) {
+            indexes[i]=i;
         }
         setChoices(indexes);
     }
@@ -274,11 +290,14 @@ public class GameBoard {
     }
 
     public static void loot() {
+        Cards.deck.shuffle();
         currentLoot = Cards.deck.getRange(0, 5);
         Cards.deck.removeRange(0, 5);
         for (int i = 0; i < currentLoot.size(); i++) {
+            System.out.println(currentLoot.get(i).getName());
+            setChoices(new int[0]);
             setCardsInDisplay(4);
-            if (currentLoot.get(i).getType() == 1) {
+            if (currentLoot.get(i).getType() == 2) {
                 currentEnemies.add((Character) currentLoot.get(i));
                 System.out.println("found");
             }
@@ -288,7 +307,7 @@ public class GameBoard {
 
         }
         System.out.println(currentEnemies.size());
-        setCardsInDisplay(1);
+        setCardsInDisplay(2);
         if (!currentEnemies.isEmpty()) {
             int j = 0;
             for (Card card : currentLoot) {

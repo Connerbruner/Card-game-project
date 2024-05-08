@@ -18,7 +18,7 @@ public class Cards {
                 user.addStatChange(new StatChange(new int[]{-10, 0, 5}, 3));
                 GameBoard.sPrintln("Prototype Gained 5 Agility but lost 10 Strength");
             }, (user, team, enemies) -> {
-                int index = Main.random(0, enemies.size() - 1);
+                int index = Main.random(0, team.size() - 1);
                 if (team.get(index).evadeCheck()) {
                     GameBoard.sPrintln(team.get(index).getName() + " takes " + user.getAgility());
                     team.get(index).changeHp(user.getAgility());
@@ -103,7 +103,7 @@ public class Cards {
         GameBoard.sPrintln("Teams strength raised by " + user.getDamage());
     },}, 155, 60, 8), new Character("Orion", "Cards/Orion.png", new CharacterVoid[]{(user, team, enemies) -> {
         GameBoard.setChoices(new int[]{5, 6, 7});
-        GameBoard.setCardsInDisplay(1);
+        GameBoard.setCardsInDisplay(2);
         Character character = (Character) GameBoard.choice("Who's ability would you like to use",team.toArray());
         Card[] currentDisplay = GameBoard.getCardsInDisplay();
         Card[] targetDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, character};
@@ -115,12 +115,12 @@ public class Cards {
         GameBoard.setChoices(new int[]{5, 6, 7});
 
         Character character = (Character) GameBoard.choice("Who's item would you like to move",team.toArray());
-        character.displayItems(character);
+        character.displayItems();
         GameBoard.setChoices(new int[]{6, 7});
         Item item = (Item) GameBoard.choice("Which item?",character.getItems().toArray());
         user.addItem(item);
         character.removeItem(character.getItems().indexOf(item));
-        GameBoard.setCardsInDisplay(1);
+        GameBoard.setCardsInDisplay(2);
     },}, 125, 50, 15), new Character("Velorum", "Cards/velorum.png", new CharacterVoid[]{(user, team, enemies) -> {
         for (int i = 0; i < enemies.size(); i++) {
             int damage = (int) (40 * user.getMul());

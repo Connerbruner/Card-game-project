@@ -109,11 +109,13 @@ public class Character extends Card {
             items.add(item);
         } else {
             if (isPlayer) {
-                displayItems(item);
                 GameBoard.setChoices(new int[]{5, 6, 7});
                 items.add(item);
-                items.remove((Item) GameBoard.choice("Which item would you like to remove: " + item.getName() + ", " + items.get(0).getName() + ", " + items.get(1).getName(), items.toArray()));
-                GameBoard.setCardsInDisplay(1);
+                displayItems();
+                Item remove = (Item) GameBoard.choice("Which item would you like to remove: ", items.toArray());
+                GameBoard.sPrintln(remove.getName() + " removed");
+                items.remove(remove);
+                GameBoard.setCardsInDisplay(2);
             } else {
                 items.set(0, item);
             }
@@ -139,11 +141,11 @@ public class Character extends Card {
         return agility < Main.random(0, 100);
     }
 
-    public void displayItems(Card place6) {
+    public void displayItems() {
         Card[] currentDisplay = GameBoard.getCardsInDisplay();
-        Card[] itemDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], place6, null, null};
+        Card[] itemDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], null, null, null};
         for (int i = 0; i < items.size(); i++) {
-            itemDisplay[i + 6] = items.get(i);
+            itemDisplay[i + 5] = items.get(i);
         }
         GameBoard.setCardsInDisplay(itemDisplay);
     }
