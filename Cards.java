@@ -10,8 +10,8 @@ public class Cards {
     public static final Item[] DIFFERENT_ITEMS = new Item[]{
             new Item("Laser Sword", "Cards/laserSword.png", 20, 25, false),
             new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
-            new Item("Laser Bow", "Cards/laserBow.png", 3,20, 20, false),
-            new Item("Cursed Cube","Cards/cursedCube.png",-100,100,false)
+            new Item("Laser Bow", "Cards/laserBow.png", 3, 20, 20, false),
+            new Item("Cursed Cube", "Cards/cursedCube.png", -100, 100, false)
     };
     public static final Character[] DIFFERENT_CHARACTERS = new Character[]{
             new Character("Prototype", "Cards/prototype.png", new CharacterVoid[]{(user, team, enemies) -> {
@@ -23,7 +23,7 @@ public class Cards {
                     GameBoard.sPrintln(team.get(index).getName() + " takes " + user.getAgility());
                     team.get(index).changeHp(user.getAgility());
                 }
-            },}, 60, 30, 60)
+            },}, 60, 40, 60)
     };
     public static final Deck deck = new Deck(new Card[]{
             new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]),
@@ -33,9 +33,9 @@ public class Cards {
             new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]),
             new Document(DIFFERENT_DOCUMENTS[2]),
             new Document(DIFFERENT_DOCUMENTS[3]), new Document(DIFFERENT_DOCUMENTS[3]), new Document(DIFFERENT_DOCUMENTS[3]),
-            new Item(DIFFERENT_ITEMS[1]),new Item(DIFFERENT_ITEMS[1]),
-            new Item(DIFFERENT_ITEMS[2]),new Item(DIFFERENT_ITEMS[2]),new Item(DIFFERENT_ITEMS[2]),
-            new Item(DIFFERENT_ITEMS[3]),new Item(DIFFERENT_ITEMS[3]),
+            new Item(DIFFERENT_ITEMS[1]), new Item(DIFFERENT_ITEMS[1]),
+            new Item(DIFFERENT_ITEMS[2]), new Item(DIFFERENT_ITEMS[2]), new Item(DIFFERENT_ITEMS[2]),
+            new Item(DIFFERENT_ITEMS[3]), new Item(DIFFERENT_ITEMS[3]),
     });
 
     public static final Character[] AvailablePartyMembers = new Character[]{new Character("Mir", "Cards/mir.png", true, new CharacterVoid[]{(user, team, enemies) -> {
@@ -45,9 +45,9 @@ public class Cards {
         }
     }, (user, team, enemies) -> {
         GameBoard.setChoices(new int[]{5, 6, 7});
-        Character character = (Character) GameBoard.choice("Which Teammate would you like to heal",team.toArray());
-        character.changeHp(-100);
-        GameBoard.sPrintln(character.getName() + " healed 100 Damage");
+        Character character = (Character) GameBoard.choice("Which Teammate would you like to heal", team.toArray());
+        character.changeHp(-70);
+        GameBoard.sPrintln(character.getName() + " healed 70 Damage");
 
     },}, 90, 125, 0), new Character("Leo", "Cards/Leo.png", new CharacterVoid[]{(user, team, enemies) -> {
         for (int i = 0; i < enemies.size(); i++) {
@@ -55,12 +55,12 @@ public class Cards {
         }
         GameBoard.sPrintln("Enemies no longer can evade");
     }, (user, team, enemies) -> {
-        Character target = (Character) GameBoard.choice("Who would you like to attack? ",enemies.toArray());
+        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
         if (target.getAgility() > 0) {
             GameBoard.sPrintln("Missed");
         } else {
-            target.changeHp(100);
-            GameBoard.sPrintln("dealt 100 damage");
+            target.changeHp(70);
+            GameBoard.sPrintln("dealt 70 damage");
         }
 
     },}, 100, 50, 35), new Character("Arrokoth", "Cards/Arrokoth.png", new CharacterVoid[]{(user, team, enemies) -> {
@@ -74,9 +74,9 @@ public class Cards {
 
     },}, 100, 60, 30), new Character("Gliese", "Cards/Gliese.png", new CharacterVoid[]{(user, team, enemies) -> {
         GameBoard.setChoicesToEnemies();
-        Character target = (Character) GameBoard.choice("Who would you like to attack? ",enemies.toArray());
-        target.changeHp(50);
-        GameBoard.sPrintln("damage dealt 50");
+        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
+        target.changeHp(30);
+        GameBoard.sPrintln("damage dealt 30");
 
     }, (user, team, enemies) -> {
         for (int i = 0; i < enemies.size(); i++) {
@@ -85,8 +85,8 @@ public class Cards {
         GameBoard.sPrintln("Enemies stats lowered 10");
     },}, 105, 70, 20), new Character("Baidam", "Cards/baidam card.png", new CharacterVoid[]{(user, team, enemies) -> {
         GameBoard.setChoicesToEnemies();
-        Character target = (Character) GameBoard.choice("Who would you like to attack? ",enemies.toArray());
-        int count = (int) GameBoard.choice("How Much damage would you like to take up to 9",new Object[] {1,2,3,4,5,6,7,8,9});
+        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
+        int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         int damage = (int) (count * 12 * user.getMul());
         if (target.evadeCheck()) {
             target.changeHp(damage);
@@ -104,26 +104,25 @@ public class Cards {
     },}, 155, 60, 8), new Character("Orion", "Cards/Orion.png", new CharacterVoid[]{(user, team, enemies) -> {
         GameBoard.setChoices(new int[]{5, 6, 7});
         GameBoard.setCardsInDisplay(2);
-        Character character = (Character) GameBoard.choice("Who's ability would you like to use",team.toArray());
+        Character character = (Character) GameBoard.choice("Who's ability would you like to use", team.toArray());
         Card[] currentDisplay = GameBoard.getCardsInDisplay();
         Card[] targetDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, character};
         GameBoard.setCardsInDisplay(targetDisplay);
         GameBoard.setChoices(new int[]{7, 8});
-        CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use",character.getAbilities());
+        CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use", character.getAbilities());
         attack.run(user, team, enemies);
     }, (user, team, enemies) -> {
-        GameBoard.setChoices(new int[]{5, 6, 7});
+        for (int i = 0; i < team.size(); i++) {
+            ArrayList<StatChange> stats = team.get(i).getStatChanges();
+            for (int j = 0; j < stats.size(); j++) {
+                stats.get(i).setTime(stats.get(i).getTime() + 3);
+            }
+        }
+        GameBoard.sPrintln("Your Teams Stat Changes will last 3 turns longer");
 
-        Character character = (Character) GameBoard.choice("Who's item would you like to move",team.toArray());
-        character.displayItems();
-        GameBoard.setChoices(new int[]{6, 7});
-        Item item = (Item) GameBoard.choice("Which item?",character.getItems().toArray());
-        user.addItem(item);
-        character.removeItem(character.getItems().indexOf(item));
-        GameBoard.setCardsInDisplay(2);
     },}, 125, 50, 15), new Character("Velorum", "Cards/velorum.png", new CharacterVoid[]{(user, team, enemies) -> {
         for (int i = 0; i < enemies.size(); i++) {
-            int damage = (int) (40 * user.getMul());
+            int damage = (int) (20 * user.getMul());
             if (enemies.get(i).evadeCheck()) {
                 GameBoard.sPrintln(enemies.get(i).getName() + " took " + damage + " damage");
                 enemies.get(i).changeHp(damage);
@@ -153,18 +152,23 @@ public class Cards {
         }
         GameBoard.setCardsInDisplay(display);
         for (int i = 0; i < loot.size(); i++) {
-            Character character = (Character) GameBoard.choice("Which party member should get the " + loot.get(i).getName(),team.toArray());
+            Character character = (Character) GameBoard.choice("Which party member should get the " + loot.get(i).getName(), team.toArray());
             GameBoard.sPrintln(character.getName() + " got a " + loot.get(i).getName());
             character.addItem((Item) loot.get(i));
         }
     }, (user, team, enemies) -> {
-        GameBoard.setChoicesToItems();
-        Item item = (Item) GameBoard.choice("Which Item would you like to steal?",GameBoard.getCurrentLoot().toArray());
-        GameBoard.getCurrentLoot().remove(item);
-        for (int i = 0; i < enemies.size(); i++) {
-            if (enemies.get(i).getItems().contains(item)) {
-                enemies.get(i).removeItem(item);
-            }
+        GameBoard.setChoicesToEnemies();
+        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
+        int count=0;
+        for(int i=0; i<team.size(); i++) {
+            count+=team.get(i).getItems().size();
+        }
+        int damage = (int) (10 * user.getMul() * count );
+        if (target.evadeCheck()) {
+            GameBoard.sPrintln(target.getName() + " took " + damage + " damage");
+            target.changeHp(damage);
+        } else {
+            GameBoard.sPrintln("Missed");
         }
     },}, 50, 100, 30),
 

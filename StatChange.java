@@ -14,10 +14,14 @@ public class StatChange {
     }
 
     public boolean hasRunout() {
-        return time<1;
+        return time==0;
     }
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public int getTime() {
+        return time;
     }
 }

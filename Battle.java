@@ -38,15 +38,15 @@ public class Battle {
     }
     public void updateHP() {
         for(int i=0; i<team.size(); i++) {
-            GameBoard.updateCharacterDisplays(team.get(i));
             if(team.get(i).getDamage()>=team.get(i).getDefense()) {
+                GameBoard.sPrintln(team.get(i).getName()+" died");
+
                 team.remove(i);
             }
 
         }
 
         for(int i=0; i<enemies.size(); i++) {
-            GameBoard.updateCharacterDisplays(enemies.get(i));
             if(enemies.get(i).getDamage()>=enemies.get(i).getDefense()) {
                 GameBoard.sPrintln(enemies.get(i).getName()+" died");
                 GameBoard.removeFromLoot(enemies.get(i));

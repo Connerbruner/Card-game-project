@@ -172,7 +172,7 @@ public class Character extends Card {
     }
 
     public void tickDownStats() {
-        for (int i = 0; i < statChanges.size(); ) {
+        for (int i = 0; i < statChanges.size(); i++) {
             statChanges.get(i).tickDown();
             if (statChanges.get(i).hasRunout()) {
                 statChanges.remove(i);
@@ -186,5 +186,15 @@ public class Character extends Card {
 
     public ArrayList<StatChange> getStatChanges() {
         return statChanges;
+    }
+    public int avgStatTime() {
+        if(statChanges.isEmpty()) {
+            return 0;
+        }
+        int amount = 0;
+        for(int i=0; i<statChanges.size(); i++) {
+            amount+=statChanges.get(i).getTime();
+        }
+        return amount/statChanges.size();
     }
 }

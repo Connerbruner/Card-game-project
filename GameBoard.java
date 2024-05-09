@@ -193,15 +193,13 @@ public class GameBoard {
 
             } else {
                 CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay[i].getPath()));
-                if(cardsInDisplay[i].getType()==2) {
+                if(cardsInDisplay[i].getType()<3) {
                     Character character = (Character) cardsInDisplay[i];
+                    HP_DISPLAYS[i].setVisible(true);
+                    STAT_DISPLAYS[i].setVisible(true);
+                    HP_DISPLAYS[i].setText(character.getDamage()+"");
+                    STAT_DISPLAYS[i].setText(character.statChangeDiff(0) + " , " + character.statChangeDiff(1) + " , " + character.statChangeDiff(2)+" for "+character.avgStatTime());
 
-                    if(character.getDamage()<0) {
-                        HP_DISPLAYS[i].setVisible(true);
-                    }
-                    if(!character.getStatChanges().isEmpty()) {
-                        STAT_DISPLAYS[i].setVisible(true);
-                    }
                 }
             }
         }
@@ -212,12 +210,6 @@ public class GameBoard {
 
     public static void setCardsInDisplay(int type) {
         ArrayList<Card> cards = new ArrayList<>();
-        if(type != 2) {
-            for (int i = 0; i < 5; i++) {
-                HP_DISPLAYS[i].setVisible(false);
-                STAT_DISPLAYS[i].setVisible(false);
-            }
-        }
         for (int i = 0; i < currentLoot.size(); i++) {
             if (currentLoot.get(i).getType() == type) {
                 cards.add(currentLoot.get(i));
@@ -228,6 +220,9 @@ public class GameBoard {
         }
         for (int i = 0; i < team.size(); i++) {
             cards.add(team.get(i));
+        }
+        while (cards.size() < 8) {
+            cards.add(BLANK_CARD);
         }
         setCardsInDisplay(cards.toArray(new Card[cards.size()]));
     }
@@ -344,29 +339,6 @@ public class GameBoard {
         }
     }
 
-    public static void updateCharacterDisplays(Character character) {
-        int index = 0;
-        for (int i = 0; i < cardsInDisplay.length; i++) {
-            if (cardsInDisplay[i] == character) {
-
-                index = i;
-            }
-        }
-        if (character.getDamage() == 0) {
-            HP_DISPLAYS[index].setVisible(false);
-        } else {
-            HP_DISPLAYS[index].setVisible(true);
-            HP_DISPLAYS[index].setText(character.getDamage() + "");
-        }
-        if (character.getStatChanges().isEmpty()) {
-            STAT_DISPLAYS[index].setVisible(false);
-        } else {
-            STAT_DISPLAYS[index].setVisible(true);
-            STAT_DISPLAYS[index].setText(character.statChangeDiff(0) + " , " + character.statChangeDiff(1) + " , " + character.statChangeDiff(2));
-        }
-
-
-    }
 
     public static void removeFromLoot(Card c) {
         currentLoot.remove(c);
@@ -386,9 +358,7 @@ public class GameBoard {
         nextRestFloor();
     }
 
-    public void updateCharacterDisplay(Character character) {
 
-    }
 
 
 }
