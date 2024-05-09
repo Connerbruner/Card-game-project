@@ -112,11 +112,13 @@ public class GameBoard {
         SYSTEM.requestFocusInWindow();
     }
 
+
     public static Object choice(String str, Object[] o) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
+        TEXT2.setText("");
         Object o1 = null;
         boolean noError = false;
         while (!noError || o1 == null) {
@@ -303,18 +305,7 @@ public class GameBoard {
         }
         System.out.println(currentEnemies.size());
         setCardsInDisplay(2);
-        if (!currentEnemies.isEmpty()) {
-            int j = 0;
-            for (Card card : currentLoot) {
-                if (card.getType() == 3) {
-                    if (currentEnemies.size() <= j) {
-                        j = 0;
-                    }
-                    currentEnemies.get(j).addItem((Item) card);
-                    j++;
-                }
-
-            }
+        if (!currentEnemies.isEmpty() && currentFloor>0) {
             new Battle(team, currentEnemies);
         }
         for (Card card : currentLoot) {

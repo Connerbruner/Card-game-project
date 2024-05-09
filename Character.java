@@ -5,17 +5,17 @@ interface CharacterVoid {
 }
 
 public class Character extends Card {
-    private final ArrayList<StatChange> statChanges = new ArrayList<>();
-    private final CharacterVoid[] abilities;
-    private final ArrayList<Item> items = new ArrayList<>();
+    private  ArrayList<StatChange> statChanges = new ArrayList<>();
+    private  CharacterVoid[] abilities;
+    private  ArrayList<Item> items = new ArrayList<>();
     private final boolean isBoss;
-    private final int strength;
-    private final int defense;
-    private final int agility;
+    private double strength;
+    private int defense;
+    private int agility;
     private int damage = 0;
     private boolean isPlayer = false;
 
-    public Character(String n, String p, CharacterVoid[] e, int s, int d, int a) {
+    public Character(String n, String p, CharacterVoid[] e, double s, int d, int a) {
         super(n, p, 1);
         abilities = e;
         isBoss = false;
@@ -26,7 +26,7 @@ public class Character extends Card {
 
     }
 
-    public Character(String n, String p, boolean b, CharacterVoid[] e, int d, int a, int s) {
+    public Character(String n, String p, boolean b, CharacterVoid[] e, double s, int d, int a) {
         super(n, p, 1);
         abilities = e;
         isBoss = b;
@@ -133,12 +133,12 @@ public class Character extends Card {
         return damage;
     }
 
-    public int getStrength() {
+    public double getStrength() {
         return strength + statChangeDiff(0);
     }
 
     public boolean evadeCheck() {
-        return agility < Main.random(0, 100);
+        return getAgility() < Main.random(0, 100) || getAgility() <0;
     }
 
     public void displayItems() {
@@ -156,10 +156,6 @@ public class Character extends Card {
 
     public void removeItem(Item i) {
         items.remove(i);
-    }
-
-    public double getMul() {
-        return getStrength() / 100;
     }
 
     public int statChangeDiff(int index) {

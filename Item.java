@@ -23,7 +23,7 @@ public class Item extends Card {
                 GameBoard.setChoicesToEnemies();
                  enemy = (Character) GameBoard.choice("Who would you like to attack",enemies.toArray());
             }
-            int damage = Main.random(low, high);
+            int damage = (int) (Main.random(low, high)*user.getStrength());
             if(enemy.evadeCheck()) {
                 enemy.changeHp(damage);
                 GameBoard.sPrintln(enemy.getName() + " took " + damage + " damage");
@@ -44,7 +44,7 @@ public class Item extends Card {
                 enemy = (Character) GameBoard.choice("Who would you like to attack",enemies.toArray());
             }
             for(int i=0; i<times; i++) {
-                int damage = Main.random(low, high);
+                int damage = (int) (Main.random(low, high)*user.getStrength());
                 if(enemy.evadeCheck()) {
                     enemy.changeHp(damage);
                     GameBoard.sPrintln(enemy.getName() + " took " + damage + " damage");
