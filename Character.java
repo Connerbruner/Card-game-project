@@ -64,7 +64,7 @@ public class Character extends Card {
             GameBoard.setChoices(new int[]{5, 6, 7, 8});
             attackIndex = (int) GameBoard.choice("Chose a Attack", new Object[]{0, 1, 2, 3});
         } else {
-            attackIndex = Main.random(0, items.size() - 1 + abilities.length - 1);
+            attackIndex = Main.random(0,  abilities.length - 1);
         }
         if (attackIndex >= items.size()) {
             abilities[attackIndex % 2].run(this, team, enemies);
@@ -134,7 +134,7 @@ public class Character extends Card {
     }
 
     public double getStrength() {
-        return strength + statChangeDiff(0);
+        return strength + (double) (statChangeDiff(0))/100;
     }
 
     public boolean evadeCheck() {

@@ -56,6 +56,29 @@ public class Item extends Card {
         };
 
     }
+    public Item(String n, String p,int times,int high,int low) {
+        super(n, p, 3);
+        discardAfter = true;
+        effect = (user, team, enemies) -> {
+            Character enemy = enemies.get(Main.random(0, enemies.size() - 1));
+            if (user.isPlayer()) {
+                GameBoard.setChoicesToEnemies();
+                enemy = (Character) GameBoard.choice("Who would you like to attack",enemies.toArray());
+            }
+            for(int i=0; i<times; i++) {
+                int damage = (int) (Main.random(low, high)*user.getStrength());
+                if(enemy.evadeCheck()) {
+                    enemy.changeHp(damage);
+                    GameBoard.sPrintln(enemy.getName() + " took " + damage + " damage");
+                } else {
+                    GameBoard.sPrintln("Missed");
+                }
+            }
+
+        };
+
+    }
+
     public void attack(Character user, ArrayList<Character> team, ArrayList<Character> enemies) {
         effect.run(user, team, enemies);
     }

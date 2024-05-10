@@ -18,12 +18,12 @@ public class Cards {
                 user.addStatChange(new StatChange(new int[]{-10, 0, 5}, 3));
                 GameBoard.sPrintln("Prototype Gained 5 Agility but lost 10 Strength");
             }, (user, team, enemies) -> {
-                int index = Main.random(0, team.size() - 1);
-                if (team.get(index).evadeCheck()) {
-                    GameBoard.sPrintln(team.get(index).getName() + " takes " + user.getAgility() * user.getStrength());
-                    team.get(index).changeHp((int) (user.getAgility() * user.getStrength()));
+                int index = Main.random(0, enemies.size() - 1);
+                if (enemies.get(index).evadeCheck()) {
+                    GameBoard.sPrintln(enemies.get(index).getName() + " takes " + user.getAgility() * user.getStrength());
+                    enemies.get(index).changeHp((int) (user.getAgility() * user.getStrength()));
                 }
-            },}, 60, 40, 60),
+            },}, 0.6, 40, 60),
             new Character("Nerdy Nerd", "Cards/nerdy.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
                         for (int i = 0; i < enemies.size(); i++) {
@@ -42,14 +42,17 @@ public class Cards {
                         for (int i = 0; i < enemies.size(); i++) {
                             if (enemies.get(i).evadeCheck()) {
                                 enemies.get(i).changeHp(30);
+                                GameBoard.sPrintln(enemies.get(i).getName()+" loses 30 HP");
                             }
                         }
                         for (int i = 0; i < team.size(); i++) {
                             if (team.get(i).evadeCheck()) {
-                                team.get(i).changeHp(30);
+                                team.get(i).changeHp((int) (30* user.getStrength()));
+                                GameBoard.sPrintln(team.get(i).getName()+" loses "+(int) (30* user.getStrength())+" HP");
+
                             }
                         }
-                        GameBoard.sPrintln("Everyone loses 30 HP");
+
                     },
                     (user, team, enemies) -> {
                         for (int i = 0; i < enemies.size(); i++) {
@@ -59,8 +62,60 @@ public class Cards {
                             team.get(i).changeHp(-30);
                         }
                         GameBoard.sPrintln("Everyone heals 30 HP");
-                    }}, 1, 85, 15)
+                    }}, 1, 85, 15),
+            new Character("KHEPRI","Cards/khepri.png",new CharacterVoid[]{
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck()) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength());
+                            enemies.get(index).changeHp((int) (30 * user.getStrength()));
+                            user.addStatChange(new StatChange(new int[]{0, 0, 5},3));
+                            GameBoard.sPrintln("KHEPRI gains 5 agility");
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+
+                    },
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck()) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength());
+                            enemies.get(index).changeHp((int) (30 * user.getStrength()));
+                            user.addStatChange(new StatChange(new int[]{5, 0, 0},3));
+                            GameBoard.sPrintln("KHEPRI gains 5 strength");
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+
+                    }
+                    },0.9,70,30),
+            new Character("Lazer dogo","Cards/lazer dogo.png", new CharacterVoid[]{
+                    (user, team, enemies) -> {
+                        for (int i=0; i<2; i++) {
+                            int index = Main.random(0, enemies.size() - 1);
+                            if (enemies.get(index).evadeCheck()) {
+                                GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength());
+                                enemies.get(index).changeHp((int) (30 * user.getStrength()));
+                            }else {
+                                GameBoard.sPrintln("Missed");
+                            }
+                        }
+
+
+
+                    },
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, team.size() - 1);
+                        if (team.get(index).evadeCheck()) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 50 * user.getStrength());
+                            team.get(index).changeHp((int) (50 * user.getStrength()));
+                        }else {
+                            GameBoard.sPrintln("Missed");
+                        }
+                    }
+            },1,85,15)
     };
+
     public static final Deck deck = new Deck(new Card[]{
             new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]),
             GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
@@ -74,6 +129,8 @@ public class Cards {
             new Item(DIFFERENT_ITEMS[3]), new Item(DIFFERENT_ITEMS[3]),
             new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]),
             new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]),
+            new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),
+            new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),
 
     });
 
@@ -132,12 +189,13 @@ public class Cards {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
                 int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
-                int damage = (int) (count * 8 * user.getStrength());
+                GameBoard.setChoices(new int[0]);
+                int damage = (int) (count * 5 * user.getStrength());
                 if (target.evadeCheck()) {
                     target.changeHp(damage);
                     GameBoard.sPrintln(damage + " damage dealt");
                     user.changeHp(count);
-                    GameBoard.sPrintln("Baidam took " + count + " damage");
+                    GameBoard.sPrintln(user.getName()+ " took " + count + " damage");
                 } else {
                     GameBoard.sPrintln("attack missed");
                 }
@@ -145,7 +203,7 @@ public class Cards {
                 for (int i = 0; i < team.size(); i++) {
                     team.get(i).addStatChange(new StatChange(new int[]{user.getDamage() / 2, 0, 0}, 3));
                 }
-                GameBoard.sPrintln("Teams strength raised by " + user.getDamage());
+                GameBoard.sPrintln("Teams strength raised by " + user.getDamage()/2);
             },}, 1.55, 60, 8),
             new Character("Orion", "Cards/Orion.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setChoices(new int[]{5, 6, 7});

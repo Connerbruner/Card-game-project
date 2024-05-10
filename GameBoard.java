@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 
 public class GameBoard {
@@ -347,10 +348,50 @@ public class GameBoard {
             score=0;
         } else {
             sPrintln("Score: "+score);
-            sPrintln("Floor bonus: "+currentFloor+"x 100 = "+currentFloor*100);
-            sPrintln("");
-            sPrintln("Team bonus: "+team);
+            sPrintln("Floor bonus: "+currentFloor+" x 100 = "+currentFloor*100);
+            score+=currentFloor*100;
+            sPrintln("Team bonus: "+team.size()+" X 1000 = "+team.size()*1000);
+            score+=team.size()*1000;
+            sPrintln("Deck Penalty: "+getDeck().size());
+            score-=getDeck().size();
+            sPrintln("Total Score: "+score);
+            if(score>getHighScore()) {
+                setHighScore(score);
+                sPrintln("NEW HIGHSCORE");
+            }
 
+        }
+    }
+    public static int getHighScore() {
+        try {
+            File           txt      = new File( "HighScore.txt" );
+            FileReader fileRead = new FileReader( txt );
+            BufferedReader reader   = new BufferedReader( fileRead );
+            return Integer.parseInt(String.valueOf(reader.read()));
+
+
+        } catch ( IOException e ) {
+            e.printStackTrace( );
+            return Integer.MAX_VALUE;
+        }
+    }
+    public static void setHighScore(int score) {
+        File fileToBeModified = new File( "HighScore.txt" );
+        FileWriter writer           = null;
+        try {
+            writer = new FileWriter( fileToBeModified );
+            writer.write(score);
+
+        } catch ( IOException e ) {
+            e.printStackTrace( );
+        } finally {
+            try {
+                //Closing the resources
+                assert writer != null;
+                writer.close( );
+            } catch ( IOException e ) {
+                e.printStackTrace( );
+            }
         }
     }
 

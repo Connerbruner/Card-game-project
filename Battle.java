@@ -22,7 +22,7 @@ public class Battle {
             System.out.println("round over");
 
             for(int i=0; i<enemies.size(); i++) {
-                updateHP();
+
                 GameBoard.setChoices(new ArrayList<>());
                 GameBoard.setCardsInDisplay(2);
                 if(!team.isEmpty() && !enemies.isEmpty()) {
@@ -30,6 +30,7 @@ public class Battle {
                     GameBoard.sPrintln(enemies.get(i).getName()+" Turn");
                     enemies.get(i).attack(enemies,team);
                 }
+                updateHP();
 
 
 
