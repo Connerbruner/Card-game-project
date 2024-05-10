@@ -27,6 +27,7 @@ public class GameBoard {
     private static int score = 0;
     private static ArrayList<Card> currentLoot = new ArrayList<>();
     private static Card[] cardsInDisplay = new Card[8];
+    private static boolean wantsToKeepGoing = true;
 
 
     public GameBoard() {
@@ -207,6 +208,10 @@ public class GameBoard {
         }
 
     }
+    public static void setCardInDisplay(Card c,int i) {
+        cardsInDisplay[i]=c;
+        CARD_IMAGES[i].setIcon(new ImageIcon(c.getPath()));
+    }
 
 
 
@@ -259,6 +264,7 @@ public class GameBoard {
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
             Character character = (Character) choice("Pick a team member (1-8)", Cards.AvailablePartyMembers);
+
             boolean inParty = false;
             for (Character value : team) {
                 if (value.equals(character)) {
@@ -272,6 +278,15 @@ public class GameBoard {
                 team.add(character);
                 character.setPlayerControlled(true);
                 sPrintln(character.getName() + " joined the party");
+            }
+            int index=-1;
+            for (int i=0; i<Cards.AvailablePartyMembers.length; i++) {
+                if(Cards.AvailablePartyMembers[i]==character) {
+                    index=i;
+                }
+            }
+            if(index!=-1) {
+                setCardInDisplay(BLANK_CARD,index);
             }
         }
     }
@@ -294,7 +309,7 @@ public class GameBoard {
             System.out.println(currentLoot.get(i).getName());
             setChoices(new int[0]);
             setCardsInDisplay(4);
-            if (currentLoot.get(i).getType() == 2) {
+            if (currentLoot.get(i).getType() == 2 && currentFloor>0) {
                 currentEnemies.add((Character) currentLoot.get(i));
                 System.out.println("found");
             }
@@ -303,9 +318,8 @@ public class GameBoard {
             }
 
         }
-        System.out.println(currentEnemies.size());
-        setCardsInDisplay(2);
-        if (!currentEnemies.isEmpty() && currentFloor>0) {
+        if (!currentEnemies.isEmpty()) {
+            setCardsInDisplay(2);
             new Battle(team, currentEnemies);
         }
         for (Card card : currentLoot) {
@@ -321,12 +335,22 @@ public class GameBoard {
 
 
     public static void gameLoop() {
-        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Cards.deck.size() > 5; currentFloor++) {
+        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Cards.deck.size() > 5 && wantsToKeepGoing; currentFloor++) {
             setFloor(currentFloor);
             loot();
             if (currentFloor >= REST_FLOORS[currentRestIndex]) {
                 rest();
             }
+        }
+
+        if(team.isEmpty()) {
+            score=0;
+        } else {
+            sPrintln("Score: "+score);
+            sPrintln("Floor bonus: "+currentFloor+"x 100 = "+currentFloor*100);
+            sPrintln("");
+            sPrintln("Team bonus: "+team);
+
         }
     }
 

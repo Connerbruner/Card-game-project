@@ -4,6 +4,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+
         new GameBoard();
         //explain the idea
         GameBoard.sPrintln("Welcome to Maddox Merc HQ");
@@ -26,7 +27,6 @@ public class Main {
         GameBoard.setTeam();
         GameBoard.getDeck().shuffle();
         GameBoard.sPrintln("Good Luck I hope I see you later");
-        ArrayList<Character> team = GameBoard.getTeam();
         GameBoard.gameLoop();
 
 

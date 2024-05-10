@@ -84,11 +84,11 @@ public class Cards {
                     GameBoard.sPrintln(team.get(i).getName() + " healed 30 damage");
                 }
             }, (user, team, enemies) -> {
+                GameBoard.setCardsInDisplay(2);
                 GameBoard.setChoices(new int[]{5, 6, 7});
                 Character character = (Character) GameBoard.choice("Which Teammate would you like to heal", team.toArray());
                 character.changeHp(-70);
                 GameBoard.sPrintln(character.getName() + " healed 70 Damage");
-
             },}, 0.9, 125, 0),
             new Character("Leo", "Cards/Leo.png", new CharacterVoid[]{(user, team, enemies) -> {
                 for (int i = 0; i < enemies.size(); i++) {
@@ -96,6 +96,7 @@ public class Cards {
                 }
                 GameBoard.sPrintln("Enemies no longer can evade");
             }, (user, team, enemies) -> {
+                GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
                 if (target.getAgility() > 0) {
                     GameBoard.sPrintln("Missed");
@@ -114,18 +115,19 @@ public class Cards {
                 GameBoard.sPrintln("Stats changed to 95,120,0");
 
 
-            },}, 1, 60, 30), new Character("Gliese", "Cards/Gliese.png", new CharacterVoid[]{(user, team, enemies) -> {
-        GameBoard.setChoicesToEnemies();
-        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
-        target.changeHp(30);
-        GameBoard.sPrintln("damage dealt 30");
+            },}, 1, 60, 30),
+            new Character("Gliese", "Cards/Gliese.png", new CharacterVoid[]{(user, team, enemies) -> {
+                GameBoard.setChoicesToEnemies();
+                Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
+                target.changeHp(30);
+                GameBoard.sPrintln("damage dealt 30");
 
-    }, (user, team, enemies) -> {
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).addStatChange(new StatChange(new int[]{-10, -10, -10}, 3));
-        }
-        GameBoard.sPrintln("Enemies stats lowered 10");
-    },}, 1.05, 70, 20),
+            }, (user, team, enemies) -> {
+                for (int i = 0; i < enemies.size(); i++) {
+                    enemies.get(i).addStatChange(new StatChange(new int[]{-10, -10, -10}, 3));
+                }
+                GameBoard.sPrintln("Enemies stats lowered 10");
+            },}, 1.05, 70, 20),
             new Character("Baidam", "Cards/baidam card.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
