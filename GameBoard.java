@@ -323,15 +323,18 @@ public class GameBoard {
             setCardsInDisplay(2);
             new Battle(team, currentEnemies);
         }
-        for (Card card : currentLoot) {
-            setCardsInDisplay(3);
-            setChoicesToTeam();
-            if (card.getType() == 3) {
-                Character target = (Character) choice("Which party member should get the " + card.getName(), team.toArray());
-                target.addItem((Item) card);
-                sPrintln(target.getName() + " got a " + card.getName());
+        if(!getTeam().isEmpty()) {
+            for (Card card : currentLoot) {
+                setCardsInDisplay(3);
+                setChoicesToTeam();
+                if (card.getType() == 3) {
+                    Character target = (Character) choice("Which party member should get the " + card.getName(), team.toArray());
+                    target.addItem((Item) card);
+                    sPrintln(target.getName() + " got a " + card.getName());
+                }
             }
         }
+
     }
 
 
@@ -410,7 +413,11 @@ public class GameBoard {
     }
 
     public static void rest() {
-
+        sPrintln("REST FLOOR");
+        sPrintln("You see a fire escape");
+        if((int)(choice("Would you like to escape and leave the tower? 1==Yes 2==No",new Object[] {1,2}))==1) {
+            wantsToKeepGoing=false;
+        }
         nextRestFloor();
     }
 
