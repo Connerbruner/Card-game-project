@@ -3,18 +3,16 @@ import java.util.Collections;
 
 public class Deck {
     public static final Deck BASE_DECK = new Deck(new Card[]{
-            new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]),
             GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
-            new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[2]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),
 
+            new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]),new Character(Cards.DIFFERENT_CHARACTERS[0]),
             new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]),
             new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]),
             new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]),
-            new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]),
+            new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]),
+            new Character(Cards.DIFFERENT_CHARACTERS[5]), new Character(Cards.DIFFERENT_CHARACTERS[5]), new Character(Cards.DIFFERENT_CHARACTERS[5]),
+            new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]),
+            new Character(Cards.DIFFERENT_CHARACTERS[7]),new Character(Cards.DIFFERENT_CHARACTERS[7]),new Character(Cards.DIFFERENT_CHARACTERS[7]),
 
             new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]),
             new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]),

@@ -10,6 +10,10 @@ public class Event extends Card{
     public void setEffect(EventVoid e) {
         effect=e;
     }
+    public Event(Event e) {
+        super(e.getName(), e.getPath(), 4);
+        effect = e.effect;
+    }
 }
 interface EventVoid {
     void run();

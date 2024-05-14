@@ -188,10 +188,11 @@ public class GameBoard {
         return cardsInDisplay;
     }
 
-    public static void setCardsInDisplay(Card[] cardsInDisplay) {
-        GameBoard.cardsInDisplay = cardsInDisplay;
+    public static void setCardsInDisplay(Card[] c) {
 
-        for (int i = 0; i < cardsInDisplay.length; i++) {
+        GameBoard.cardsInDisplay = c;
+
+        for (int i = 0; i < cardsInDisplay.length && i<8; i++) {
             HP_DISPLAYS[i].setVisible(false);
             STAT_DISPLAYS[i].setVisible(false);
             if (cardsInDisplay[i] == null || cardsInDisplay[i].getType() == 0) {
@@ -220,7 +221,7 @@ public class GameBoard {
 
     public static void setCardsInDisplay(int type) {
         ArrayList<Card> cards = new ArrayList<>();
-        for (int i = 0; i < currentLoot.size(); i++) {
+        for (int i = 0; i < currentLoot.size() && i<5; i++) {
             if (currentLoot.get(i).getType() == type) {
                 cards.add(currentLoot.get(i));
             }
@@ -428,5 +429,9 @@ public class GameBoard {
 
     public static int getCurrentFloor() {
         return currentFloor;
+    }
+
+    public static ArrayList<Character> getCurrentEnemies() {
+        return currentEnemies;
     }
 }

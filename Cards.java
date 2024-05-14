@@ -12,45 +12,45 @@ public class Cards {
 
             new Item("Laser Sword", "Cards/laserSword.png", 20, 25, false),
             new Item("Laser Bow", "Cards/laserBow.png", 3, 10, 10, false),
-            new Item("Laser Axe","Cards/laser axe.png",5,40,false),
-            new Item("Laser Fists","Cards/Laser fists.png",18,28,false),
-            new Item("Laser Pistol","Cards/Laser pistol.png",7,4,4,false),
-            new Item("Laser Pistols","Cards/Laser pistols.png",14,2,2,false),
-            new Item("Laser Spear", "Cards/laser spear.png",  23, 23, false),
+            new Item("Laser Axe", "Cards/laser axe.png", 5, 40, false),
+            new Item("Laser Fists", "Cards/Laser fists.png", 18, 28, false),
+            new Item("Laser Pistol", "Cards/Laser pistol.png", 7, 4, 4, false),
+            new Item("Laser Pistols", "Cards/Laser pistols.png", 14, 2, 2, false),
+            new Item("Laser Spear", "Cards/laser spear.png", 23, 23, false),
             new Item("Laser Rifle", "Cards/laser rifle.png", 5, 6, 6, false),
-            new Item("Laser Trident","Cards/Laser trident.png",0,50,false),
+            new Item("Laser Trident", "Cards/Laser trident.png", 0, 50, false),
 
-            new Item("Plasma Trident","Cards/plasma trident.png",0,70,false),
-            new Item("Plasma Axe","Cards/Plasma axe.png",10,50,false),
-            new Item("Plasma Rifle","Cards/Plasma Rife.png",10,50,false),
+            new Item("Plasma Trident", "Cards/plasma trident.png", 0, 70, false),
+            new Item("Plasma Axe", "Cards/Plasma axe.png", 10, 50, false),
+            new Item("Plasma Rifle", "Cards/plasma rifle.png", 10, 50, false),
             new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
 
             new Item("Cursed Cube", "Cards/cursedCube.png", -100, 100, false),
-            new Item("Potion","Cards/potionB.png",-30,30),
-            new Item("Potion","Cards/potionP.png",0,10),
-            new Item("Potion","Cards/potion.png",-20,20),
+            new Item("Potion", "Cards/potionB.png", -30, 30),
+            new Item("Potion", "Cards/potionP.png", 0, 10),
+            new Item("Potion", "Cards/potion.png", -20, 20),
 
     };
-    public static final Event[] DIFFERENT_EVENTS = new Event[] {
-            new Chest("Cards/chest.png",0,DIFFERENT_ITEMS.length,3),
-            new Chest("Cards/chest rare.png",0,DIFFERENT_ITEMS.length-4,3),
-            new Chest("Cards/chest legendary.png",8,DIFFERENT_ITEMS.length,5),
-            new Chest("Cards/chest power.png",0,DIFFERENT_ITEMS.length-4,4),
-            new Chest("Cards/chest power legendary.png",8,DIFFERENT_ITEMS.length-4,4),
+    public static final Event[] DIFFERENT_EVENTS = new Event[]{
+            new Chest("Cards/chest.png", 0, DIFFERENT_ITEMS.length, 3),
+            new Chest("Cards/chest rare.png", 0, DIFFERENT_ITEMS.length - 4, 3),
+            new Chest("Cards/chest legendary.png", 8, DIFFERENT_ITEMS.length, 5),
+            new Chest("Cards/chest power.png", 0, DIFFERENT_ITEMS.length - 4, 4),
+            new Chest("Cards/power chest rare.png", 8, DIFFERENT_ITEMS.length - 4, 4),
             new Event("ALARM", "Cards/alarm.png", () -> {
-                Deck.BASE_DECK.removeRange(0,20,2);
+                Deck.BASE_DECK.removeRange(0, 20, 2);
                 GameBoard.sPrintln("all items and events removed from the top 20 cards of the deck");
 
             }),
-            new Event("wrong way","Cards/wrong way.png",()->{
+            new Event("wrong way", "Cards/wrong way.png", () -> {
                 GameBoard.sPrintln("You went the wrong way you have to go down 3 floors");
-                GameBoard.setFloor(GameBoard.getCurrentFloor()-3);
-                if(GameBoard.getCurrentFloor()<0) {
+                GameBoard.setFloor(GameBoard.getCurrentFloor() - 3);
+                if (GameBoard.getCurrentFloor() < 0) {
                     GameBoard.setFloor(0);
                 }
-            } ),
-            new Event("JACKPOT","Cards/JACKPOT",()-> {
-                new Chest("Cards/chest.png",Deck.BASE_DECK.search(5,3).toArray(Item[]::new)).effect.run();
+            }),
+            new Event("JACKPOT", "Cards/JACKPOT.png", () -> {
+                new Chest("Cards/chest.png", Deck.BASE_DECK.search(5, 3).toArray(Item[]::new)).effect.run();
             }),
     };
 
@@ -61,7 +61,7 @@ public class Cards {
             }, (user, team, enemies) -> {
                 int index = Main.random(0, enemies.size() - 1);
                 if (enemies.get(index).evadeCheck(user)) {
-                    GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int)(user.getAgility() * user.getStrength()));
+                    GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (user.getAgility() * user.getStrength()));
                     enemies.get(index).changeHp((int) (user.getAgility() * user.getStrength()));
                 }
             },}, 0.6, 40, 60),
@@ -104,13 +104,13 @@ public class Cards {
                         }
                         GameBoard.sPrintln("Everyone heals 30 HP");
                     }}, 1, 85, 15),
-            new Character("KHEPRI","Cards/khepri.png",new CharacterVoid[]{
+            new Character("KHEPRI", "Cards/khepri.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
                         int index = Main.random(0, enemies.size() - 1);
                         if (enemies.get(index).evadeCheck(user)) {
-                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (30 * user.getStrength())+" damage");
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (30 * user.getStrength()) + " damage");
                             enemies.get(index).changeHp((int) (30 * user.getStrength()));
-                            user.addStatChange(new StatChange(new int[]{0, 0, 5},3));
+                            user.addStatChange(new StatChange(new int[]{0, 0, 5}, 3));
                             GameBoard.sPrintln("KHEPRI gains 5 agility");
                         } else {
                             GameBoard.sPrintln("Missed");
@@ -120,43 +120,101 @@ public class Cards {
                     (user, team, enemies) -> {
                         int index = Main.random(0, enemies.size() - 1);
                         if (enemies.get(index).evadeCheck(user)) {
-                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength()+" damage");
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength() + " damage");
                             enemies.get(index).changeHp((int) (30 * user.getStrength()));
-                            user.addStatChange(new StatChange(new int[]{5, 0, 0},3));
+                            user.addStatChange(new StatChange(new int[]{5, 0, 0}, 3));
                             GameBoard.sPrintln("KHEPRI gains 5 strength");
                         } else {
                             GameBoard.sPrintln("Missed");
                         }
 
                     }
-            },0.9,70,30),
-            new Character("Lazer dogo","Cards/lazer dogo.png", new CharacterVoid[]{
+            }, 0.9, 70, 30),
+            new Character("Lazer dogo", "Cards/lazer dogo.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
-                        for (int i=0; i<2; i++) {
+                        for (int i = 0; i < 2; i++) {
                             int index = Main.random(0, enemies.size() - 1);
                             if (enemies.get(index).evadeCheck(user)) {
-                                GameBoard.sPrintln(enemies.get(index).getName() + " takes " +(int) (30 * user.getStrength())+" damage");
-                                enemies.get(index).changeHp((int) (30 * user.getStrength()));
-                            }else {
+                                GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (15 * user.getStrength()) + " damage");
+                                enemies.get(index).changeHp((int) (15 * user.getStrength()));
+                            } else {
                                 GameBoard.sPrintln("Missed");
                             }
                         }
-
 
 
                     },
                     (user, team, enemies) -> {
                         int index = Main.random(0, enemies.size() - 1);
                         if (enemies.get(index).evadeCheck(user)) {
-                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 50 * user.getStrength());
-                            enemies.get(index).changeHp((int) (50 * user.getStrength()));
-                        }else {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 40 * user.getStrength() + " damage");
+                            enemies.get(index).changeHp((int) (40 * user.getStrength()));
+                        } else {
                             GameBoard.sPrintln("Missed");
                         }
                     }
-            },1,85,15)
-    };
+            }, 1, 85, 15),
+            new Character("Robot", "Cards/robot.png", new CharacterVoid[]{
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck(user)) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 50 * user.getStrength() + " damage");
+                            enemies.get(index).changeHp((int) (50 * user.getStrength()));
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+                    },
+                    (user, team, enemies) -> {
+                        GameBoard.sPrintln("the robot just looks you");
+                    }
+            }, 1, 125, 0),
+            new Character("phone", "Cards/phones.png", new CharacterVoid[]{
+                    (user, team, enemies) -> {
+                        if (GameBoard.getCurrentEnemies().size() < 5) {
+                            GameBoard.getCurrentEnemies().add(enemies.get(0));
+                            GameBoard.sPrintln(enemies.get(0).getName() + " joined the fight");
+                        }
 
+                    },
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck(user)) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + team.size() * 10 * user.getStrength() + " damage");
+                            enemies.get(index).changeHp((int) (team.size() * 10 * user.getStrength()));
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+                    }
+            }, 0.7, 75, 35),
+            new Character("Lazer dogo", "Cards/lazer dogo.png", new CharacterVoid[]{
+                    (user, team, enemies) -> {
+
+                        for (int i = 0; i < 2; i++) {
+
+                            for (int j = 0; j < team.size(); j++) {
+                                if (enemies.get(j).evadeCheck(user)) {
+                                    GameBoard.sPrintln(enemies.get(j).getName() + " takes " + (int) (7 * user.getStrength()) + " damage");
+                                    enemies.get(j).changeHp((int) (7 * user.getStrength()));
+                                } else {
+                                    GameBoard.sPrintln("Missed");
+                                }
+                            }
+                        }
+
+
+                    },
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck(user)) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 40 * user.getStrength() + " damage");
+                            enemies.get(index).changeHp((int) (40 * user.getStrength()));
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+                    }
+            }, 1.15, 85, 0),
+
+    };
 
 
     public static final Character[] AvailablePartyMembers = new Character[]{
