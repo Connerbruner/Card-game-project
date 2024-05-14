@@ -27,6 +27,7 @@ public class Main {
         GameBoard.setTeam();
         GameBoard.getDeck().shuffle();
         GameBoard.sPrintln("Good Luck I hope I see you later");
+
         GameBoard.gameLoop();
         GameBoard.sPrintln("GAME OVER");
         GameBoard.sPrintln("Thank you for Playing");

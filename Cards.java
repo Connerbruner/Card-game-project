@@ -7,15 +7,53 @@ public class Cards {
             new Document("Woke agenda", "Cards/woke agenda.png", 1),
             new Document("Joe Bidens shopping list", "Cards/shopping list.png", 1000)
     };
+
     public static final Item[] DIFFERENT_ITEMS = new Item[]{
+
             new Item("Laser Sword", "Cards/laserSword.png", 20, 25, false),
-            new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
             new Item("Laser Bow", "Cards/laserBow.png", 3, 10, 10, false),
+            new Item("Laser Axe","Cards/laser axe.png",5,40,false),
+            new Item("Laser Fists","Cards/Laser fists.png",18,28,false),
+            new Item("Laser Pistol","Cards/Laser pistol.png",7,4,4,false),
+            new Item("Laser Pistols","Cards/Laser pistols.png",14,2,2,false),
+            new Item("Laser Spear", "Cards/laser spear.png",  23, 23, false),
+            new Item("Laser Rifle", "Cards/laser rifle.png", 5, 6, 6, false),
+            new Item("Laser Trident","Cards/Laser trident.png",0,50,false),
+
+            new Item("Plasma Trident","Cards/plasma trident.png",0,70,false),
+            new Item("Plasma Axe","Cards/Plasma axe.png",10,50,false),
+            new Item("Plasma Rifle","Cards/Plasma Rife.png",10,50,false),
+            new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
+
             new Item("Cursed Cube", "Cards/cursedCube.png", -100, 100, false),
             new Item("Potion","Cards/potionB.png",-30,30),
             new Item("Potion","Cards/potionP.png",0,10),
             new Item("Potion","Cards/potion.png",-20,20),
+
     };
+    public static final Event[] DIFFERENT_EVENTS = new Event[] {
+            new Chest("Cards/chest.png",0,DIFFERENT_ITEMS.length,3),
+            new Chest("Cards/chest rare.png",0,DIFFERENT_ITEMS.length-4,3),
+            new Chest("Cards/chest legendary.png",8,DIFFERENT_ITEMS.length,5),
+            new Chest("Cards/chest power.png",0,DIFFERENT_ITEMS.length-4,4),
+            new Chest("Cards/chest power legendary.png",8,DIFFERENT_ITEMS.length-4,4),
+            new Event("ALARM", "Cards/alarm.png", () -> {
+                Deck.BASE_DECK.removeRange(0,20,2);
+                GameBoard.sPrintln("all items and events removed from the top 20 cards of the deck");
+
+            }),
+            new Event("wrong way","Cards/wrong way.png",()->{
+                GameBoard.sPrintln("You went the wrong way you have to go down 3 floors");
+                GameBoard.setFloor(GameBoard.getCurrentFloor()-3);
+                if(GameBoard.getCurrentFloor()<0) {
+                    GameBoard.setFloor(0);
+                }
+            } ),
+            new Event("JACKPOT","Cards/JACKPOT",()-> {
+                new Chest("Cards/chest.png",Deck.BASE_DECK.search(5,3).toArray(Item[]::new)).effect.run();
+            }),
+    };
+
     public static final Character[] DIFFERENT_CHARACTERS = new Character[]{
             new Character("Prototype", "Cards/prototype.png", new CharacterVoid[]{(user, team, enemies) -> {
                 user.addStatChange(new StatChange(new int[]{-10, 0, 5}, 3));
@@ -82,7 +120,7 @@ public class Cards {
                     (user, team, enemies) -> {
                         int index = Main.random(0, enemies.size() - 1);
                         if (enemies.get(index).evadeCheck(user)) {
-                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength());
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength()+" damage");
                             enemies.get(index).changeHp((int) (30 * user.getStrength()));
                             user.addStatChange(new StatChange(new int[]{5, 0, 0},3));
                             GameBoard.sPrintln("KHEPRI gains 5 strength");
@@ -118,26 +156,8 @@ public class Cards {
                     }
             },1,85,15)
     };
-    public static final Deck deck = new Deck(new Card[]{
-            new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]), new Item(DIFFERENT_ITEMS[0]),
-            GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
-            new Character(DIFFERENT_CHARACTERS[0]), new Character(DIFFERENT_CHARACTERS[0]), new Character(DIFFERENT_CHARACTERS[0]), new Character(DIFFERENT_CHARACTERS[0]),
-            new Document(DIFFERENT_DOCUMENTS[0]), new Document(DIFFERENT_DOCUMENTS[0]),
-            new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]), new Document(DIFFERENT_DOCUMENTS[1]),
-            new Document(DIFFERENT_DOCUMENTS[2]),
-            new Document(DIFFERENT_DOCUMENTS[3]), new Document(DIFFERENT_DOCUMENTS[3]), new Document(DIFFERENT_DOCUMENTS[3]),
-            new Item(DIFFERENT_ITEMS[1]), new Item(DIFFERENT_ITEMS[1]),
-            new Item(DIFFERENT_ITEMS[2]), new Item(DIFFERENT_ITEMS[2]), new Item(DIFFERENT_ITEMS[2]),
-            new Item(DIFFERENT_ITEMS[3]), new Item(DIFFERENT_ITEMS[3]),
-            new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]), new Character(DIFFERENT_CHARACTERS[1]),
-            new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]), new Character(DIFFERENT_CHARACTERS[2]),
-            new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),new Character(DIFFERENT_CHARACTERS[3]),
-            new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),new Character(DIFFERENT_CHARACTERS[4]),
-            new Item(DIFFERENT_ITEMS[4]),new Item(DIFFERENT_ITEMS[4]),new Item(DIFFERENT_ITEMS[4]),
-            new Item(DIFFERENT_ITEMS[5]),new Item(DIFFERENT_ITEMS[5]),new Item(DIFFERENT_ITEMS[5]),
-            new Item(DIFFERENT_ITEMS[6]),new Item(DIFFERENT_ITEMS[6]),new Item(DIFFERENT_ITEMS[6]),
 
-    });
+
 
     public static final Character[] AvailablePartyMembers = new Character[]{
             new Character("Mir", "Cards/mir.png", true, new CharacterVoid[]{(user, team, enemies) -> {
@@ -155,9 +175,9 @@ public class Cards {
             },}, 0.9, 125, 0),
             new Character("Leo", "Cards/Leo.png", new CharacterVoid[]{(user, team, enemies) -> {
                 for (Character enemy : enemies) {
-                    enemy.addStatChange(new StatChange(new int[]{0, 0, -100}, 3));
+                    enemy.addStatChange(new StatChange(new int[]{0, 0, -30}, 2));
                 }
-                GameBoard.sPrintln("Enemies no longer can evade");
+                GameBoard.sPrintln("Enemies lost 30 agility");
             }, (user, team, enemies) -> {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
@@ -251,7 +271,7 @@ public class Cards {
             },}, 0.6, 55, 55),
             new Character("Vela", "Cards/Vela.png", new CharacterVoid[]{(user, team, enemies) -> {
                 Card[] display = new Card[]{GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD};
-                ArrayList<Card> loot = deck.search(7, 3);
+                ArrayList<Card> loot = Deck.BASE_DECK.search(7, 3);
                 GameBoard.setChoicesToTeam();
                 for (int i = 0; i < loot.size() && i < 5; i++) {
                     display[i] = loot.get(i);

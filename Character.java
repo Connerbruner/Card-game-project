@@ -16,7 +16,7 @@ public class Character extends Card {
     private boolean isPlayer = false;
 
     public Character(String n, String p, CharacterVoid[] e, double s, int d, int a) {
-        super(n, p, 1);
+        super(n, p, 2);
         abilities = e;
         isBoss = false;
         defense = d;
@@ -27,7 +27,7 @@ public class Character extends Card {
     }
 
     public Character(String n, String p, boolean b, CharacterVoid[] e, double s, int d, int a) {
-        super(n, p, 1);
+        super(n, p, 2);
         abilities = e;
         isBoss = b;
         defense = d;

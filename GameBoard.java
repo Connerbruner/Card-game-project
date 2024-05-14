@@ -9,7 +9,7 @@ public class GameBoard {
     private static final JLabel TEXT1 = new JLabel();
     private static final JLabel TEXT2 = new JLabel();
     private static final JLabel[] STAT_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
+    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private static final JLabel[] INDEX_LABELS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
@@ -97,6 +97,8 @@ public class GameBoard {
         SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         SYSTEM.setVisible(true);
         LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
+        GameBoard.setInfoPanelText(2,"Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+
         SYSTEM.pack();
 
 
@@ -174,7 +176,7 @@ public class GameBoard {
     }
 
     public static Deck getDeck() {
-        return Cards.deck;
+        return Deck.BASE_DECK;
     }
 
     public static ArrayList<Character> getTeam() {
@@ -294,25 +296,25 @@ public class GameBoard {
 
     public static void addScore(int add) {
         score += add;
-        INFO_PANEL[0].setText("Score: " + score);
+        setInfoPanelText(0,"Score: " + score);
     }
+
 
     public static void setFloor(int floor) {
         currentFloor = floor;
-        INFO_PANEL[1].setText("Current Floor: " + currentFloor);
+        setInfoPanelText(1,"Current Floor: " + currentFloor);
     }
 
     public static void loot() {
-        Cards.deck.shuffle();
-        currentLoot = Cards.deck.getRange(0, 5);
-        Cards.deck.removeRange(0, 5);
+        Deck.BASE_DECK.shuffle();
+        currentLoot = Deck.BASE_DECK.getRange(0, 5);
+        Deck.BASE_DECK.removeRange(0, 5);
         for (int i = 0; i < currentLoot.size(); i++) {
             System.out.println(currentLoot.get(i).getName());
             setChoices(new int[0]);
             setCardsInDisplay(4);
             if (currentLoot.get(i).getType() == 2 && currentFloor>0) {
                 currentEnemies.add((Character) currentLoot.get(i));
-                System.out.println("found");
             }
             if (currentLoot.get(i).getType() == 4) {
                 (currentLoot.get(i)).trigger();
@@ -339,7 +341,7 @@ public class GameBoard {
 
 
     public static void gameLoop() {
-        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Cards.deck.size() > 5 && wantsToKeepGoing; currentFloor++) {
+        for (currentFloor = 0; currentFloor < 100 && !team.isEmpty() && Deck.BASE_DECK.size() > 5 && wantsToKeepGoing; currentFloor++) {
             setFloor(currentFloor);
             loot();
             if (currentFloor >= REST_FLOORS[currentRestIndex]) {
@@ -405,7 +407,7 @@ public class GameBoard {
 
     public static void nextRestFloor() {
         currentRestIndex++;
-        INFO_PANEL[2].setText("Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        setInfoPanelText(2,"Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
     }
 
     public static ArrayList<Card> getCurrentLoot() {
@@ -420,8 +422,11 @@ public class GameBoard {
         }
         nextRestFloor();
     }
+    public static void setInfoPanelText(int i,String s) {
+        INFO_PANEL[i].setText(s);
+    }
 
-
-
-
+    public static int getCurrentFloor() {
+        return currentFloor;
+    }
 }
