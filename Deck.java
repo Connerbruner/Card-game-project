@@ -4,28 +4,33 @@ import java.util.Collections;
 public class Deck {
     public static final Deck BASE_DECK = new Deck(new Card[]{
             GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
-            new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]),new Document(Cards.DIFFERENT_DOCUMENTS[0]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
             new Document(Cards.DIFFERENT_DOCUMENTS[2]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),new Document(Cards.DIFFERENT_DOCUMENTS[3]),
 
-            new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),
-            new Chest((Chest) Cards.DIFFERENT_EVENTS[1]),new Chest((Chest) Cards.DIFFERENT_EVENTS[1]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[1]),
             new Chest((Chest) Cards.DIFFERENT_EVENTS[2]),
-            new Chest((Chest) Cards.DIFFERENT_EVENTS[3]),new Chest((Chest) Cards.DIFFERENT_EVENTS[3]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[3]),
             new Chest((Chest) Cards.DIFFERENT_EVENTS[4]),
-            new Event(Cards.DIFFERENT_EVENTS[5]),
-            new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),
-            new Event(Cards.DIFFERENT_EVENTS[7]),new Event(Cards.DIFFERENT_EVENTS[7]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[5]),
+
+
+            new Event(Cards.DIFFERENT_EVENTS[7]),
+            new Event(Cards.DIFFERENT_EVENTS[8]),new Event(Cards.DIFFERENT_EVENTS[8]),new Event(Cards.DIFFERENT_EVENTS[8]),
+            new Event(Cards.DIFFERENT_EVENTS[9]),new Event(Cards.DIFFERENT_EVENTS[9]),new Event(Cards.DIFFERENT_EVENTS[9]),
 
             new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]),new Character(Cards.DIFFERENT_CHARACTERS[0]),
-            new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]),
-            new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]),
-            new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]),
+            new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]),new Character(Cards.DIFFERENT_CHARACTERS[1]),
+            new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]), new Character(Cards.DIFFERENT_CHARACTERS[2]),new Character(Cards.DIFFERENT_CHARACTERS[2]),
+            new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]), new Character(Cards.DIFFERENT_CHARACTERS[3]),new Character(Cards.DIFFERENT_CHARACTERS[3]),
             new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]), new Character(Cards.DIFFERENT_CHARACTERS[4]),
             new Character(Cards.DIFFERENT_CHARACTERS[5]), new Character(Cards.DIFFERENT_CHARACTERS[5]), new Character(Cards.DIFFERENT_CHARACTERS[5]),
-            new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]),
+            new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]),new Character(Cards.DIFFERENT_CHARACTERS[6]),
             new Character(Cards.DIFFERENT_CHARACTERS[7]),new Character(Cards.DIFFERENT_CHARACTERS[7]),new Character(Cards.DIFFERENT_CHARACTERS[7]),
+            new Character(Cards.DIFFERENT_CHARACTERS[8]),new Character(Cards.DIFFERENT_CHARACTERS[8]),new Character(Cards.DIFFERENT_CHARACTERS[8]),new Character(Cards.DIFFERENT_CHARACTERS[8]),
+
 
             new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]),
             new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]),
@@ -45,7 +50,12 @@ public class Deck {
             new Item(Cards.DIFFERENT_ITEMS[13]), new Item(Cards.DIFFERENT_ITEMS[13]),
             new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]),
             new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]),
-            new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]),});
+            new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]),
+            new Item(Cards.DIFFERENT_ITEMS[17]),new Item(Cards.DIFFERENT_ITEMS[17]),new Item(Cards.DIFFERENT_ITEMS[17]),new Item(Cards.DIFFERENT_ITEMS[17]),
+            new Item(Cards.DIFFERENT_ITEMS[18]),new Item(Cards.DIFFERENT_ITEMS[18]),new Item(Cards.DIFFERENT_ITEMS[18]),new Item(Cards.DIFFERENT_ITEMS[18]),
+            new Item(Cards.DIFFERENT_ITEMS[19]),new Item(Cards.DIFFERENT_ITEMS[19]),new Item(Cards.DIFFERENT_ITEMS[19]),
+            new Item(Cards.DIFFERENT_ITEMS[20]),new Item(Cards.DIFFERENT_ITEMS[20]),
+    });
     private final ArrayList<Card> deck;
 
     public Deck(Card[] cards) {

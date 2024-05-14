@@ -116,7 +116,6 @@ public class Character extends Card {
                 Item remove = (Item) GameBoard.choice("Which item would you like to remove: ", items.toArray());
                 GameBoard.sPrintln(remove.getName() + " removed");
                 items.remove(remove);
-                GameBoard.setCardsInDisplay(2);
             } else {
                 items.set(0, item);
             }

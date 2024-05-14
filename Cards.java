@@ -22,13 +22,33 @@ public class Cards {
 
             new Item("Plasma Trident", "Cards/plasma trident.png", 0, 70, false),
             new Item("Plasma Axe", "Cards/Plasma axe.png", 10, 50, false),
-            new Item("Plasma Rifle", "Cards/plasma rifle.png", 10, 50, false),
+            new Item("Plasma Rifle", "Cards/plasma rifle.png",6, 10, 10, false),
             new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
 
             new Item("Cursed Cube", "Cards/cursedCube.png", -100, 100, false),
             new Item("Potion", "Cards/potionB.png", -30, 30),
             new Item("Potion", "Cards/potionP.png", 0, 10),
             new Item("Potion", "Cards/potion.png", -20, 20),
+            new Item("lunch","Cards/lunch.png",10,10),
+            new Item("candy","Cards/candy.png",5,5),
+            new Item("Shield", "Cards/sheild.png", (user, team, enemies) -> {
+                user.addStatChange(new StatChange(new int[] {0,30,0},3));
+                GameBoard.sPrintln("Defense raised by 30 for 3 turns");
+            }, true),
+            new Item("Rally Flag", "Cards/rally flag.png", (user, team, enemies) -> {
+                for(int i=0; i<team.size(); i++) {
+                    team.get(i).addStatChange(new StatChange(new int[] {10,10,10},3));
+                }
+                GameBoard.sPrintln("All stats raised by 10 for the whole team for 3 turns");
+            }, false),
+            new Item("First aid kit", "Cards/first aid kit.png", (user, team, enemies) -> {
+                    GameBoard.setChoicesToTeam();
+                    GameBoard.setCardsInDisplay(2);
+                    Character teamMate = (Character) GameBoard.choice("Who would you like to heal", team.toArray());
+
+                    teamMate.changeHp(-20);
+                    GameBoard.sPrintln(teamMate.getName() + " healed 20 damage");
+            },false)
 
     };
     public static final Event[] DIFFERENT_EVENTS = new Event[]{
@@ -37,6 +57,8 @@ public class Cards {
             new Chest("Cards/chest legendary.png", 8, DIFFERENT_ITEMS.length, 5),
             new Chest("Cards/chest power.png", 0, DIFFERENT_ITEMS.length - 4, 4),
             new Chest("Cards/power chest rare.png", 8, DIFFERENT_ITEMS.length - 4, 4),
+            new Chest("Cards/fridge.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17]}),
+            new Chest("Cards/fridge chest.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[16]}),
             new Event("ALARM", "Cards/alarm.png", () -> {
                 Deck.BASE_DECK.removeRange(0, 20, 2);
                 GameBoard.sPrintln("all items and events removed from the top 20 cards of the deck");
@@ -62,7 +84,7 @@ public class Cards {
             }, (user, team, enemies) -> {
                 int index = Main.random(0, enemies.size() - 1);
                 if (enemies.get(index).evadeCheck(user)) {
-                    GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (user.getAgility() * user.getStrength()));
+                    GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (user.getAgility() * user.getStrength())+" damage");
                     enemies.get(index).changeHp((int) (user.getAgility() * user.getStrength()));
                 }
             },}, 0.6, 40, 60),
@@ -169,7 +191,7 @@ public class Cards {
                         GameBoard.sPrintln("the robot just looks you");
                     }
             }, 1, 125, 0),
-            new Character("phone", "Cards/phones.png", new CharacterVoid[]{
+            new Character("phone", "Cards/phone.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
                         if (GameBoard.getCurrentEnemies().size() < 5) {
                             GameBoard.getCurrentEnemies().add(enemies.get(0));
@@ -187,7 +209,7 @@ public class Cards {
                         }
                     }
             }, 0.7, 75, 35),
-            new Character("Lazer dogo", "Cards/lazer dogo.png", new CharacterVoid[]{
+            new Character("Flame dogo", "Cards/flame dogo.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
 
                         for (int i = 0; i < 2; i++) {
@@ -214,6 +236,28 @@ public class Cards {
                         }
                     }
             }, 1.15, 85, 0),
+            new Character("Drone","Cards/drone.png",new CharacterVoid[]{
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck(user)) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + 30 * user.getStrength() + " damage");
+                            enemies.get(index).changeHp((int) (30 * user.getStrength()));
+                        } else {
+                            GameBoard.sPrintln("Missed and took 5 damage");
+                            user.changeHp(5);
+
+                        }
+                    },
+                    (user, team, enemies) -> {
+                        int index = Main.random(0, enemies.size() - 1);
+                        if (enemies.get(index).evadeCheck(user)) {
+                            GameBoard.sPrintln(enemies.get(index).getName() + " takes " + (int) (user.getDamage()*5* user.getStrength()) + " damage");
+                            enemies.get(index).changeHp((int) (user.getDamage()*5* user.getStrength()));
+                        } else {
+                            GameBoard.sPrintln("Missed");
+                        }
+                    },
+            },0.6,10,70)
 
     };
 

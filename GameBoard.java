@@ -13,6 +13,7 @@ public class GameBoard {
     private static final JLabel[] INDEX_LABELS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
+    private static final JLabel[] ACTIVE_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final int[][] INDEX_POSITIONS = {{170, 90}, {555, 90}, {960, 90}, {1350, 90}, {1740, 90}, {555, 570}, {960, 570}, {1340, 570}, {1360, 570},};
     private static final int[][] CARD_POSITIONS = {{30, 120}, {410, 120}, {820, 120}, {1200, 120}, {1590, 120}, {410, 600}, {820, 600}, {1200, 600},};
     private static final int[][] CARD_HP = {{0, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
@@ -20,9 +21,9 @@ public class GameBoard {
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
     private static final JTextField INPUT = new JTextField(10);
     private static final JFrame SYSTEM = new JFrame("");
-
     private static final ArrayList<Character> team = new ArrayList<>();
     private static final ArrayList<Character> currentEnemies = new ArrayList<>();
+    private static final ArrayList<Integer> currentChoices = new ArrayList<>();
     private static int currentFloor = 0;
     private static int currentRestIndex = 0;
     private static int score = 0;
@@ -34,12 +35,7 @@ public class GameBoard {
     public GameBoard() {
 
         //party member shuffle
-        for (int i = 0; i < Cards.AvailablePartyMembers.length; i++) {
-            int randomIndexToSwap = Main.random(0, Cards.AvailablePartyMembers.length - 1);
-            Character temp = Cards.AvailablePartyMembers[randomIndexToSwap];
-            Cards.AvailablePartyMembers[randomIndexToSwap] = Cards.AvailablePartyMembers[i];
-            Cards.AvailablePartyMembers[i] = temp;
-        }
+
         //text 1 2 setup
 
         SYSTEM.add(TEXT1);
@@ -67,9 +63,11 @@ public class GameBoard {
             STAT_DISPLAYS[i].setText("100");
             STAT_DISPLAYS[i].setHorizontalTextPosition(JLabel.CENTER);
             STAT_DISPLAYS[i].setIcon(new ImageIcon("ui_images/stats.png"));
+
             STAT_DISPLAYS[i].setBounds(CARD_STATS[i][0], CARD_STATS[i][1], 128, 128);
             STAT_DISPLAYS[i].setVisible(false);
         }
+
 
         //card system setup
         for (int i = 0; i < CARD_IMAGES.length; i++) {
@@ -77,6 +75,13 @@ public class GameBoard {
             CARD_IMAGES[i].setIcon(new ImageIcon(Cards.AvailablePartyMembers[i].getPath()));
             Dimension size = CARD_IMAGES[i].getPreferredSize();
             CARD_IMAGES[i].setBounds(CARD_POSITIONS[i][0], CARD_POSITIONS[i][1], size.width, size.height);
+        }
+        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+            SYSTEM.add(ACTIVE_DISPLAYS[i]);
+            ACTIVE_DISPLAYS[i].setIcon(new ImageIcon("ui_images/active.png"));
+
+            ACTIVE_DISPLAYS[i].setBounds(CARD_POSITIONS[i][0] - 20, CARD_POSITIONS[i][1] - 10, 350, 451);
+            ACTIVE_DISPLAYS[i].setVisible(false);
         }
         for (int i = 0; i < INDEX_LABELS.length; i++) {
             SYSTEM.add(INDEX_LABELS[i]);
@@ -97,7 +102,7 @@ public class GameBoard {
         SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         SYSTEM.setVisible(true);
         LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
-        GameBoard.setInfoPanelText(2,"Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        GameBoard.setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
 
         SYSTEM.pack();
 
@@ -123,33 +128,76 @@ public class GameBoard {
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
         TEXT2.setText("");
+        int currentPose = -1;
         Object o1 = null;
         boolean noError = false;
         while (!noError || o1 == null) {
             try {
+                String input = INPUT.getText();
+                for (int i = input.length() - 1; i > 0; i--) {
+                    String place = input.charAt(i) + "";
+                    if (strIsInt(place)) {
+                        try {
+                            ACTIVE_DISPLAYS[currentChoices.get(Integer.parseInt(place) - 1)].setVisible(true);
+                            currentPose = currentChoices.get(Integer.parseInt(place) - 1);
+                            break;
+                        } catch (IndexOutOfBoundsException ignored) {
+                            System.out.println("failed");
+                            System.out.println("TEXT:"+INPUT.getText());
+                            System.out.println("Place:"+place);
+                            System.out.println("Arr: ");
+                            for(int j=0; j<currentChoices.size(); j++) {
+                                System.out.print(currentChoices.get(j)+" ");
+                            }
+
+                        }
+
+                    }
+                }
+                for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+                    if (i != currentPose) {
+                        ACTIVE_DISPLAYS[i].setVisible(false);
+                    }
+
+                }
                 o1 = o[formatInput(INPUT.getText()) - 1];
                 noError = true;
             } catch (ArrayIndexOutOfBoundsException ignored) {
-
             }
+        }
+        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+                ACTIVE_DISPLAYS[i].setVisible(false);
         }
         TEXT1.setText("");
         return o1;
     }
 
+
+
     public static void setChoices(int[] choices) {
+        currentChoices.clear();
+        for(int choice : choices) {
+            currentChoices.add(choice);
+        }
         for (JLabel indexLabel : INDEX_LABELS) {
             indexLabel.setText("");
         }
         for (int i = 0; i < choices.length; i++) {
             INDEX_LABELS[choices[i]].setText((i + 1) + "");
+            currentChoices.add(choices[i]);
         }
+
     }
 
     public static void setChoices(ArrayList<Integer> choices) {
+        currentChoices.clear();
+        for(int choice : choices) {
+            currentChoices.add(choice);
+        }
         for (JLabel indexLabel : INDEX_LABELS) {
             indexLabel.setText("");
         }
+
         for (int i = 0; i < choices.size(); i++) {
             INDEX_LABELS[choices.get(i)].setText((i + 1) + "");
         }
@@ -192,7 +240,7 @@ public class GameBoard {
 
         GameBoard.cardsInDisplay = c;
 
-        for (int i = 0; i < cardsInDisplay.length && i<8; i++) {
+        for (int i = 0; i < cardsInDisplay.length && i < 8; i++) {
             HP_DISPLAYS[i].setVisible(false);
             STAT_DISPLAYS[i].setVisible(false);
             if (cardsInDisplay[i] == null || cardsInDisplay[i].getType() == 0) {
@@ -200,28 +248,22 @@ public class GameBoard {
 
             } else {
                 CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay[i].getPath()));
-                if(cardsInDisplay[i].getType()<3) {
+                if (cardsInDisplay[i].getType() < 3) {
                     Character character = (Character) cardsInDisplay[i];
                     HP_DISPLAYS[i].setVisible(true);
                     STAT_DISPLAYS[i].setVisible(true);
-                    HP_DISPLAYS[i].setText(character.getDamage()+"");
-                    STAT_DISPLAYS[i].setText(character.statChangeDiff(0) + " , " + character.statChangeDiff(1) + " , " + character.statChangeDiff(2)+" for "+character.avgStatTime());
+                    HP_DISPLAYS[i].setText(character.getDamage() + "");
+                    STAT_DISPLAYS[i].setText(character.statChangeDiff(0) + " , " + character.statChangeDiff(1) + " , " + character.statChangeDiff(2) + " for " + character.avgStatTime());
 
                 }
             }
         }
 
     }
-    public static void setCardInDisplay(Card c,int i) {
-        cardsInDisplay[i]=c;
-        CARD_IMAGES[i].setIcon(new ImageIcon(c.getPath()));
-    }
-
-
 
     public static void setCardsInDisplay(int type) {
         ArrayList<Card> cards = new ArrayList<>();
-        for (int i = 0; i < currentLoot.size() && i<5; i++) {
+        for (int i = 0; i < currentLoot.size() && i < 5; i++) {
             if (currentLoot.get(i).getType() == type) {
                 cards.add(currentLoot.get(i));
             }
@@ -238,6 +280,11 @@ public class GameBoard {
         setCardsInDisplay(cards.toArray(new Card[cards.size()]));
     }
 
+    public static void setCardInDisplay(Card c, int i) {
+        cardsInDisplay[i] = c;
+        CARD_IMAGES[i].setIcon(new ImageIcon(c.getPath()));
+    }
+
     public static void setChoicesToTeam() {
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < team.size(); i++) {
@@ -249,7 +296,7 @@ public class GameBoard {
     public static void setChoicesToEnemies() {
         int[] indexes = new int[currentEnemies.size()];
         for (int i = 0; i < indexes.length; i++) {
-            indexes[i]=i;
+            indexes[i] = i;
         }
         setChoices(indexes);
     }
@@ -283,27 +330,27 @@ public class GameBoard {
                 character.setPlayerControlled(true);
                 sPrintln(character.getName() + " joined the party");
             }
-            int index=-1;
-            for (int i=0; i<Cards.AvailablePartyMembers.length; i++) {
-                if(Cards.AvailablePartyMembers[i]==character) {
-                    index=i;
+            int index = -1;
+            for (int i = 0; i < Cards.AvailablePartyMembers.length; i++) {
+                if (Cards.AvailablePartyMembers[i] == character) {
+                    index = i;
                 }
             }
-            if(index!=-1) {
-                setCardInDisplay(BLANK_CARD,index);
+            if (index != -1) {
+                setCardInDisplay(BLANK_CARD, index);
             }
         }
     }
 
     public static void addScore(int add) {
         score += add;
-        setInfoPanelText(0,"Score: " + score);
+        setInfoPanelText(0, "Score: " + score);
     }
 
 
     public static void setFloor(int floor) {
         currentFloor = floor;
-        setInfoPanelText(1,"Current Floor: " + currentFloor);
+        setInfoPanelText(1, "Current Floor: " + currentFloor);
     }
 
     public static void loot() {
@@ -314,7 +361,7 @@ public class GameBoard {
             System.out.println(currentLoot.get(i).getName());
             setChoices(new int[0]);
             setCardsInDisplay(4);
-            if (currentLoot.get(i).getType() == 2 && currentFloor>0) {
+            if (currentLoot.get(i).getType() == 2 && currentFloor > 0) {
                 currentEnemies.add((Character) currentLoot.get(i));
             }
             if (currentLoot.get(i).getType() == 4) {
@@ -326,7 +373,7 @@ public class GameBoard {
             setCardsInDisplay(2);
             new Battle(team, currentEnemies);
         }
-        if(!getTeam().isEmpty()) {
+        if (!getTeam().isEmpty()) {
             for (Card card : currentLoot) {
                 setCardsInDisplay(3);
                 setChoicesToTeam();
@@ -350,53 +397,55 @@ public class GameBoard {
             }
         }
 
-        if(team.isEmpty()) {
-            score=0;
+        if (team.isEmpty()) {
+            score = 0;
         } else {
-            sPrintln("Score: "+score);
-            sPrintln("Floor bonus: "+currentFloor+" x 100 = "+currentFloor*100);
-            score+=currentFloor*100;
-            sPrintln("Team bonus: "+team.size()+" X 1000 = "+team.size()*1000);
-            score+=team.size()*1000;
-            sPrintln("Deck Penalty: "+getDeck().size());
-            score-=getDeck().size();
-            sPrintln("Total Score: "+score);
-            if(score>getHighScore()) {
+            sPrintln("Score: " + score);
+            sPrintln("Floor bonus: " + currentFloor + " x 100 = " + currentFloor * 100);
+            score += currentFloor * 100;
+            sPrintln("Team bonus: " + team.size() + " X 1000 = " + team.size() * 1000);
+            score += team.size() * 1000;
+            sPrintln("Deck Penalty: " + getDeck().size());
+            score -= getDeck().size();
+            sPrintln("Total Score: " + score);
+            if (score > getHighScore()) {
                 setHighScore(score);
                 sPrintln("NEW HIGHSCORE");
             }
 
         }
     }
+
     public static int getHighScore() {
         try {
-            File           txt      = new File( "HighScore.txt" );
-            FileReader fileRead = new FileReader( txt );
-            BufferedReader reader   = new BufferedReader( fileRead );
+            File txt = new File("HighScore.txt");
+            FileReader fileRead = new FileReader(txt);
+            BufferedReader reader = new BufferedReader(fileRead);
             return Integer.parseInt(String.valueOf(reader.read()));
 
 
-        } catch ( IOException e ) {
-            e.printStackTrace( );
+        } catch (IOException e) {
+            e.printStackTrace();
             return Integer.MAX_VALUE;
         }
     }
-    public static void setHighScore(int score) {
-        File fileToBeModified = new File( "HighScore.txt" );
-        FileWriter writer           = null;
-        try {
-            writer = new FileWriter( fileToBeModified );
-            writer.write(score);
 
-        } catch ( IOException e ) {
-            e.printStackTrace( );
+    public static void setHighScore(int score) {
+        File fileToBeModified = new File("HighScore.txt");
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(fileToBeModified);
+            writer.write(score + "");
+
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 //Closing the resources
                 assert writer != null;
-                writer.close( );
-            } catch ( IOException e ) {
-                e.printStackTrace( );
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -408,7 +457,7 @@ public class GameBoard {
 
     public static void nextRestFloor() {
         currentRestIndex++;
-        setInfoPanelText(2,"Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
     }
 
     public static ArrayList<Card> getCurrentLoot() {
@@ -418,12 +467,13 @@ public class GameBoard {
     public static void rest() {
         sPrintln("REST FLOOR");
         sPrintln("You see a fire escape");
-        if((int)(choice("Would you like to escape and leave the tower? 1==Yes 2==No",new Object[] {1,2}))==1) {
-            wantsToKeepGoing=false;
+        if ((int) (choice("Would you like to escape and leave the tower? 1==Yes 2==No", new Object[]{1, 2})) == 1) {
+            wantsToKeepGoing = false;
         }
         nextRestFloor();
     }
-    public static void setInfoPanelText(int i,String s) {
+
+    public static void setInfoPanelText(int i, String s) {
         INFO_PANEL[i].setText(s);
     }
 
