@@ -54,6 +54,7 @@ public class Cards {
             }),
     };
 
+
     public static final Character[] DIFFERENT_CHARACTERS = new Character[]{
             new Character("Prototype", "Cards/prototype.png", new CharacterVoid[]{(user, team, enemies) -> {
                 user.addStatChange(new StatChange(new int[]{-10, 0, 5}, 3));

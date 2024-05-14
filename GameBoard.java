@@ -9,7 +9,7 @@ public class GameBoard {
     private static final JLabel TEXT1 = new JLabel();
     private static final JLabel TEXT2 = new JLabel();
     private static final JLabel[] STAT_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
+    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] INDEX_LABELS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};

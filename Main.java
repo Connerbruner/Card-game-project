@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Main {
 
 
@@ -33,12 +31,18 @@ public class Main {
         GameBoard.sPrintln("Thank you for Playing");
 
 
-
-
-
     }
+
     public static int random(int low, int high) {
         int range = high - low + 1;
         return (int) (Math.random() * range) + low;
+    }
+
+    public static int randomExponential(int low, int high, double odds) {
+        while (random(0, 100) > odds && low < high) {
+            low++;
+        }
+        System.out.println(low);
+        return low;
     }
 }

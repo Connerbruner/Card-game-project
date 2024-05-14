@@ -4,6 +4,19 @@ import java.util.Collections;
 public class Deck {
     public static final Deck BASE_DECK = new Deck(new Card[]{
             GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
+            new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[2]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),
+
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),new Chest((Chest) Cards.DIFFERENT_EVENTS[0]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[1]),new Chest((Chest) Cards.DIFFERENT_EVENTS[1]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[2]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[3]),new Chest((Chest) Cards.DIFFERENT_EVENTS[3]),
+            new Chest((Chest) Cards.DIFFERENT_EVENTS[4]),
+            new Event(Cards.DIFFERENT_EVENTS[5]),
+            new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),new Event(Cards.DIFFERENT_EVENTS[6]),
+            new Event(Cards.DIFFERENT_EVENTS[7]),new Event(Cards.DIFFERENT_EVENTS[7]),
 
             new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]),new Character(Cards.DIFFERENT_CHARACTERS[0]),
             new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]),
@@ -50,7 +63,7 @@ public class Deck {
 
     public ArrayList<Card> getRange(int min, int max) {
         ArrayList<Card> temp = new ArrayList<>();
-        for (int i = min; i < max || i<deck.size(); i++) {
+        for (int i = min; i < max && i<deck.size(); i++) {
             temp.add(get(i));
         }
         return temp;
@@ -71,13 +84,13 @@ public class Deck {
     }
 
     public void removeRange(int min, int max) {
-        for (int i = min; i < max|| i<deck.size(); i++) {
+        for (int i = min; i < max && i<deck.size(); i++) {
             deck.remove(min);
         }
     }
 
     public void removeRange(int min, int max, int notType) {
-        for (int i = min; i < max || i<deck.size(); i++) {
+        for (int i = min; i < max && i<deck.size(); i++) {
             if (deck.get(min).getType() != notType) {
                 deck.remove(min);
             }
@@ -94,7 +107,7 @@ public class Deck {
 
     public ArrayList<Card> search(int count, String target) {
         ArrayList<Card> found = new ArrayList<>();
-        for (int i = 0; i < count || i<deck.size(); i++) {
+        for (int i = 0; i < count && i<deck.size(); i++) {
             if (deck.get(i).getName().contains(target)) {
                 found.add(deck.get(i));
             }
@@ -111,7 +124,7 @@ public class Deck {
         if (count > deck.size()) {
             count = deck.size();
         }
-        for (int i = 0; i < count|| i<deck.size(); i++) {
+        for (int i = 0; i < count && i<deck.size(); i++) {
             if (deck.get(i).getType() == type) {
                 found.add(deck.get(i));
             }
