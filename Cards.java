@@ -52,23 +52,23 @@ public class Cards {
 
     };
     public static final Event[] DIFFERENT_EVENTS = new Event[]{
-            new Chest("Cards/chest.png", 0, DIFFERENT_ITEMS.length, 3),
-            new Chest("Cards/chest rare.png", 0, DIFFERENT_ITEMS.length - 4, 3),
-            new Chest("Cards/chest legendary.png", 8, DIFFERENT_ITEMS.length, 5),
-            new Chest("Cards/chest power.png", 0, DIFFERENT_ITEMS.length - 4, 4),
-            new Chest("Cards/power chest rare.png", 8, DIFFERENT_ITEMS.length - 4, 4),
-            new Chest("Cards/fridge.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17]}),
-            new Chest("Cards/fridge chest.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[16]}),
+//            new Chest("Cards/chest.png", 0, DIFFERENT_ITEMS.length, 3),
+//            new Chest("Cards/chest rare.png", 0, DIFFERENT_ITEMS.length - 4, 3),
+//            new Chest("Cards/chest legendary.png", 8, DIFFERENT_ITEMS.length, 5),
+//            new Chest("Cards/chest power.png", 0, DIFFERENT_ITEMS.length - 4, 4),
+//            new Chest("Cards/power chest rare.png", 8, DIFFERENT_ITEMS.length - 4, 4),
+//            new Chest("Cards/fridge.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17]}),
+//            new Chest("Cards/fridge chest.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[16]}),
             new Event("ALARM", "Cards/alarm.png", () -> {
                 Deck.BASE_DECK.removeRange(0, 20, 2);
                 GameBoard.sPrintln("all items and events removed from the top 20 cards of the deck");
 
             }),
             new Event("wrong way", "Cards/wrong way.png", () -> {
-                GameBoard.sPrintln("You went the wrong way you have to go down 3 floors");
-                GameBoard.setFloor(GameBoard.getCurrentFloor() - 3);
-                if (GameBoard.getCurrentFloor() < 0) {
-                    GameBoard.setFloor(0);
+                GameBoard.sPrintln("You went the wrong way you have to go down a floor");
+                if (GameBoard.getCurrentFloor() > 0) {
+                    GameBoard.setFloor(GameBoard.getCurrentFloor() - 1);
+
                 }
             }),
             new Event("JACKPOT", "Cards/JACKPOT.png", () -> {
@@ -193,10 +193,8 @@ public class Cards {
             }, 1, 125, 0),
             new Character("phone", "Cards/phone.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
-                        if (GameBoard.getCurrentEnemies().size() < 5) {
-                            GameBoard.getCurrentEnemies().add(enemies.get(0));
-                            GameBoard.sPrintln(enemies.get(0).getName() + " joined the fight");
-                        }
+                        Deck.BASE_DECK.remove(0);
+                        GameBoard.sPrintln("Removed the top card of the deck");
 
                     },
                     (user, team, enemies) -> {
@@ -317,7 +315,7 @@ public class Cards {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
                 GameBoard.setChoices(new int[0]);
-                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
+                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9},false);
                 int damage = (int) (count * 5 * user.getStrength());
                 if (target.evadeCheck(user)) {
                     target.changeHp(damage);

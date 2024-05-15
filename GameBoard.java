@@ -14,6 +14,8 @@ public class GameBoard {
     private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] ACTIVE_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
+    private static final JLabel[] TARGET_DISPLAY = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
+
     private static final int[][] INDEX_POSITIONS = {{170, 90}, {555, 90}, {960, 90}, {1350, 90}, {1740, 90}, {555, 570}, {960, 570}, {1340, 570}, {1360, 570},};
     private static final int[][] CARD_POSITIONS = {{30, 120}, {410, 120}, {820, 120}, {1200, 120}, {1590, 120}, {410, 600}, {820, 600}, {1200, 600},};
     private static final int[][] CARD_HP = {{0, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
@@ -26,6 +28,7 @@ public class GameBoard {
     private static final ArrayList<Integer> currentChoices = new ArrayList<>();
     private static int currentFloor = 0;
     private static int currentRestIndex = 0;
+    private static int currentTargetIndex = 0;
     private static int score = 0;
     private static ArrayList<Card> currentLoot = new ArrayList<>();
     private static Card[] cardsInDisplay = new Card[8];
@@ -48,6 +51,11 @@ public class GameBoard {
         TEXT2.setHorizontalAlignment(0);
         TEXT2.setBounds(0, 50, 1920, 20);
         //hp display setup
+        for (int i = 0; i < INDEX_LABELS.length; i++) {
+            SYSTEM.add(INDEX_LABELS[i]);
+            INDEX_LABELS[i].setFont(new Font("Arial", Font.BOLD, 20));
+            INDEX_LABELS[i].setBounds(INDEX_POSITIONS[i][0], INDEX_POSITIONS[i][1], 200, 30);
+        }
         for (int i = 0; i < HP_DISPLAYS.length; i++) {
             SYSTEM.add(HP_DISPLAYS[i]);
             HP_DISPLAYS[i].setFont(new Font("Arial", Font.BOLD, 15));
@@ -79,15 +87,16 @@ public class GameBoard {
         for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
             SYSTEM.add(ACTIVE_DISPLAYS[i]);
             ACTIVE_DISPLAYS[i].setIcon(new ImageIcon("ui_images/active.png"));
-
             ACTIVE_DISPLAYS[i].setBounds(CARD_POSITIONS[i][0] - 20, CARD_POSITIONS[i][1] - 10, 350, 451);
             ACTIVE_DISPLAYS[i].setVisible(false);
         }
-        for (int i = 0; i < INDEX_LABELS.length; i++) {
-            SYSTEM.add(INDEX_LABELS[i]);
-            INDEX_LABELS[i].setFont(new Font("Arial", Font.BOLD, 20));
-            INDEX_LABELS[i].setBounds(INDEX_POSITIONS[i][0], INDEX_POSITIONS[i][1], 200, 30);
+        for (int i = 0; i < TARGET_DISPLAY.length; i++) {
+            SYSTEM.add(TARGET_DISPLAY[i]);
+            TARGET_DISPLAY[i].setIcon(new ImageIcon("ui_images/target.png"));
+            TARGET_DISPLAY[i].setBounds(CARD_POSITIONS[i][0] - 20, CARD_POSITIONS[i][1] - 10, 350, 451);
+            TARGET_DISPLAY[i].setVisible(false);
         }
+
 
         //INFO_PANNEL setup
         for (int i = 0; i < INFO_PANEL.length; i++) {
@@ -131,52 +140,92 @@ public class GameBoard {
         int currentPose = -1;
         Object o1 = null;
         boolean noError = false;
+        while (formatInput(INPUT.getText()) == 0) {
+            while ((!noError || o1 == null)) {
+                try {
+                    String input = INPUT.getText();
+                    for (int i = 0; i < input.length(); i++) {
+                        String place = input.charAt(i) + "";
+                        if (strIsInt(place)) {
+                            try {
+                                currentPose = currentChoices.get(Integer.parseInt(place) - 1);
+                            } catch (IndexOutOfBoundsException ignored) {
+                            }
+                        }
+                    }
+                    for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+                        if (i != currentPose) {
+                            ACTIVE_DISPLAYS[i].setVisible(false);
+                        } else {
+                            ACTIVE_DISPLAYS[currentPose].setVisible(true);
+                        }
+
+                    }
+                    o1 = o[formatInput(INPUT.getText()) - 1];
+                    noError = true;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                }
+            }
+
+        }
+        INPUT.setEditable(false);
+
+        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+            ACTIVE_DISPLAYS[i].setVisible(false);
+        }
+        INPUT.setEditable(false);
+        TEXT1.setText("");
+
+        return o1;
+    }
+
+    public static Object choice(String str, Object[] o, boolean displayTracking) {
+        INPUT.setText("");
+        INPUT.setEditable(true);
+        INPUT.requestFocus();
+        TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
+        TEXT2.setText("");
+        int currentPose = -1;
+        Object o1 = null;
+        boolean noError = false;
         while (!noError || o1 == null) {
             try {
                 String input = INPUT.getText();
-                for (int i = input.length() - 1; i > 0; i--) {
+                for (int i = 0; i < input.length(); i++) {
                     String place = input.charAt(i) + "";
                     if (strIsInt(place)) {
                         try {
-                            ACTIVE_DISPLAYS[currentChoices.get(Integer.parseInt(place) - 1)].setVisible(true);
                             currentPose = currentChoices.get(Integer.parseInt(place) - 1);
-                            break;
                         } catch (IndexOutOfBoundsException ignored) {
-                            System.out.println("failed");
-                            System.out.println("TEXT:"+INPUT.getText());
-                            System.out.println("Place:"+place);
-                            System.out.println("Arr: ");
-                            for(int j=0; j<currentChoices.size(); j++) {
-                                System.out.print(currentChoices.get(j)+" ");
-                            }
-
+                        }
+                    }
+                }
+                if (displayTracking) {
+                    for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+                        if (i != currentPose) {
+                            ACTIVE_DISPLAYS[i].setVisible(false);
+                        } else {
+                            ACTIVE_DISPLAYS[currentPose].setVisible(true);
                         }
 
                     }
                 }
-                for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
-                    if (i != currentPose) {
-                        ACTIVE_DISPLAYS[i].setVisible(false);
-                    }
 
-                }
                 o1 = o[formatInput(INPUT.getText()) - 1];
                 noError = true;
             } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         }
         for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
-                ACTIVE_DISPLAYS[i].setVisible(false);
+            ACTIVE_DISPLAYS[i].setVisible(false);
         }
         TEXT1.setText("");
         return o1;
     }
 
-
-
     public static void setChoices(int[] choices) {
         currentChoices.clear();
-        for(int choice : choices) {
+        for (int choice : choices) {
             currentChoices.add(choice);
         }
         for (JLabel indexLabel : INDEX_LABELS) {
@@ -191,7 +240,7 @@ public class GameBoard {
 
     public static void setChoices(ArrayList<Integer> choices) {
         currentChoices.clear();
-        for(int choice : choices) {
+        for (int choice : choices) {
             currentChoices.add(choice);
         }
         for (JLabel indexLabel : INDEX_LABELS) {
@@ -354,6 +403,7 @@ public class GameBoard {
     }
 
     public static void loot() {
+        setTargetDisplay(-1);
         Deck.BASE_DECK.shuffle();
         currentLoot = Deck.BASE_DECK.getRange(0, 5);
         Deck.BASE_DECK.removeRange(0, 5);
@@ -365,6 +415,7 @@ public class GameBoard {
                 currentEnemies.add((Character) currentLoot.get(i));
             }
             if (currentLoot.get(i).getType() == 4) {
+                setNextTargetDisplay();
                 (currentLoot.get(i)).trigger();
             }
 
@@ -374,13 +425,17 @@ public class GameBoard {
             new Battle(team, currentEnemies);
         }
         if (!getTeam().isEmpty()) {
-            for (Card card : currentLoot) {
-                setCardsInDisplay(3);
+            setTargetDisplay(-1);
+            for (int i = 0; i < currentLoot.size(); i++) {
+
                 setChoicesToTeam();
-                if (card.getType() == 3) {
-                    Character target = (Character) choice("Which party member should get the " + card.getName(), team.toArray());
-                    target.addItem((Item) card);
-                    sPrintln(target.getName() + " got a " + card.getName());
+                if (currentLoot.get(i).getType() == 3) {
+                    setNextTargetDisplay();
+                    setCardsInDisplay(3);
+                    System.out.println("currentTargetIndex: " + currentTargetIndex);
+                    Character target = (Character) choice("Which party member should get the " + currentLoot.get(i).getName(), team.toArray());
+                    target.addItem((Item) currentLoot.get(i));
+                    sPrintln(target.getName() + " got a " + currentLoot.get(i).getName());
                 }
             }
         }
@@ -467,7 +522,7 @@ public class GameBoard {
     public static void rest() {
         sPrintln("REST FLOOR");
         sPrintln("You see a fire escape");
-        if ((int) (choice("Would you like to escape and leave the tower? 1==Yes 2==No", new Object[]{1, 2})) == 1) {
+        if ((int) (choice("Would you like to escape and leave the tower? 1==Yes 2==No", new Object[]{1, 2}, false)) == 1) {
             wantsToKeepGoing = false;
         }
         nextRestFloor();
@@ -483,5 +538,19 @@ public class GameBoard {
 
     public static ArrayList<Character> getCurrentEnemies() {
         return currentEnemies;
+    }
+
+    public static void setTargetDisplay(int index) {
+        currentTargetIndex = index;
+        for (int i = 0; i < TARGET_DISPLAY.length; i++) {
+            TARGET_DISPLAY[i].setVisible(i == currentTargetIndex);
+        }
+    }
+
+    public static void setNextTargetDisplay() {
+        currentTargetIndex++;
+        for (int i = 0; i < TARGET_DISPLAY.length; i++) {
+            TARGET_DISPLAY[i].setVisible(i == currentTargetIndex);
+        }
     }
 }

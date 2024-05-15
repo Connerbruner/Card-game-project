@@ -15,8 +15,11 @@ public class Battle {
                 GameBoard.setCardsInDisplay(2);
                 if (!team.isEmpty() && !enemies.isEmpty()) {
                     if (team.get(i).getDamage() < team.get(i).getDefense()) {
+                        GameBoard.setTargetDisplay(i+5);
                         team.get(i).tickDownStats();
                         GameBoard.sPrintln(team.get(i).getName() + " Turn");
+                        GameBoard.setTargetDisplay(-1);
+
                         team.get(i).attack(team, enemies);
                     }
 
@@ -32,9 +35,11 @@ public class Battle {
                 GameBoard.setCardsInDisplay(2);
                 if (!team.isEmpty() && !enemies.isEmpty()) {
                     if (enemies.get(i).getDamage() < enemies.get(i).getDefense()) {
+                        GameBoard.setTargetDisplay(i);
                         enemies.get(i).tickDownStats();
                         GameBoard.sPrintln(enemies.get(i).getName() + " Turn");
                         enemies.get(i).attack(enemies, team);
+
                     }
                 }
                 updateHP();
@@ -48,7 +53,6 @@ public class Battle {
         for (int i = 0; i < team.size(); i++) {
             if (team.get(i).getDamage() >= team.get(i).getDefense()) {
                 GameBoard.sPrintln(team.get(i).getName() + " died");
-
                 team.remove(i);
             }
 

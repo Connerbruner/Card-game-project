@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Chest extends Event{
     public Chest(String path,Item[] items, int amount) {
