@@ -20,15 +20,22 @@ public class Main {
         GameBoard.sPrintln("Next we have bosses they are the same as characters however they are more powerful but with better stats and 3 abilities");
         GameBoard.sPrintln("When a boss is killed you will receive bonus rewards and they are discarded");
         GameBoard.sPrintln("Finally we have events cards. When these cards go into play they are triggered. They effect is on the text");
-        //Game Setup
         GameBoard.sPrintln("Alright now that you understand the goal lets pick your team");
-        GameBoard.setTeam();
-        GameBoard.getDeck().shuffle();
-        GameBoard.sPrintln("Good Luck I hope I see you later");
+        //Game Setup
+        while (true) {
+            GameBoard.setTeam();
+            GameBoard.getDeck().shuffle();
+            GameBoard.sPrintln("Good Luck I hope I see you later");
 
-        GameBoard.gameLoop();
-        GameBoard.sPrintln("GAME OVER");
-        GameBoard.sPrintln("Thank you for Playing");
+            GameBoard.gameLoop();
+            if(GameBoard.getTeam().isEmpty()) {
+                GameBoard.sPrintln("We are going to need a new team");
+            } else {
+                break;
+            }
+
+        }
+
 
 
     }

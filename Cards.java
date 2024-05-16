@@ -260,7 +260,7 @@ public class Cards {
     };
 
 
-    public static final Character[] AvailablePartyMembers = new Character[]{
+    public static final Character[] AVAILABLE_PARTY_MEMBERS = new Character[]{
             new Character("Mir", "Cards/mir.png", true, new CharacterVoid[]{(user, team, enemies) -> {
                 for (Character character : team) {
                     character.changeHp(-30);

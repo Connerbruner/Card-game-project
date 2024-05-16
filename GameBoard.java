@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameBoard {
     public static final Card BLANK_CARD = new Card("Cards/cardBack.png");
@@ -23,6 +24,7 @@ public class GameBoard {
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
     private static final JTextField INPUT = new JTextField(10);
     private static final JFrame SYSTEM = new JFrame("");
+
     private static final ArrayList<Character> team = new ArrayList<>();
     private static final ArrayList<Character> currentEnemies = new ArrayList<>();
     private static final ArrayList<Integer> currentChoices = new ArrayList<>();
@@ -80,7 +82,7 @@ public class GameBoard {
         //card system setup
         for (int i = 0; i < CARD_IMAGES.length; i++) {
             SYSTEM.add(CARD_IMAGES[i]);
-            CARD_IMAGES[i].setIcon(new ImageIcon(Cards.AvailablePartyMembers[i].getPath()));
+            CARD_IMAGES[i].setIcon(new ImageIcon(Cards.AVAILABLE_PARTY_MEMBERS[i].getPath()));
             Dimension size = CARD_IMAGES[i].getPreferredSize();
             CARD_IMAGES[i].setBounds(CARD_POSITIONS[i][0], CARD_POSITIONS[i][1], size.width, size.height);
         }
@@ -287,7 +289,7 @@ public class GameBoard {
 
     public static void setCardsInDisplay(Card[] c) {
 
-        GameBoard.cardsInDisplay = c;
+        cardsInDisplay = c;
 
         for (int i = 0; i < cardsInDisplay.length && i < 8; i++) {
             HP_DISPLAYS[i].setVisible(false);
@@ -363,31 +365,36 @@ public class GameBoard {
     public static void setTeam() {
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
-            Character character = (Character) choice("Pick a team member (1-8)", Cards.AvailablePartyMembers);
+            Character character = (Character) choice("Pick a team member (1-8)", Cards.AVAILABLE_PARTY_MEMBERS);
 
             boolean inParty = false;
+            boolean isDead = false;
             for (Character value : team) {
                 if (value.equals(character)) {
                     inParty = true;
                     break;
                 }
             }
+
             if (inParty) {
                 sPrintln("You already have this member in the party");
+            } else if(isDead) {
+              sPrintln("This member needs to rest up");
             } else {
                 team.add(character);
                 character.setPlayerControlled(true);
                 sPrintln(character.getName() + " joined the party");
             }
             int index = -1;
-            for (int i = 0; i < Cards.AvailablePartyMembers.length; i++) {
-                if (Cards.AvailablePartyMembers[i] == character) {
+            for (int i = 0; i < Cards.AVAILABLE_PARTY_MEMBERS.length; i++) {
+                if (Cards.AVAILABLE_PARTY_MEMBERS[i] == character) {
                     index = i;
                 }
             }
             if (index != -1) {
                 setCardInDisplay(BLANK_CARD, index);
             }
+
         }
     }
 
