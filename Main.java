@@ -13,14 +13,43 @@ public class Main {
 
         //Explaining the game
         GameBoard.sPrintln("Before we Get started Let me explain the how we plan to handle this");
+        GameBoard.setBackground("ui_images/character.png");
         GameBoard.sPrintln("This is a character. Characters can be both friend or foe");
-        GameBoard.sPrintln("You can see the stats of the Character on the card Strength is the percent of damage they deal when attacking");
+        GameBoard.setBackground("ui_images/Cards Explained0000.png");
+        GameBoard.sPrintln("You can see the stats of the Character on the card ");
+        GameBoard.sPrintln("Strength: is the percent of damage they deal when attacking");
+        GameBoard.sPrintln("Defense: is the amount of damage that you can take ");
+        GameBoard.sPrintln("Agility: is the percent chance to dodge");
+        GameBoard.setBackground("ui_images/Cards Explained0001.png");
         GameBoard.sPrintln("They also have 2 abilities that they can use during their turn");
-        GameBoard.sPrintln("Next up is items the text below explain how they work. Character They can hold up to 2 at a time. These can be used instead of abilities during a Character turn");
-        GameBoard.sPrintln("Next we have bosses they are the same as characters however they are more powerful but with better stats and 3 abilities");
-        GameBoard.sPrintln("When a boss is killed you will receive bonus rewards and they are discarded");
-        GameBoard.sPrintln("Finally we have events cards. When these cards go into play they are triggered. They effect is on the text");
+        GameBoard.setBackground("ui_images/Cards Explained0002.png");
+        GameBoard.sPrintln("If any temporary stat changes are made they show up hear the format is: (Strength),(Defense),(Agility) for (Average Time Left)");
+        GameBoard.setBackground("ui_images/Cards Explained0003.png");
+        GameBoard.sPrintln("This is how much damage you have taken");
+        GameBoard.setBackground("ui_images/items.png");
+        GameBoard.sPrintln("Next up is items the text below explain how they work.");
+        GameBoard.sPrintln("Character They can hold up to 2 at a time. These can be used instead of abilities during a Character turn");
+        GameBoard.sPrintln("The effect of a item is listed below");
+        GameBoard.setBackground("ui_images/events.png");
+        GameBoard.sPrintln("Events trigger when entering play the effect is listed on the text");
+        GameBoard.setBackground("ui_images/base.png");
+        GameBoard.sPrintln("The round starts by drawing 5 cards");
+        GameBoard.setBackground("ui_images/turnflowEvents.png");
+        GameBoard.sPrintln("First events are triggers");
+        GameBoard.setBackground("ui_images/turnflowCharacthers.png");
+        GameBoard.sPrintln("Then you fight any characters/enemies.");
+        GameBoard.sPrintln("Your party attacks first from left to right. Then the characters/enemies go left to right");
+        GameBoard.setBackground("ui_images/turnflowItems.png");
+        GameBoard.sPrintln("Then you add any items that remain");
+        GameBoard.setBackground("ui_images/chosing explained.png");
+        GameBoard.sPrintln("If you want to choose anything you press that number on the keyboard 2 times in a row");
+
+
+
+
+
         //Game Setup
+        GameBoard.setupDisplay();
         GameBoard.sPrintln("Alright now that you understand the goal lets pick your team");
         GameBoard.setTeam();
         GameBoard.getDeck().shuffle();

@@ -50,6 +50,23 @@ public class GameBoard {
         TEXT2.setFont(new Font("Arial", Font.BOLD, 20));
         TEXT2.setHorizontalAlignment(0);
         TEXT2.setBounds(0, 50, 1920, 20);
+
+        //final setup
+        INPUT.setEditable(false);
+        SYSTEM.add(INPUT, BorderLayout.SOUTH);
+        SYSTEM.add(LABEL);
+        SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        SYSTEM.setVisible(true);
+        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
+
+        SYSTEM.pack();
+
+
+    }
+    public static void setBackground(String path) {
+        LABEL.setIcon(new ImageIcon(path));
+    }
+    public static void setupDisplay() {
         //hp display setup
         for (int i = 0; i < INDEX_LABELS.length; i++) {
             SYSTEM.add(INDEX_LABELS[i]);
@@ -104,18 +121,6 @@ public class GameBoard {
             INFO_PANEL[i].setFont(new Font("Arial", Font.BOLD, 20));
             INFO_PANEL[i].setBounds(1600, 600 + (i * 20), 200, 20);
         }
-        //final setup
-        INPUT.setEditable(false);
-        SYSTEM.add(INPUT, BorderLayout.SOUTH);
-        SYSTEM.add(LABEL);
-        SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        SYSTEM.setVisible(true);
-        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
-        GameBoard.setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
-
-        SYSTEM.pack();
-
-
     }
 
     public static void sPrintln(String str) {
@@ -124,7 +129,6 @@ public class GameBoard {
         INPUT.requestFocus();
         TEXT1.setText(str);
         TEXT2.setText(">Press any key<");
-
         while (INPUT.getText().equals(" ")) ;
         INPUT.setEditable(false);
         SYSTEM.requestFocusInWindow();
@@ -403,6 +407,8 @@ public class GameBoard {
     }
 
     public static void loot() {
+        GameBoard.setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+
         setTargetDisplay(-1);
         Deck.BASE_DECK.shuffle();
         currentLoot = Deck.BASE_DECK.getRange(0, 5);
