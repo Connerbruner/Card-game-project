@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 
 public class Battle {
-    private final ArrayList<Character> team;
-    private final ArrayList<Character> enemies;
+    private ArrayList<Character> team;
+    private ArrayList<Character> enemies;
+
 
     public Battle(ArrayList<Character> t, ArrayList<Character> e) {
         team = t;

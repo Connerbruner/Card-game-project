@@ -7,6 +7,11 @@ public class Cards {
             new Document("Woke agenda", "Cards/woke agenda.png", 1),
             new Document("Joe Bidens shopping list", "Cards/shopping list.png", 1000)
     };
+    public static final Character[] MADDOX_BOSSES = new Character[] {
+      new Character("Maddox","Cards/maddox.png",new CharacterVoid[]{
+
+      },100,500,10)
+    };
 
     public static final Item[] DIFFERENT_ITEMS = new Item[]{
 
@@ -260,7 +265,7 @@ public class Cards {
     };
 
 
-    public static final Character[] AVAILABLE_PARTY_MEMBERS = new Character[]{
+    public static final Character[] AVAILABLE_PARTY_MEMBERS  = new Character[]{
             new Character("Mir", "Cards/mir.png", true, new CharacterVoid[]{(user, team, enemies) -> {
                 for (Character character : team) {
                     character.changeHp(-30);
@@ -345,7 +350,7 @@ public class Cards {
                 for (int i = 0; i < team.size(); i++) {
                     ArrayList<StatChange> stats = team.get(i).getStatChanges();
                     for (int j = 0; j < stats.size(); j++) {
-                        stats.get(i).setTime(stats.get(i).getTime() + 3);
+                        stats.get(i).setTime(stats.get(j).getTime() + 3);
                     }
                 }
                 GameBoard.sPrintln("Your Teams Stat Changes will last 3 turns longer");

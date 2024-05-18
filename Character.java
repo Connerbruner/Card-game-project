@@ -140,13 +140,7 @@ public class Character extends Card {
     public boolean evadeCheck(Character enemy) {
         int enemyPower = Main.random(enemy.getAgility(),100);
         int thisPower = Main.random(getAgility(),100);
-        System.out.println("enemyPower: "+enemyPower);
-        System.out.println("thisPower: "+thisPower);
-        System.out.println("enemyAGL: "+enemy.getAgility());
-        System.out.println("thisAGL: "+getAgility());
-        System.out.println((thisPower<enemyPower)+"");
-        System.out.println((getAgility() <= enemy.getAgility())+"");
-        System.out.println((getAgility() <= 0)+"");
+
         if(getAgility() <= 0) {
             return true;
         }
@@ -210,5 +204,9 @@ public class Character extends Card {
             amount+=statChanges.get(i).getTime();
         }
         return amount/statChanges.size();
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 }

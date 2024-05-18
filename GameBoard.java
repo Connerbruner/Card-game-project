@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GameBoard {
     public static final Card BLANK_CARD = new Card("Cards/cardBack.png");
@@ -38,7 +37,7 @@ public class GameBoard {
 
 
     public GameBoard() {
-
+        wantsToKeepGoing=true;
         //party member shuffle
 
         //text 1 2 setup
@@ -52,28 +51,13 @@ public class GameBoard {
         TEXT2.setFont(new Font("Arial", Font.BOLD, 20));
         TEXT2.setHorizontalAlignment(0);
         TEXT2.setBounds(0, 50, 1920, 20);
-
-        //final setup
-        INPUT.setEditable(false);
-        SYSTEM.add(INPUT, BorderLayout.SOUTH);
-        SYSTEM.add(LABEL);
-        SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        SYSTEM.setVisible(true);
-        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
-
-        SYSTEM.pack();
-
-
-    }
-    public static void setBackground(String path) {
-        LABEL.setIcon(new ImageIcon(path));
-    }
-    public static void setupDisplay() {
-        //hp display setup
+//hp display setup
         for (int i = 0; i < INDEX_LABELS.length; i++) {
             SYSTEM.add(INDEX_LABELS[i]);
             INDEX_LABELS[i].setFont(new Font("Arial", Font.BOLD, 20));
             INDEX_LABELS[i].setBounds(INDEX_POSITIONS[i][0], INDEX_POSITIONS[i][1], 200, 30);
+            INDEX_LABELS[i].setVisible(false);
+
         }
         for (int i = 0; i < HP_DISPLAYS.length; i++) {
             SYSTEM.add(HP_DISPLAYS[i]);
@@ -90,7 +74,6 @@ public class GameBoard {
             STAT_DISPLAYS[i].setText("100");
             STAT_DISPLAYS[i].setHorizontalTextPosition(JLabel.CENTER);
             STAT_DISPLAYS[i].setIcon(new ImageIcon("ui_images/stats.png"));
-
             STAT_DISPLAYS[i].setBounds(CARD_STATS[i][0], CARD_STATS[i][1], 128, 128);
             STAT_DISPLAYS[i].setVisible(false);
         }
@@ -102,6 +85,8 @@ public class GameBoard {
             CARD_IMAGES[i].setIcon(new ImageIcon(Cards.AVAILABLE_PARTY_MEMBERS[i].getPath()));
             Dimension size = CARD_IMAGES[i].getPreferredSize();
             CARD_IMAGES[i].setBounds(CARD_POSITIONS[i][0], CARD_POSITIONS[i][1], size.width, size.height);
+            CARD_IMAGES[i].setVisible(false);
+
         }
         for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
             SYSTEM.add(ACTIVE_DISPLAYS[i]);
@@ -122,8 +107,25 @@ public class GameBoard {
             SYSTEM.add(INFO_PANEL[i]);
             INFO_PANEL[i].setFont(new Font("Arial", Font.BOLD, 20));
             INFO_PANEL[i].setBounds(1600, 600 + (i * 20), 200, 20);
+            INFO_PANEL[i].setVisible(false);
+
         }
+        //final setup
+        INPUT.setEditable(false);
+        SYSTEM.add(INPUT);
+        SYSTEM.add(LABEL);
+        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
+        SYSTEM.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        SYSTEM.setVisible(true);
+
+        SYSTEM.pack();
     }
+
+    public static void setBackground(String path) {
+        LABEL.setIcon(new ImageIcon(path));
+    }
+
+
 
     public static void sPrintln(String str) {
         INPUT.setText(" ");
@@ -367,12 +369,12 @@ public class GameBoard {
     }
 
     public static void setTeam() {
+        team.clear();
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
             Character character = (Character) choice("Pick a team member (1-8)", Cards.AVAILABLE_PARTY_MEMBERS);
 
             boolean inParty = false;
-            boolean isDead = false;
             for (Character value : team) {
                 if (value.equals(character)) {
                     inParty = true;
@@ -382,8 +384,6 @@ public class GameBoard {
 
             if (inParty) {
                 sPrintln("You already have this member in the party");
-            } else if(isDead) {
-              sPrintln("This member needs to rest up");
             } else {
                 team.add(character);
                 character.setPlayerControlled(true);
@@ -414,24 +414,51 @@ public class GameBoard {
     }
 
     public static void loot() {
-        GameBoard.setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        if(Main.random(currentFloor^2,676)==676) {
+            turnOffDisplay();
+            GameBoard.setBackground("Maddox Animation/frame0003.png");
+            Main.wait(300);
+            turnOnText();
+            GameBoard.sPrintln("Looks like my employees could not handle you");
+            GameBoard.sPrintln("Guess I will have to deal with myself");
+            turnOnDisplay();
+            ArrayList<Character> characters = new ArrayList<>();
+            characters.add(Cards.MADDOX_BOSSES[Main.random(0,Cards.MADDOX_BOSSES.length-1)]);
+            new Battle(GameBoard.getTeam(),characters);
+        }
 
         setTargetDisplay(-1);
         Deck.BASE_DECK.shuffle();
         currentLoot = Deck.BASE_DECK.getRange(0, 5);
+        System.out.println(currentLoot.size() + "");
+        Card[] cards = new Card[]{
+                BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD
+        };
+        for (int i = 0; i < currentLoot.size(); i++) {
+            cards[i] = currentLoot.get(i);
+        }
+        for (int i = 0; i < team.size(); i++) {
+            cards[i + 5] = team.get(i);
+        }
+        setCardsInDisplay(cards);
+        sPrintln("Here is what you find on floor: " + currentFloor);
         Deck.BASE_DECK.removeRange(0, 5);
         for (int i = 0; i < currentLoot.size(); i++) {
             System.out.println(currentLoot.get(i).getName());
             setChoices(new int[0]);
-            setCardsInDisplay(4);
             if (currentLoot.get(i).getType() == 2 && currentFloor > 0) {
                 currentEnemies.add((Character) currentLoot.get(i));
+            } else if (currentFloor <= 0 && currentLoot.get(i).getType() == 2) {
+                sPrintln(currentLoot.get(i).getName() + " runs away to a higher floor");
             }
+        }
+        setCardsInDisplay(4);
+        for (int i = 0; i < currentLoot.size(); i++) {
             if (currentLoot.get(i).getType() == 4) {
                 setNextTargetDisplay();
                 (currentLoot.get(i)).trigger();
             }
-
         }
         if (!currentEnemies.isEmpty()) {
             setCardsInDisplay(2);
@@ -445,7 +472,6 @@ public class GameBoard {
                 if (currentLoot.get(i).getType() == 3) {
                     setNextTargetDisplay();
                     setCardsInDisplay(3);
-                    System.out.println("currentTargetIndex: " + currentTargetIndex);
                     Character target = (Character) choice("Which party member should get the " + currentLoot.get(i).getName(), team.toArray());
                     target.addItem((Item) currentLoot.get(i));
                     sPrintln(target.getName() + " got a " + currentLoot.get(i).getName());
@@ -566,4 +592,50 @@ public class GameBoard {
             TARGET_DISPLAY[i].setVisible(i == currentTargetIndex);
         }
     }
+    public static void turnOffDisplay() {
+        for (int i = 0; i < STAT_DISPLAYS.length; i++) {
+            STAT_DISPLAYS[i].setVisible(false);
+        }
+        for (int i = 0; i < INFO_PANEL.length; i++) {
+            INFO_PANEL[i].setVisible(false);
+        }
+        for (int i = 0; i < INDEX_LABELS.length; i++) {
+            INDEX_LABELS[i].setVisible(false);
+        }
+        for (int i = 0; i < HP_DISPLAYS.length; i++) {
+            HP_DISPLAYS[i].setVisible(false);
+        }
+        for (int i = 0; i < CARD_IMAGES.length; i++) {
+            CARD_IMAGES[i].setVisible(false);
+        }
+        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+            ACTIVE_DISPLAYS[i].setVisible(false);
+        }
+        for (int i = 0; i < TARGET_DISPLAY.length; i++) {
+            TARGET_DISPLAY[i].setVisible(false);
+        }
+        TEXT2.setVisible(false);
+        TEXT1.setVisible(false);
+    }
+    public static void turnOnText() {
+        TEXT2.setVisible(true);
+        TEXT1.setVisible(true);
+    }
+    public static void turnOnDisplay() {
+        for (int i = 0; i < INFO_PANEL.length; i++) {
+            INFO_PANEL[i].setVisible(true);
+        }
+        for (int i = 0; i < INDEX_LABELS.length; i++) {
+            INDEX_LABELS[i].setVisible(true);
+        }
+
+        for (int i = 0; i < CARD_IMAGES.length; i++) {
+            CARD_IMAGES[i].setVisible(true);
+        }
+
+
+        LABEL.setIcon(new ImageIcon("ui_images/ui.png"));
+
+    }
+
 }

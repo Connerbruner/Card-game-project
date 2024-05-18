@@ -2,19 +2,19 @@ public class Main {
 
 
     public static void main(String[] args) {
-
         new GameBoard();
+
         //explain the idea
         GameBoard.sPrintln("Welcome to Maddox Merc HQ");
         GameBoard.sPrintln("I contracted you to steal some important documents for us and take out some higher-ups");
         GameBoard.sPrintln("Dont worry about the money I will pay you handsomely");
         GameBoard.sPrintln("The Goal is to get me all the goods you can get without dying");
         GameBoard.addScore(0);
-
         //Explaining the game
-        GameBoard.sPrintln("Before we Get started Let me explain the how we plan to handle this");
+        GameBoard.sPrintln("Before we Get started Let me explain how we plan to handle this");
         GameBoard.setBackground("ui_images/character.png");
-        GameBoard.sPrintln("This is a character. Characters can be both friend or foe");
+        GameBoard.sPrintln("This is a character. Characters can be both friend or foe.");
+        GameBoard.sPrintln("You will create a team of 3 Characters to raid Maddox Merc HQ");
         GameBoard.setBackground("ui_images/Cards Explained0000.png");
         GameBoard.sPrintln("You can see the stats of the Character on the card ");
         GameBoard.sPrintln("Strength: is the percent of damage they deal when attacking");
@@ -28,7 +28,6 @@ public class Main {
         GameBoard.sPrintln("This is how much damage you have taken");
         GameBoard.setBackground("ui_images/items.png");
         GameBoard.sPrintln("Next up is items the text below explain how they work.");
-        GameBoard.sPrintln("Character They can hold up to 2 at a time. These can be used instead of abilities during a Character turn");
         GameBoard.sPrintln("The effect of a item is listed below");
         GameBoard.setBackground("ui_images/events.png");
         GameBoard.sPrintln("Events trigger when entering play the effect is listed on the text");
@@ -39,18 +38,16 @@ public class Main {
         GameBoard.setBackground("ui_images/turnflowCharacthers.png");
         GameBoard.sPrintln("Then you fight any characters/enemies.");
         GameBoard.sPrintln("Your party attacks first from left to right. Then the characters/enemies go left to right");
+        GameBoard.setBackground("ui_images/chosing explained.png    ");
+        GameBoard.sPrintln("During one of your teammates turns you can use an item or an ability");
+        GameBoard.sPrintln("If you want to choose anything you press that number on the keyboard 2 times in a row");
+        GameBoard.sPrintln("Pressing 3 triggers ability 1 and 4 to ability 2");
         GameBoard.setBackground("ui_images/turnflowItems.png");
         GameBoard.sPrintln("Then you add any items that remain");
-        GameBoard.setBackground("ui_images/chosing explained.png");
-        GameBoard.sPrintln("If you want to choose anything you press that number on the keyboard 2 times in a row");
-
-
-
-
 
         //Game Setup
-        GameBoard.setupDisplay();
-        GameBoard.sPrintln("Alright now that you understand the goal lets pick your team");
+        GameBoard.turnOnDisplay();
+        GameBoard.sPrintln("Alright now that you understand the goal lets pick your team of 3");
         GameBoard.setTeam();
         GameBoard.getDeck().shuffle();
         GameBoard.sPrintln("Good Luck I hope I see you later");
@@ -59,7 +56,7 @@ public class Main {
         GameBoard.sPrintln("GAME OVER");
         GameBoard.sPrintln("Thank you for Playing");
 
-
+        Main.main(null);
     }
 
     public static int random(int low, int high) {
@@ -73,5 +70,9 @@ public class Main {
         }
         System.out.println(low);
         return low;
+    }
+    public static void wait(int millis) {
+        long startTime = System.currentTimeMillis();
+        while (startTime+millis>System.currentTimeMillis());
     }
 }
