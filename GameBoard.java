@@ -21,6 +21,7 @@ public class GameBoard {
     private static final int[][] CARD_HP = {{0, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
     private static final int[][] CARD_STATS = {{40, 80}, {450, 80}, {860, 80}, {1240, 80}, {1650, 80}, {450, 560}, {850, 560}, {1240, 560},};
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
+    private static int[] permanentStatChange = new int[] {0,0,0};
     private static final JTextField INPUT = new JTextField(10);
     private static final JFrame SYSTEM = new JFrame("");
 
@@ -338,8 +339,14 @@ public class GameBoard {
     }
 
     public static void setCardInDisplay(Card c, int i) {
-        cardsInDisplay[i] = c;
-        CARD_IMAGES[i].setIcon(new ImageIcon(c.getPath()));
+        Card[] cards = new Card[8];
+        for (int j = 0; j < cards.length; j++) {
+            cards[j] = cardsInDisplay[j];
+            if(i==j) {
+                cards[j] = c;
+            }
+        }
+        setCardsInDisplay(cards);
     }
 
     public static void setChoicesToTeam() {
@@ -370,6 +377,7 @@ public class GameBoard {
 
     public static void setTeam() {
         team.clear();
+        setCardsInDisplay(Cards.AVAILABLE_PARTY_MEMBERS);
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
             Character character = (Character) choice("Pick a team member (1-8)", Cards.AVAILABLE_PARTY_MEMBERS);
@@ -414,23 +422,13 @@ public class GameBoard {
     }
 
     public static void loot() {
-        setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
-        if(Main.random(currentFloor^2,676)==676) {
-            turnOffDisplay();
-            GameBoard.setBackground("Maddox Animation/frame0003.png");
-            Main.wait(300);
-            turnOnText();
-            GameBoard.sPrintln("Looks like my employees could not handle you");
-            GameBoard.sPrintln("Guess I will have to deal with myself");
-            turnOnDisplay();
-            ArrayList<Character> characters = new ArrayList<>();
-            characters.add(Cards.MADDOX_BOSSES[Main.random(0,Cards.MADDOX_BOSSES.length-1)]);
-            new Battle(GameBoard.getTeam(),characters);
-        }
-
-        setTargetDisplay(-1);
+        currentLoot.clear();
+        currentEnemies.clear();
         Deck.BASE_DECK.shuffle();
-        currentLoot = Deck.BASE_DECK.getRange(0, 5);
+        setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
+        setTargetDisplay(-1);
+        setChoices(new int[0]);
+        currentLoot = Deck.BASE_DECK.getRange(0, 5,true);
         System.out.println(currentLoot.size() + "");
         Card[] cards = new Card[]{
                 BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD
@@ -460,10 +458,11 @@ public class GameBoard {
                 (currentLoot.get(i)).trigger();
             }
         }
-        if (!currentEnemies.isEmpty()) {
-            setCardsInDisplay(2);
-            new Battle(team, currentEnemies);
-        }
+
+        setCardsInDisplay(2);
+        new Battle(team, currentEnemies);
+
+
         if (!getTeam().isEmpty()) {
             setTargetDisplay(-1);
             for (int i = 0; i < currentLoot.size(); i++) {
@@ -638,4 +637,10 @@ public class GameBoard {
 
     }
 
+        public static int[] getPermanentStatChange() {
+        return permanentStatChange;
+    }
+    public static void addToPermanentStatChange(int[] arr) {
+        permanentStatChange = new int[]{arr[0] + permanentStatChange[0], arr[1] + permanentStatChange[1], arr[1] + permanentStatChange[1]};
+    }
 }

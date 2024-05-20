@@ -4,6 +4,7 @@ public class Card {
     private String name;
 
     public Card(String p) {
+        name="";
         path=p;
         type=0;
 

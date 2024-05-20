@@ -8,6 +8,11 @@ public class Battle {
     public Battle(ArrayList<Character> t, ArrayList<Character> e) {
         team = t;
         enemies = e;
+        if(GameBoard.getPermanentStatChange()[0]!=0) {
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).addStatChange(new StatChange(GameBoard.getPermanentStatChange(),99));
+            }
+        }
         while (!team.isEmpty() && !enemies.isEmpty()) {
 
             for (int i = 0; i < team.size(); i++) {
@@ -64,6 +69,9 @@ public class Battle {
                 GameBoard.sPrintln(enemies.get(i).getName() + " died");
                 GameBoard.removeFromLoot(enemies.get(i));
                 enemies.remove(i);
+                int score = Main.random(0,100);
+                GameBoard.sPrintln("Score +"+score);
+                GameBoard.addScore(score);
             }
 
 

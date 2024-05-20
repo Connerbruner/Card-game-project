@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 interface CharacterVoid {
     void run(Character user, ArrayList<Character> team, ArrayList<Character> enemies);
@@ -127,6 +128,7 @@ public class Character extends Card {
         if (damage < 0) {
             damage = 0;
         }
+        GameBoard.setTargetDisplay(Arrays.asList(GameBoard.getCardsInDisplay()).indexOf(this));
     }
 
     public int getDamage() {
@@ -204,6 +206,16 @@ public class Character extends Card {
             amount+=statChanges.get(i).getTime();
         }
         return amount/statChanges.size();
+    }
+    public static boolean basicAttack(int damage,Character target, Character user) {
+        if (target.evadeCheck(user)) {
+            target.changeHp((int) (damage * user.getStrength()));
+            GameBoard.sPrintln(target.getName() + " takes " + (int) (damage * user.getStrength()) + " damage");
+            return true;
+        }  else {
+            GameBoard.sPrintln("Missed");
+            return false;
+        }
     }
 
     public void setDefense(int defense) {

@@ -54,10 +54,10 @@ public class Item extends Card {
                   hits++;
                 }
             }
-            GameBoard.sPrintln(enemy.getName() + " got hit " + hits + " times");
             int damage = (int) (hits *Main.random(low, high)*user.getStrength());
-            GameBoard.sPrintln(enemy.getName() + " took "+damage+" damage");
             enemy.changeHp(damage);
+            GameBoard.sPrintln(enemy.getName() + " got hit " + hits + " times");
+            GameBoard.sPrintln(enemy.getName() + " took "+damage+" damage");
 
 
         };

@@ -30,6 +30,7 @@ public class DeckReadOut {
         System.out.println("itemCount: "+itemCount);
         System.out.println("plasmaCount: "+plasmaCount);
         System.out.println("LaserCount: "+laserCount);
+        System.out.println("TOTAL: "+Deck.BASE_DECK.getStartingSize());
     }
 
 }

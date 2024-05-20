@@ -2,17 +2,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-    public static final Deck BASE_DECK = new Deck(new Card[]{
-            GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
-            new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]), new Document(Cards.DIFFERENT_DOCUMENTS[0]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[2]),
-            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),
+    public static Deck BASE_DECK = new Deck(new Card[]{
+
+            GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,
+            new Document(Cards.DIFFERENT_DOCUMENTS[0]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]), new Document(Cards.DIFFERENT_DOCUMENTS[1]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[2]),new Document(Cards.DIFFERENT_DOCUMENTS[2]),
+            new Document(Cards.DIFFERENT_DOCUMENTS[3]), new Document(Cards.DIFFERENT_DOCUMENTS[3]),
 
 
-            new Event(Cards.DIFFERENT_EVENTS[0]),
+            new Event(Cards.DIFFERENT_EVENTS[0]),new Event(Cards.DIFFERENT_EVENTS[0]),new Event(Cards.DIFFERENT_EVENTS[1]),
             new Event(Cards.DIFFERENT_EVENTS[1]), new Event(Cards.DIFFERENT_EVENTS[1]), new Event(Cards.DIFFERENT_EVENTS[1]),
-            new Event(Cards.DIFFERENT_EVENTS[2]), new Event(Cards.DIFFERENT_EVENTS[2]), new Event(Cards.DIFFERENT_EVENTS[2]),
+            new Event(Cards.DIFFERENT_EVENTS[2]), new Event(Cards.DIFFERENT_EVENTS[2]), new Event(Cards.DIFFERENT_EVENTS[2]),new Event(Cards.DIFFERENT_EVENTS[2]),
+            new Event(Cards.DIFFERENT_EVENTS[3]),new Event(Cards.DIFFERENT_EVENTS[3]),new Event(Cards.DIFFERENT_EVENTS[3]),new Event(Cards.DIFFERENT_EVENTS[3]),
 
             new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]), new Character(Cards.DIFFERENT_CHARACTERS[0]),
             new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]), new Character(Cards.DIFFERENT_CHARACTERS[1]),
@@ -23,7 +25,6 @@ public class Deck {
             new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]), new Character(Cards.DIFFERENT_CHARACTERS[6]),
             new Character(Cards.DIFFERENT_CHARACTERS[7]), new Character(Cards.DIFFERENT_CHARACTERS[7]), new Character(Cards.DIFFERENT_CHARACTERS[7]),
             new Character(Cards.DIFFERENT_CHARACTERS[8]), new Character(Cards.DIFFERENT_CHARACTERS[8]), new Character(Cards.DIFFERENT_CHARACTERS[8]), new Character(Cards.DIFFERENT_CHARACTERS[8]),
-
 
             new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]), new Item(Cards.DIFFERENT_ITEMS[0]),
             new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]), new Item(Cards.DIFFERENT_ITEMS[1]),
@@ -50,14 +51,16 @@ public class Deck {
             new Item(Cards.DIFFERENT_ITEMS[20]), new Item(Cards.DIFFERENT_ITEMS[20]),
     });
     private final ArrayList<Card> deck;
+    private int startingSize;
 
     public Deck(Card[] cards) {
         deck = new ArrayList<>();
         Collections.addAll(deck, cards);
+        startingSize=deck.size();
     }
 
-    public Card getTopCard() {
-        return get(0);
+    public int getStartingSize() {
+        return startingSize;
     }
 
     public Card get(int i) {
@@ -66,6 +69,20 @@ public class Deck {
 
     public ArrayList<Card> getRange(int min, int max) {
         ArrayList<Card> temp = new ArrayList<>();
+        for (int i = min; i < max && i < deck.size(); i++) {
+            temp.add(get(i));
+        }
+        return temp;
+    }
+    public ArrayList<Card> getRange(int min, int max,boolean maddox) {
+        ArrayList<Card> temp = new ArrayList<>();
+
+        if(maddox) {
+            if(Main.random(GameBoard.getCurrentFloor()^2,(Deck.BASE_DECK.getStartingSize()/5)^2)==((Deck.BASE_DECK.getStartingSize()/5)^2)) {
+                temp.add(Cards.MADDOX_BOSSES[0]);
+                return temp;
+            }
+        }
         for (int i = min; i < max && i < deck.size(); i++) {
             temp.add(get(i));
         }
@@ -101,18 +118,16 @@ public class Deck {
     }
 
 
-    public void add(Card card) {
-        GameBoard.setInfoPanelText(3, "Cards left: " + deck.size());
 
-        deck.add(card);
-    }
 
 
     public ArrayList<Card> search(int count, String target) {
         ArrayList<Card> found = new ArrayList<>();
         for (int i = 0; i < count && i < deck.size(); i++) {
-            if (deck.get(i).getName().contains(target)) {
-                found.add(deck.get(i));
+            if (deck.get(i).getName() != null) {
+                if (deck.get(i).getName().contains(target)) {
+                    found.add(deck.get(i));
+                }
             }
         }
         return found;
