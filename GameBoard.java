@@ -9,25 +9,22 @@ public class GameBoard {
     private static final JLabel TEXT1 = new JLabel();
     private static final JLabel TEXT2 = new JLabel();
     private static final JLabel[] STAT_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(),new JLabel(),};
+    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] INDEX_LABELS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-    private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] ACTIVE_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] TARGET_DISPLAY = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
 
     private static final int[][] INDEX_POSITIONS = {{170, 90}, {555, 90}, {960, 90}, {1350, 90}, {1740, 90}, {555, 570}, {960, 570}, {1340, 570}, {1360, 570},};
     private static final int[][] CARD_POSITIONS = {{30, 120}, {410, 120}, {820, 120}, {1200, 120}, {1590, 120}, {410, 600}, {820, 600}, {1200, 600},};
-    private static final int[][] CARD_HP = {{25, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
-    private static final int[][] CARD_STATS = {{50, 80}, {435, 80}, {845, 80}, {1225, 80}, {1615, 80}, {435, 560}, {850, 560}, {1225, 560},};
+    private static final int[][] CARD_STATS = {{50, 307}, {425, 307}, {835, 307}, {1215, 307}, {1605, 307}, {425, 777}, {835, 805}, {1215, 805},};
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
-    private static int[] permanentStatChange = new int[] {0,0,0};
     private static final JTextField INPUT = new JTextField(10);
     private static final JFrame SYSTEM = new JFrame("");
-
     private static final ArrayList<Character> team = new ArrayList<>();
     private static final ArrayList<Character> currentEnemies = new ArrayList<>();
     private static final ArrayList<Integer> currentChoices = new ArrayList<>();
+    private static int[] permanentStatChange = new int[]{0, 0, 0};
     private static int currentFloor = 0;
     private static int currentRestIndex = 0;
     private static int currentTargetIndex = 0;
@@ -38,18 +35,18 @@ public class GameBoard {
 
 
     public GameBoard() {
-        wantsToKeepGoing=true;
+        wantsToKeepGoing = true;
         //party member shuffle
 
         //text 1 2 setup
 
         SYSTEM.add(TEXT1);
-        TEXT1.setFont(new Font("Arial", Font.BOLD, 20));
+        TEXT1.setFont(new Font("Lato", Font.BOLD, 20));
         TEXT1.setHorizontalAlignment(0);
         TEXT1.setBounds(0, 30, 1920, 20);
 
         SYSTEM.add(TEXT2);
-        TEXT2.setFont(new Font("Arial", Font.BOLD, 20));
+        TEXT2.setFont(new Font("Lato", Font.BOLD, 20));
         TEXT2.setHorizontalAlignment(0);
         TEXT2.setBounds(0, 50, 1920, 20);
 //hp display setup
@@ -60,22 +57,15 @@ public class GameBoard {
             INDEX_LABELS[i].setVisible(false);
 
         }
-        for (int i = 0; i < HP_DISPLAYS.length; i++) {
-            SYSTEM.add(HP_DISPLAYS[i]);
-            HP_DISPLAYS[i].setFont(new Font("Arial", Font.BOLD, 15));
-            HP_DISPLAYS[i].setText("100");
-            HP_DISPLAYS[i].setHorizontalTextPosition(JLabel.CENTER);
-            HP_DISPLAYS[i].setIcon(new ImageIcon("ui_images/damage.png"));
-            HP_DISPLAYS[i].setBounds(CARD_HP[i][0], CARD_HP[i][1], 128, 128);
-            HP_DISPLAYS[i].setVisible(false);
-        }
+
         for (int i = 0; i < STAT_DISPLAYS.length; i++) {
             SYSTEM.add(STAT_DISPLAYS[i]);
-            STAT_DISPLAYS[i].setFont(new Font("Arial", Font.BOLD, 15));
+            STAT_DISPLAYS[i].setIcon(new ImageIcon("ui_images/stats.png"));
+            STAT_DISPLAYS[i].setFont(new Font("Arial", Font.BOLD, 20));
             STAT_DISPLAYS[i].setText("100");
             STAT_DISPLAYS[i].setHorizontalTextPosition(JLabel.CENTER);
-            STAT_DISPLAYS[i].setIcon(new ImageIcon("ui_images/stats.png"));
-            STAT_DISPLAYS[i].setBounds(CARD_STATS[i][0], CARD_STATS[i][1], 128, 128);
+            STAT_DISPLAYS[i].setBounds(CARD_STATS[i][0], CARD_STATS[i][1], 200, 200);
+            STAT_DISPLAYS[i].setForeground(Color.BLACK);
             STAT_DISPLAYS[i].setVisible(false);
         }
 
@@ -87,7 +77,6 @@ public class GameBoard {
             Dimension size = CARD_IMAGES[i].getPreferredSize();
             CARD_IMAGES[i].setBounds(CARD_POSITIONS[i][0], CARD_POSITIONS[i][1], size.width, size.height);
             CARD_IMAGES[i].setVisible(false);
-
         }
         for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
             SYSTEM.add(ACTIVE_DISPLAYS[i]);
@@ -127,7 +116,6 @@ public class GameBoard {
     }
 
 
-
     public static void sPrintln(String str) {
         INPUT.setText(" ");
         INPUT.setEditable(true);
@@ -145,9 +133,9 @@ public class GameBoard {
         INPUT.setEditable(true);
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
-        String s="";
+        String s = "";
         for (int i = 0; i < o.length; i++) {
-            s+=(i+1)+" == "+o[i].toString()+"   ";
+            s += (i + 1) + " == " + o[i].toString() + "   ";
         }
         TEXT2.setText(s);
         int currentPose = -1;
@@ -191,7 +179,8 @@ public class GameBoard {
 
         return o1;
     }
-    public static Object choice(String str, Object[] o,String s) {
+
+    public static Object choice(String str, Object[] o, String s) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
@@ -350,7 +339,6 @@ public class GameBoard {
         cardsInDisplay = c;
 
         for (int i = 0; i < cardsInDisplay.length && i < 8; i++) {
-            HP_DISPLAYS[i].setVisible(false);
             STAT_DISPLAYS[i].setVisible(false);
             if (cardsInDisplay[i] == null || cardsInDisplay[i].getType() == 0) {
                 CARD_IMAGES[i].setIcon(new ImageIcon(BLANK_CARD.getPath()));
@@ -359,11 +347,9 @@ public class GameBoard {
                 CARD_IMAGES[i].setIcon(new ImageIcon(cardsInDisplay[i].getPath()));
                 if (cardsInDisplay[i].getType() < 3) {
                     Character character = (Character) cardsInDisplay[i];
-                    HP_DISPLAYS[i].setVisible(true);
-                    STAT_DISPLAYS[i].setVisible(true);
-                    HP_DISPLAYS[i].setText(character.getDefense()-character.getDamage() + "");
-                    STAT_DISPLAYS[i].setText(character.statChangeDiff(1) + " , " + character.statChangeDiff(0) + " , " + character.statChangeDiff(2) + " for " + character.avgStatTime());
-
+                        STAT_DISPLAYS[i].setVisible(true);
+                        STAT_DISPLAYS[i].setText("<html> Max HP: " + character.getDefense() + "<br>HP: " + (character.getDefense() - character.getDamage())
+                                 +"<br>Damage: " + character.getStrength() + "%<br>Agility: " + character.getAgility()+"</html>");
                 }
             }
         }
@@ -393,7 +379,7 @@ public class GameBoard {
         Card[] cards = new Card[8];
         for (int j = 0; j < cards.length; j++) {
             cards[j] = cardsInDisplay[j];
-            if(i==j) {
+            if (i == j) {
                 cards[j] = c;
             }
         }
@@ -476,8 +462,9 @@ public class GameBoard {
         currentFloor = floor;
         setInfoPanelText(1, "Current Floor: " + currentFloor);
     }
+
     public static void showHighScore() {
-        setInfoPanelText(4,"High Score: "+getHighScore());
+        setInfoPanelText(4, "High Score: " + getHighScore());
     }
 
     public static void loot() {
@@ -487,7 +474,7 @@ public class GameBoard {
         setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
         setTargetDisplay(-1);
         setChoices(new int[0]);
-        currentLoot = Deck.BASE_DECK.getRange(0, 5,true);
+        currentLoot = Deck.BASE_DECK.getRange(0, 5, true);
         System.out.println(currentLoot.size() + "");
         Card[] cards = new Card[]{
                 BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD, BLANK_CARD
@@ -621,7 +608,7 @@ public class GameBoard {
     public static void rest() {
         sPrintln("REST FLOOR");
         sPrintln("You see a fire escape");
-        if ((int) (choice("Would you like to escape and leave the tower?", new Object[]{1, 2}, false,"1 == Yes  2 == No")) == 1) {
+        if ((int) (choice("Would you like to escape and leave the tower?", new Object[]{1, 2}, false, "1 == Yes  2 == No")) == 1) {
             wantsToKeepGoing = false;
         }
         nextRestFloor();
@@ -667,9 +654,10 @@ public class GameBoard {
 
     }
 
-        public static int[] getPermanentStatChange() {
+    public static int[] getPermanentStatChange() {
         return permanentStatChange;
     }
+
     public static void addToPermanentStatChange(int[] arr) {
         permanentStatChange = new int[]{arr[0] + permanentStatChange[0], arr[1] + permanentStatChange[1], arr[1] + permanentStatChange[1]};
     }

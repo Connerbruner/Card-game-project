@@ -271,7 +271,7 @@ public class Cards {
                 for (int i = 0; i < team.size(); i++) {
                     ArrayList<StatChange> stats = team.get(i).getStatChanges();
                     for (int j = 0; j < stats.size(); j++) {
-                        stats.get(i).setTime(stats.get(j).getTime() + 3);
+                        stats.get(j).setTime(stats.get(j).getTime() + 3);
                     }
                 }
                 GameBoard.sPrintln("Your Teams Stat Changes will last 3 turns longer");

@@ -74,6 +74,7 @@ public class Deck {
         startingSize = deck.size();
         data = read("data.txt");
         maxHands=startingSize/5;
+        System.out.println(maxHands);
 
     }
 
@@ -140,7 +141,7 @@ public class Deck {
         ArrayList<Card> temp = new ArrayList<>();
 
         if (maddox) {
-            if (Main.random(GameBoard.getCurrentFloor() ^ 2, maxHands ^ 2) == (maxHands ^ 2)) {
+            if (Main.random(GameBoard.getCurrentFloor() ^ 2, 576) == 567) {
                 temp.add(Cards.MADDOX_BOSSES[0]);
                 tickUpData(6);
                 return temp;

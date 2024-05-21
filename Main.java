@@ -5,7 +5,6 @@ public class Main {
 
     public static void main(String[] args) {
         new GameBoard();
-
         //explain the idea
         GameBoard.sPrintln("Welcome to Maddox Merc HQ");
         GameBoard.sPrintln("I contracted you to steal some important documents for us and take out some higher-ups");

@@ -18,11 +18,12 @@ public class Chest extends Event{
             GameBoard.sPrintln("Found a chest");
 
             for (Card card : loot) {
+                GameBoard.setNextTargetDisplay();
+
                 GameBoard.setCardsInDisplay(display);
                 Character character = (Character) GameBoard.choice("Which party member should get the " + card.getName(), GameBoard.getTeam().toArray());
                 GameBoard.sPrintln(character.getName() + " got a " + card.getName());
                 character.addItem((Item) card);
-
             }
         });
 
