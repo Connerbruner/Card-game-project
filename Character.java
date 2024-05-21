@@ -63,7 +63,11 @@ public class Character extends Card {
             }
             GameBoard.setCardsInDisplay(itemDisplay);
             GameBoard.setChoices(new int[]{5, 6, 7, 8});
-            attackIndex = (int) GameBoard.choice("Chose a Attack", new Object[]{0, 1, 2, 3});
+            String s="";
+            for (int i = 0; i < items.size(); i++) {
+                s+=(i+1)+" = "+items.get(i).getName()+"   ";
+            }
+            attackIndex = (int) GameBoard.choice("Chose a Attack", new Object[]{0, 1, 2, 3},s+"3 = Ability 1    4 = Ability 2");
             if (attackIndex >= items.size()) {
                 abilities[attackIndex % 2].run(this, team, enemies);
             } else {
@@ -75,7 +79,7 @@ public class Character extends Card {
 
             }
         } else {
-            abilities[Main.random(0,  abilities.length - 1)].run(this,team,enemies);
+            abilities[Main.random(abilities)].run(this,team,enemies);
         }
 
 

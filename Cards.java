@@ -5,16 +5,33 @@ public class Cards {
     public static final Character[] MADDOX_BOSSES = new Character[]{
             new Character("Maddox", "Cards/maddox.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
+                        GameBoard.sPrintln("YOU ARE POINTLESS");
+                        for (int i = 0; i < enemies.size(); i++) {
+                            enemies.get(i).addStatChange(new StatChange(new int[]{-10,-10,-10}, 5));
+                        }
+                        GameBoard.sPrintln("Everyone's stats are lowered by 10 for 5 turns");
+                        user.getAbilities()[user.getAbilities().length-1].run(user,team,enemies);
 
                     },
                     (user, team, enemies) -> {
-
+                        Character.basicAttack(50,enemies.get(Main.random(enemies.toArray())),user);
+                        user.getAbilities()[user.getAbilities().length-1].run(user,team,enemies);
                     },
                     (user, team, enemies) -> {
-
+                        GameBoard.sPrintln("MY POWER IS LIMITLESS");
+                        user.addStatChange(new StatChange(new int[] {20,20,20},5));
+                        GameBoard.sPrintln("Maddox's stats are increased by 20 for 5 turns");
                     },
+                    ((user, team, enemies) -> {
+                        if(Main.random(0,1)==1) {
+                            user.getAbilities()[Main.random(user.getAbilities())].run(user,team,enemies);
+                        } else {
+                            GameBoard.sPrintln("Maddox Stares at you");
+                        }
 
-            }, 100, 500, 10)
+                    })
+
+            }, 1, 500, 10)
     };
 
     public static final Item[] DIFFERENT_ITEMS = new Item[]{
@@ -66,7 +83,7 @@ public class Cards {
             new Character("Prototype", "Cards/prototype.png", new CharacterVoid[]{(user, team, enemies) -> {
                 user.addStatChange(new StatChange(new int[]{-10, 0, 5}, 3));
                 GameBoard.sPrintln("Prototype Gained 5 Agility but lost 10 Strength");
-            }, (user, team, enemies) -> Character.basicAttack(user.getAgility(), enemies.get(Main.random(0, enemies.size() - 1)), user)
+            }, (user, team, enemies) -> Character.basicAttack(user.getAgility(), enemies.get(Main.random(enemies.toArray())), user)
             }, 0.6, 40, 60),
             new Character("Nerdy Nerd", "Cards/nerdy.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
@@ -102,14 +119,14 @@ public class Cards {
                     }}, 1, 85, 15),
             new Character("KHEPRI", "Cards/khepri.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
-                        if (Character.basicAttack(30, enemies.get(Main.random(0, enemies.size() - 1)), user)) {
+                        if (Character.basicAttack(30, enemies.get(Main.random(enemies.toArray())), user)) {
                             user.addStatChange(new StatChange(new int[]{0, 0, 5}, 3));
                             GameBoard.sPrintln("KHEPRI gains 5 agility");
                         }
 
                     },
                     (user, team, enemies) -> {
-                        if (Character.basicAttack(30, enemies.get(Main.random(0, enemies.size() - 1)), user)) {
+                        if (Character.basicAttack(30, enemies.get(Main.random(enemies.toArray())), user)) {
                             user.addStatChange(new StatChange(new int[]{5, 0, 0}, 3));
                             GameBoard.sPrintln("KHEPRI gains 5 strength");
                         }
@@ -119,19 +136,18 @@ public class Cards {
             new Character("Lazer dogo", "Cards/lazer dogo.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
                         for (int i = 0; i < 2; i++) {
-                            int index = Main.random(0, enemies.size() - 1);
-                            Character.basicAttack(30, enemies.get(Main.random(0, enemies.size() - 1)), user);
+                            Character.basicAttack(30, enemies.get(Main.random(enemies.toArray())), user);
                         }
 
 
                     },
                     (user, team, enemies) -> {
-                        Character.basicAttack(40, enemies.get(Main.random(0, enemies.size() - 1)), user);
+                        Character.basicAttack(40, enemies.get(Main.random(enemies.toArray())), user);
 
                     }
             }, 1, 85, 15),
             new Character("Robot", "Cards/robot.png", new CharacterVoid[]{
-                    (user, team, enemies) -> Character.basicAttack(50, enemies.get(Main.random(0, enemies.size() - 1)), user),
+                    (user, team, enemies) -> Character.basicAttack(50, enemies.get(Main.random(enemies.toArray())), user),
                     (user, team, enemies) -> GameBoard.sPrintln("the robot just looks you")
             }, 1, 125, 0),
             new Character("phone", "Cards/phone.png", new CharacterVoid[]{
@@ -140,7 +156,7 @@ public class Cards {
                         GameBoard.sPrintln("Removed the top card of the deck");
 
                     },
-                    (user, team, enemies) -> Character.basicAttack(team.size() * 10, enemies.get(Main.random(0, enemies.size() - 1)), user)
+                    (user, team, enemies) -> Character.basicAttack(team.size() * 10, enemies.get(Main.random(enemies.toArray())), user)
             }, 0.7, 75, 35),
             new Character("Flame dogo", "Cards/flame dogo.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
@@ -154,17 +170,17 @@ public class Cards {
 
 
                     },
-                    (user, team, enemies) -> Character.basicAttack(50, enemies.get(Main.random(0, enemies.size() - 1)), user),
+                    (user, team, enemies) -> Character.basicAttack(50, enemies.get(Main.random(enemies.toArray())), user),
 
             }, 1.15, 85, 0),
             new Character("Drone", "Cards/drone.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
-                        if (!Character.basicAttack(30, enemies.get(Main.random(0, enemies.size() - 1)), user)) {
+                        if (!Character.basicAttack(30, enemies.get(Main.random(enemies.toArray())), user)) {
                             GameBoard.sPrintln(user.getName() + " took 5 damage");
                             user.changeHp(5);
                         }
                     },
-                    (user, team, enemies) -> Character.basicAttack(user.getDamage(), enemies.get(Main.random(0, enemies.size() - 1)), user)
+                    (user, team, enemies) -> Character.basicAttack(user.getDamage(), enemies.get(Main.random(enemies.toArray())), user)
             }, 0.7, 10, 50)
 
     };
@@ -225,7 +241,7 @@ public class Cards {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
                 GameBoard.setChoices(new int[0]);
-                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, false);
+                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, false,"choice x 5 = damage");
                 int damage = (int) (count * 5 * user.getStrength());
                 if (target.evadeCheck(user)) {
                     target.changeHp(damage);
@@ -239,7 +255,7 @@ public class Cards {
                 for (Character character : team) {
                     character.addStatChange(new StatChange(new int[]{user.getDamage() / 2, 0, 0}, 3));
                 }
-                GameBoard.sPrintln("Teams strength raised by " + user.getDamage());
+                GameBoard.sPrintln("Teams strength raised by " + user.getDamage()/2);
             },}, 1.55, 60, 8),
             new Character("Orion", "Cards/Orion.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setChoices(new int[]{5, 6, 7});
@@ -249,7 +265,7 @@ public class Cards {
                 Card[] targetDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, character};
                 GameBoard.setCardsInDisplay(targetDisplay);
                 GameBoard.setChoices(new int[]{7, 8});
-                CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use", character.getAbilities());
+                CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use", character.getAbilities(),"1 = Ability 1    2 = Ability 2");
                 attack.run(user, team, enemies);
             }, (user, team, enemies) -> {
                 for (int i = 0; i < team.size(); i++) {

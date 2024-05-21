@@ -9,7 +9,7 @@ public class GameBoard {
     private static final JLabel TEXT1 = new JLabel();
     private static final JLabel TEXT2 = new JLabel();
     private static final JLabel[] STAT_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
+    private static final JLabel[] INFO_PANEL = {new JLabel(), new JLabel(), new JLabel(), new JLabel(),new JLabel(),};
     private static final JLabel[] INDEX_LABELS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] HP_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
@@ -18,8 +18,8 @@ public class GameBoard {
 
     private static final int[][] INDEX_POSITIONS = {{170, 90}, {555, 90}, {960, 90}, {1350, 90}, {1740, 90}, {555, 570}, {960, 570}, {1340, 570}, {1360, 570},};
     private static final int[][] CARD_POSITIONS = {{30, 120}, {410, 120}, {820, 120}, {1200, 120}, {1590, 120}, {410, 600}, {820, 600}, {1200, 600},};
-    private static final int[][] CARD_HP = {{0, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
-    private static final int[][] CARD_STATS = {{40, 80}, {450, 80}, {860, 80}, {1240, 80}, {1650, 80}, {450, 560}, {850, 560}, {1240, 560},};
+    private static final int[][] CARD_HP = {{25, 80}, {410, 80}, {820, 80}, {1200, 80}, {1590, 80}, {410, 560}, {820, 560}, {1200, 560},};
+    private static final int[][] CARD_STATS = {{50, 80}, {435, 80}, {845, 80}, {1225, 80}, {1615, 80}, {435, 560}, {850, 560}, {1225, 560},};
     private static final int[] REST_FLOORS = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
     private static int[] permanentStatChange = new int[] {0,0,0};
     private static final JTextField INPUT = new JTextField(10);
@@ -145,7 +145,58 @@ public class GameBoard {
         INPUT.setEditable(true);
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
-        TEXT2.setText("");
+        String s="";
+        for (int i = 0; i < o.length; i++) {
+            s+=(i+1)+" == "+o[i].toString()+"   ";
+        }
+        TEXT2.setText(s);
+        int currentPose = -1;
+        Object o1 = null;
+        boolean noError = false;
+        while (formatInput(INPUT.getText()) == 0) {
+            while ((!noError || o1 == null)) {
+                try {
+                    String input = INPUT.getText();
+                    for (int i = 0; i < input.length(); i++) {
+                        String place = input.charAt(i) + "";
+                        if (strIsInt(place)) {
+                            try {
+                                currentPose = currentChoices.get(Integer.parseInt(place) - 1);
+                            } catch (IndexOutOfBoundsException ignored) {
+                            }
+                        }
+                    }
+                    for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+                        if (i != currentPose) {
+                            ACTIVE_DISPLAYS[i].setVisible(false);
+                        } else {
+                            ACTIVE_DISPLAYS[currentPose].setVisible(true);
+                        }
+
+                    }
+                    o1 = o[formatInput(INPUT.getText()) - 1];
+                    noError = true;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                }
+            }
+
+        }
+        INPUT.setEditable(false);
+
+        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
+            ACTIVE_DISPLAYS[i].setVisible(false);
+        }
+        INPUT.setEditable(false);
+        TEXT1.setText("");
+
+        return o1;
+    }
+    public static Object choice(String str, Object[] o,String s) {
+        INPUT.setText("");
+        INPUT.setEditable(true);
+        INPUT.requestFocus();
+        TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
+        TEXT2.setText(s);
         int currentPose = -1;
         Object o1 = null;
         boolean noError = false;
@@ -188,12 +239,12 @@ public class GameBoard {
         return o1;
     }
 
-    public static Object choice(String str, Object[] o, boolean displayTracking) {
+    public static Object choice(String str, Object[] o, boolean displayTracking, String bottomReadOut) {
         INPUT.setText("");
         INPUT.setEditable(true);
         INPUT.requestFocus();
         TEXT1.setText(str + " (Press number on your keyboard corresponding to the number you want 2 times)");
-        TEXT2.setText("");
+        TEXT2.setText(bottomReadOut);
         int currentPose = -1;
         Object o1 = null;
         boolean noError = false;
@@ -310,8 +361,8 @@ public class GameBoard {
                     Character character = (Character) cardsInDisplay[i];
                     HP_DISPLAYS[i].setVisible(true);
                     STAT_DISPLAYS[i].setVisible(true);
-                    HP_DISPLAYS[i].setText(character.getDamage() + "");
-                    STAT_DISPLAYS[i].setText(character.statChangeDiff(0) + " , " + character.statChangeDiff(1) + " , " + character.statChangeDiff(2) + " for " + character.avgStatTime());
+                    HP_DISPLAYS[i].setText(character.getDefense()-character.getDamage() + "");
+                    STAT_DISPLAYS[i].setText(character.statChangeDiff(1) + " , " + character.statChangeDiff(0) + " , " + character.statChangeDiff(2) + " for " + character.avgStatTime());
 
                 }
             }
@@ -413,12 +464,20 @@ public class GameBoard {
     public static void addScore(int add) {
         score += add;
         setInfoPanelText(0, "Score: " + score);
+        if (score > getHighScore()) {
+            setHighScore(score);
+            showHighScore();
+            sPrintln("NEW HIGHSCORE");
+        }
     }
 
 
     public static void setFloor(int floor) {
         currentFloor = floor;
         setInfoPanelText(1, "Current Floor: " + currentFloor);
+    }
+    public static void showHighScore() {
+        setInfoPanelText(4,"High Score: "+getHighScore());
     }
 
     public static void loot() {
@@ -488,6 +547,10 @@ public class GameBoard {
             if (currentFloor >= REST_FLOORS[currentRestIndex]) {
                 rest();
             }
+            if (score > getHighScore()) {
+                setHighScore(score);
+                sPrintln("NEW HIGHSCORE");
+            }
         }
 
         if (team.isEmpty()) {
@@ -501,12 +564,14 @@ public class GameBoard {
             sPrintln("Deck Penalty: " + getDeck().size());
             score -= getDeck().size();
             sPrintln("Total Score: " + score);
-            if (score > getHighScore()) {
-                setHighScore(score);
-                sPrintln("NEW HIGHSCORE");
-            }
 
         }
+        if (score > getHighScore()) {
+            setHighScore(score);
+            showHighScore();
+            sPrintln("NEW HIGHSCORE");
+        }
+
     }
 
     public static int getHighScore() {
@@ -514,7 +579,7 @@ public class GameBoard {
             File txt = new File("HighScore.txt");
             FileReader fileRead = new FileReader(txt);
             BufferedReader reader = new BufferedReader(fileRead);
-            return Integer.parseInt(String.valueOf(reader.read()));
+            return Integer.parseInt(reader.readLine());
 
 
         } catch (IOException e) {
@@ -553,14 +618,10 @@ public class GameBoard {
         setInfoPanelText(2, "Next Rest Floor: " + REST_FLOORS[currentRestIndex]);
     }
 
-    public static ArrayList<Card> getCurrentLoot() {
-        return currentLoot;
-    }
-
     public static void rest() {
         sPrintln("REST FLOOR");
         sPrintln("You see a fire escape");
-        if ((int) (choice("Would you like to escape and leave the tower? 1==Yes 2==No", new Object[]{1, 2}, false)) == 1) {
+        if ((int) (choice("Would you like to escape and leave the tower?", new Object[]{1, 2}, false,"1 == Yes  2 == No")) == 1) {
             wantsToKeepGoing = false;
         }
         nextRestFloor();
@@ -572,10 +633,6 @@ public class GameBoard {
 
     public static int getCurrentFloor() {
         return currentFloor;
-    }
-
-    public static ArrayList<Character> getCurrentEnemies() {
-        return currentEnemies;
     }
 
     public static void setTargetDisplay(int index) {
@@ -591,35 +648,8 @@ public class GameBoard {
             TARGET_DISPLAY[i].setVisible(i == currentTargetIndex);
         }
     }
-    public static void turnOffDisplay() {
-        for (int i = 0; i < STAT_DISPLAYS.length; i++) {
-            STAT_DISPLAYS[i].setVisible(false);
-        }
-        for (int i = 0; i < INFO_PANEL.length; i++) {
-            INFO_PANEL[i].setVisible(false);
-        }
-        for (int i = 0; i < INDEX_LABELS.length; i++) {
-            INDEX_LABELS[i].setVisible(false);
-        }
-        for (int i = 0; i < HP_DISPLAYS.length; i++) {
-            HP_DISPLAYS[i].setVisible(false);
-        }
-        for (int i = 0; i < CARD_IMAGES.length; i++) {
-            CARD_IMAGES[i].setVisible(false);
-        }
-        for (int i = 0; i < ACTIVE_DISPLAYS.length; i++) {
-            ACTIVE_DISPLAYS[i].setVisible(false);
-        }
-        for (int i = 0; i < TARGET_DISPLAY.length; i++) {
-            TARGET_DISPLAY[i].setVisible(false);
-        }
-        TEXT2.setVisible(false);
-        TEXT1.setVisible(false);
-    }
-    public static void turnOnText() {
-        TEXT2.setVisible(true);
-        TEXT1.setVisible(true);
-    }
+
+
     public static void turnOnDisplay() {
         for (int i = 0; i < INFO_PANEL.length; i++) {
             INFO_PANEL[i].setVisible(true);
