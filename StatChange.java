@@ -1,10 +1,12 @@
 public class StatChange {
+    private final int[] stats;
     private int time;
-    private int[] stats;
-    public StatChange(int[] s,int t) {
-        time=t;
-        stats=s;
+
+    public StatChange(int[] s, int t) {
+        time = t;
+        stats = s;
     }
+
     public void tickDown() {
         time--;
     }
@@ -13,15 +15,15 @@ public class StatChange {
         return stats;
     }
 
-    public boolean hasRunout() {
-        return time==0;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
+    public boolean hasRunOut() {
+        return time == 0;
     }
 
     public int getTime() {
         return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

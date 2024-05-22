@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Main {
 
 
@@ -31,6 +29,7 @@ public class Main {
         int range = high - low + 1;
         return (int) (Math.random() * range) + low;
     }
+
     public static int random(Object[] arr) {
         return (int) (Math.random() * arr.length);
     }
@@ -43,36 +42,40 @@ public class Main {
         System.out.println(low);
         return low;
     }
+
     public static void tutorial() {
-        GameBoard.setCardsInDisplay(new Card[] {
+        GameBoard.setCardsInDisplay(new Card[]{
                 Cards.DIFFERENT_CHARACTERS[0],
-                GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,
+                GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
                 Cards.AVAILABLE_PARTY_MEMBERS[1],
-                GameBoard.BLANK_CARD,GameBoard.BLANK_CARD
+                GameBoard.BLANK_CARD, GameBoard.BLANK_CARD
         });
         GameBoard.sPrintln("Lets Learn to play");
         GameBoard.sPrintln("First off lets learn to make a decisions");
         GameBoard.sPrintln("Press the 3 or 4 keys 2 times to select one of the abilities ");
-        GameBoard.setCardsInDisplay(new Card[] {
+        GameBoard.setCardsInDisplay(new Card[]{
                 Cards.DIFFERENT_CHARACTERS[0],
-                GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,
-                GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,
+                GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
+                GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
                 Cards.AVAILABLE_PARTY_MEMBERS[1]
         });
-        GameBoard.setChoices(new int[] {5,6,7,8});
-        while ((int)GameBoard.choice("What would you like to use? ", new Object[]{0,1,2,3},"3 = Ability 1    4 = Ability 2")<2);
+        GameBoard.setChoices(new int[]{5, 6, 7, 8});
+        String[] strings = Cards.DIFFERENT_CHARACTERS[1].getAbilityStrings();
+
+        while ((int) GameBoard.choice("What would you like to use? ", new Object[]{0, 1, 2, 3}, "3 = -30 Dodge Chance for enemies for 2 turns    4 = 70 damage if Dodge Chance is more than 0 this fails") < 2)
+            ;
         GameBoard.sPrintln("Now lets add some items and use some");
-        GameBoard.setCardsInDisplay(new Card[] {
+        GameBoard.setCardsInDisplay(new Card[]{
                 Cards.DIFFERENT_CHARACTERS[0],
-                GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,GameBoard.BLANK_CARD,
-                Cards.DIFFERENT_ITEMS[0],GameBoard.BLANK_CARD,
+                GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD,
+                Cards.DIFFERENT_ITEMS[0], GameBoard.BLANK_CARD,
                 Cards.AVAILABLE_PARTY_MEMBERS[1]
         });
-        while (!((int)GameBoard.choice("What would you like to use? ", new Object[]{0,1,2,3},"1 = Laser Sword   3 = Ability 1    4 = Ability 2") ==0));
-        GameBoard.setChoices(new int[] {0});
-        GameBoard.choice("Who would you like to attack",new Object[]{1},"1 = Prototype");
-
-
+        GameBoard.sPrintln("Now use the laser Sword");
+        while (!((int) GameBoard.choice("What would you like to use? ", new Object[]{0, 1, 2, 3}, "1 = Laser Sword   3 = -30 Dodge Chance for enemies for 2 turns    4 = 70 damage if Dodge Chance is more than 0 this fails") == 0))
+            ;
+        GameBoard.setChoices(new int[]{0});
+        GameBoard.choice("Who would you like to attack", new Object[]{1}, "1 = Prototype");
 
 
     }

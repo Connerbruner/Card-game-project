@@ -54,7 +54,6 @@ public class Deck {
     private final ArrayList<Card> deck;
     private final ArrayList<Double> data;
     private final int startingSize;
-    private final int maxHands;
 
     /**
      * data order:
@@ -73,7 +72,7 @@ public class Deck {
         Collections.addAll(deck, cards);
         startingSize = deck.size();
         data = read("data.txt");
-        maxHands=startingSize/5;
+        int maxHands = startingSize / 5;
         System.out.println(maxHands);
 
     }
@@ -96,27 +95,28 @@ public class Deck {
             return new ArrayList<>();
         }
     }
-    public static void edit( String filePath , ArrayList<Double> arr ) {
-        File       fileToBeModified = new File( filePath );
-        FileWriter writer           = null;
+
+    public static void edit(String filePath, ArrayList<Double> arr) {
+        File fileToBeModified = new File(filePath);
+        FileWriter writer = null;
         try {
-            writer = new FileWriter( fileToBeModified );
-            for ( Object o : arr ) {
-                if ( o != null ) {
+            writer = new FileWriter(fileToBeModified);
+            for (Object o : arr) {
+                if (o != null) {
                     String print = o + "\n";
-                    writer.write( print+"" );
+                    writer.write(print);
                 }
             }
 
-        } catch ( IOException e ) {
-            e.printStackTrace( );
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 //Closing the resources
                 assert writer != null;
-                writer.close( );
-            } catch ( IOException e ) {
-                e.printStackTrace( );
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -129,19 +129,11 @@ public class Deck {
         return deck.get(i);
     }
 
-    public ArrayList<Card> getRange(int min, int max) {
-        ArrayList<Card> temp = new ArrayList<>();
-        for (int i = min; i < max && i < deck.size(); i++) {
-            temp.add(get(i));
-        }
-        return temp;
-    }
-
     public ArrayList<Card> getRange(int min, int max, boolean maddox) {
         ArrayList<Card> temp = new ArrayList<>();
 
         if (maddox) {
-            if (Main.random(GameBoard.getCurrentFloor() ^ 2, 576) == 567) {
+            if (Main.random(GameBoard.getCurrentFloor() ^ 2, 576) == 567 ) {
                 temp.add(Cards.MADDOX_BOSSES[0]);
                 tickUpData(6);
                 return temp;
@@ -153,7 +145,7 @@ public class Deck {
             if (!alreadyTicked[0] && get(i).getType() == 2) {
                 tickUpData(0);
                 alreadyTicked[0] = true;
-            }  else if (get(i).getType() == 3) {
+            } else if (get(i).getType() == 3) {
                 if (!alreadyTicked[4] && get(i).getName().contains("Laser")) {
                     tickUpData(4);
                     alreadyTicked[4] = true;
@@ -174,14 +166,11 @@ public class Deck {
             }
         }
         tickUpData(7);
-        edit("data.txt",data);
+        edit("data.txt", data);
 
         return temp;
     }
 
-    public ArrayList<Card> getRange(int max) {
-        return getRange(0, max);
-    }
 
     public void shuffle() {
         GameBoard.setInfoPanelText(3, "Cards left: " + deck.size());
@@ -208,22 +197,6 @@ public class Deck {
     }
 
 
-    public ArrayList<Card> search(int count, String target) {
-        ArrayList<Card> found = new ArrayList<>();
-        for (int i = 0; i < count && i < deck.size(); i++) {
-            if (deck.get(i).getName() != null) {
-                if (deck.get(i).getName().contains(target)) {
-                    found.add(deck.get(i));
-                }
-            }
-        }
-        return found;
-    }
-
-    public ArrayList<Card> search(String target) {
-        return search(deck.size(), target);
-    }
-
     public ArrayList<Card> search(int count, int type) {
         ArrayList<Card> found = new ArrayList<>();
         if (count > deck.size()) {
@@ -237,27 +210,6 @@ public class Deck {
         return found;
     }
 
-    public Card searchTop(int type) {
-        Card found = null;
-        for (int i = 0; i < deck.size(); i++) {
-            if (deck.get(i).getType() == type) {
-                found = deck.get(i);
-                break;
-            }
-        }
-        return found;
-    }
-
-    public Card searchTop(String name) {
-        Card found = null;
-        for (int i = 0; i < deck.size(); i++) {
-            if (deck.get(i).getName().contains(name)) {
-                found = deck.get(i);
-                break;
-            }
-        }
-        return found;
-    }
 
     public int size() {
         return deck.size();

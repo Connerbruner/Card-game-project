@@ -6,25 +6,35 @@ public class Cards {
             new Character("Maddox", "Cards/maddox.png", new CharacterVoid[]{
                     (user, team, enemies) -> {
                         GameBoard.sPrintln("YOU ARE POINTLESS");
-                        for (int i = 0; i < enemies.size(); i++) {
-                            enemies.get(i).addStatChange(new StatChange(new int[]{-10,-10,-10}, 5));
+                        for (Character enemy : enemies) {
+                            enemy.addStatChange(new StatChange(new int[]{-10, -10, -10}, 5));
                         }
                         GameBoard.sPrintln("Everyone's stats are lowered by 10 for 5 turns");
-                        user.getAbilities()[user.getAbilities().length-1].run(user,team,enemies);
+                        user.getAbilities()[user.getAbilities().length - 1].run(user, team, enemies);
 
                     },
                     (user, team, enemies) -> {
-                        Character.basicAttack(50,enemies.get(Main.random(enemies.toArray())),user);
-                        user.getAbilities()[user.getAbilities().length-1].run(user,team,enemies);
+                        GameBoard.sPrintln("THIS IRON FIST SHOULD HURT");
+                        Character.basicAttack(50, enemies.get(Main.random(enemies.toArray())), user);
+                        user.getAbilities()[user.getAbilities().length - 1].run(user, team, enemies);
                     },
                     (user, team, enemies) -> {
                         GameBoard.sPrintln("MY POWER IS LIMITLESS");
-                        user.addStatChange(new StatChange(new int[] {20,20,20},5));
+                        user.addStatChange(new StatChange(new int[]{20, 20, 20}, 5));
                         GameBoard.sPrintln("Maddox's stats are increased by 20 for 5 turns");
+                        user.getAbilities()[user.getAbilities().length - 1].run(user, team, enemies);
+
+                    },
+                    (user, team, enemies) -> {
+                        GameBoard.sPrintln("WANT SOME MISSILES?");
+                        for (int i = 0; i < Main.random(0,10); i++) {
+                            Character.basicAttack(5, enemies.get(Main.random(enemies.toArray())), user);
+
+                        }
                     },
                     ((user, team, enemies) -> {
-                        if(Main.random(0,1)==1) {
-                            user.getAbilities()[Main.random(user.getAbilities())].run(user,team,enemies);
+                        if (Main.random(0, 2) > 0) {
+                            user.getAbilities()[Main.random(user.getAbilities())].run(user, team, enemies);
                         } else {
                             GameBoard.sPrintln("Maddox Stares at you");
                         }
@@ -62,8 +72,8 @@ public class Cards {
                 GameBoard.sPrintln("Defense raised by 30 for 3 turns");
             }, true),
             new Item("Rally Flag", "Cards/rally flag.png", (user, team, enemies) -> {
-                for (int i = 0; i < team.size(); i++) {
-                    team.get(i).addStatChange(new StatChange(new int[]{10, 10, 10}, 3));
+                for (Character character : team) {
+                    character.addStatChange(new StatChange(new int[]{10, 10, 10}, 3));
                 }
                 GameBoard.sPrintln("All stats raised by 10 for the whole team for 3 turns");
             }, false),
@@ -141,10 +151,7 @@ public class Cards {
 
 
                     },
-                    (user, team, enemies) -> {
-                        Character.basicAttack(40, enemies.get(Main.random(enemies.toArray())), user);
-
-                    }
+                    (user, team, enemies) -> Character.basicAttack(40, enemies.get(Main.random(enemies.toArray())), user)
             }, 1, 85, 15),
             new Character("Robot", "Cards/robot.png", new CharacterVoid[]{
                     (user, team, enemies) -> Character.basicAttack(50, enemies.get(Main.random(enemies.toArray())), user),
@@ -162,8 +169,8 @@ public class Cards {
                     (user, team, enemies) -> {
 
                         for (int i = 0; i < 2; i++) {
-                            for (int j = 0; j < enemies.size(); j++) {
-                                Character.basicAttack(7, enemies.get(j), user);
+                            for (Character enemy : enemies) {
+                                Character.basicAttack(7, enemy, user);
 
                             }
                         }
@@ -187,7 +194,10 @@ public class Cards {
 
 
     public static final Character[] AVAILABLE_PARTY_MEMBERS = new Character[]{
-            new Character("Mir", "Cards/mir.png", true, new CharacterVoid[]{(user, team, enemies) -> {
+
+            new Character("Mir", "Cards/mir.png", new CharacterVoid[]{(user, team, enemies) -> {
+                GameBoard.setCardsInDisplay(2);
+                GameBoard.setChoices(new ArrayList<>());
                 for (Character character : team) {
                     character.changeHp(-30);
                     GameBoard.sPrintln(character.getName() + " healed 30 damage");
@@ -199,7 +209,8 @@ public class Cards {
                 character.changeHp(-70);
                 GameBoard.sPrintln(character.getName() + " healed 70 Damage");
 
-            },}, 0.9, 125, 0),
+            },}, 0.9, 125, 0, new String[]{"Heal 30 damage from all Teammates ", "Heal 70 damage from 1 Teammate"}),
+
             new Character("Leo", "Cards/Leo.png", new CharacterVoid[]{(user, team, enemies) -> {
                 for (Character enemy : enemies) {
                     enemy.addStatChange(new StatChange(new int[]{0, 0, -30}, 2));
@@ -215,17 +226,19 @@ public class Cards {
                     GameBoard.sPrintln("dealt " + (int) (70 * user.getStrength()) + " damage");
                 }
 
-            },}, 1, 50, 35),
+            },}, 1, 50, 35, new String[]{"-30 Dodge Chance for enemies for 2 turns", "70 damage if Dodge Chance is more than 0 this fails"}),
             new Character("Arrokoth", "Cards/Arrokoth.png", new CharacterVoid[]{(user, team, enemies) -> {
+                user.getStatChanges().clear();
                 user.addStatChange(new StatChange(new int[]{-50, 20, 15}, 3));
                 GameBoard.sPrintln("Stats changed to 50,80,45");
 
             }, (user, team, enemies) -> {
+                user.getStatChanges().clear();
                 user.addStatChange(new StatChange(new int[]{-5, 60, -30}, 3));
                 GameBoard.sPrintln("Stats changed to 95,120,0");
 
 
-            },}, 1, 60, 30), new Character("Gliese", "Cards/Gliese.png", new CharacterVoid[]{(user, team, enemies) -> {
+            },}, 1, 60, 30, new String[]{"Change stats to 50,80,45 for 3 turns", "Change stats to 95,120,0 for 3 turns"}), new Character("Gliese", "Cards/Gliese.png", new CharacterVoid[]{(user, team, enemies) -> {
         GameBoard.setChoicesToEnemies();
         Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
         target.changeHp(30);
@@ -236,12 +249,13 @@ public class Cards {
             enemy.addStatChange(new StatChange(new int[]{-10, -10, -10}, 3));
         }
         GameBoard.sPrintln("Enemies stats lowered 10");
-    },}, 1.05, 70, 20),
+    },}, 1.05, 70, 20, new String[]{"30 damage this is not affected by any effects on any cards", "reduce all enemies stats by 10 for 3 turns"}),
+
             new Character("Baidam", "Cards/baidam card.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
                 GameBoard.setChoices(new int[0]);
-                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, false,"choice x 5 = damage");
+                int count = (int) GameBoard.choice("How Much damage would you like to take up to 9", new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, false, "choice x 5 = damage");
                 int damage = (int) (count * 5 * user.getStrength());
                 if (target.evadeCheck(user)) {
                     target.changeHp(damage);
@@ -255,8 +269,8 @@ public class Cards {
                 for (Character character : team) {
                     character.addStatChange(new StatChange(new int[]{user.getDamage() / 2, 0, 0}, 3));
                 }
-                GameBoard.sPrintln("Teams strength raised by " + user.getDamage()/2);
-            },}, 1.55, 60, 8),
+                GameBoard.sPrintln("Teams strength raised by " + user.getDamage() / 2);
+            },}, 1.55, 60, 8, new String[]{"Deal 5 damage for each you take (up to 9)", "Raise your team damage% for each (damage counter)/2 on this for 3 turns"}),
             new Character("Orion", "Cards/Orion.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setChoices(new int[]{5, 6, 7});
                 GameBoard.setCardsInDisplay(2);
@@ -265,18 +279,20 @@ public class Cards {
                 Card[] targetDisplay = new Card[]{currentDisplay[0], currentDisplay[1], currentDisplay[2], currentDisplay[3], currentDisplay[4], GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, character};
                 GameBoard.setCardsInDisplay(targetDisplay);
                 GameBoard.setChoices(new int[]{7, 8});
-                CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use", character.getAbilities(),"1 = Ability 1    2 = Ability 2");
+                String[] strings = character.getAbilityStrings();
+                CharacterVoid attack = (CharacterVoid) GameBoard.choice("Which ability 1 or 2 would you like to use", character.getAbilities(), "1 = "+strings[0]+"    2 = "+strings[1]);
                 attack.run(user, team, enemies);
             }, (user, team, enemies) -> {
-                for (int i = 0; i < team.size(); i++) {
-                    ArrayList<StatChange> stats = team.get(i).getStatChanges();
-                    for (int j = 0; j < stats.size(); j++) {
-                        stats.get(j).setTime(stats.get(j).getTime() + 3);
+                for (Character character : team) {
+                    ArrayList<StatChange> stats = character.getStatChanges();
+                    for (StatChange stat : stats) {
+                        stat.setTime(stat.getTime() + 3);
                     }
                 }
                 GameBoard.sPrintln("Your Teams Stat Changes will last 3 turns longer");
 
-            },}, 1.25, 65, 10),
+            },}, 1.25, 65, 10, new String[]{"Use one of your teammates abilities", "Extend all of the teams buffs for 3 turns"}),
+
             new Character("Velorum", "Cards/velorum.png", new CharacterVoid[]{(user, team, enemies) -> {
                 for (Character enemy : enemies) {
                     if (enemy.evadeCheck(user)) {
@@ -295,7 +311,7 @@ public class Cards {
                         GameBoard.sPrintln("Missed");
                     }
                 }
-            },}, 0.6, 55, 55),
+            },}, 0.6, 55, 55, new String[]{"20 damage to all enemies", "double all damage on enemies"}),
             new Character("Vela", "Cards/Vela.png", new CharacterVoid[]{(user, team, enemies) -> {
                 Card[] display = new Card[]{GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD};
                 ArrayList<Card> loot = Deck.BASE_DECK.search(7, 3);
@@ -326,7 +342,7 @@ public class Cards {
                 } else {
                     GameBoard.sPrintln("Missed");
                 }
-            },}, 0.5, 100, 30),
+            },}, 0.5, 100, 30, new String[]{"Grab all items from the top 7 cards", "10 damage for each item on your team"}),
 
 
     };
@@ -334,7 +350,7 @@ public class Cards {
             new Document("F35 cad", "Cards/F35 cad.png", 3000),
             new Document("Password sticker", "Cards/passwordSticker.png", 100),
             new Document("Woke agenda", "Cards/woke agenda.png", 1),
-            new Document("Joe Bidens shopping list", "Cards/shopping list.png", 1000)
+            new Document("Joe Biden's shopping list", "Cards/shopping list.png", 1000)
     };
     public static final Event[] DIFFERENT_EVENTS = new Event[]{
 //            new Chest("Cards/chest.png", 0, DIFFERENT_ITEMS.length, 3),
@@ -356,11 +372,11 @@ public class Cards {
 
                 }
             }),
-            new Event("JACKPOT", "Cards/JACKPOT.png", () -> new Chest("Cards/chest.png", Deck.BASE_DECK.search(5, 3).toArray(Item[]::new)).effect.run()),
+            new Event("JACKPOT", "Cards/JACKPOT.png", () -> new Chest("Cards/chest.png", (Item[]) Deck.BASE_DECK.search(5, 3).toArray(Card[]::new)).trigger()),
             new Event("Rally", "Cards/rally.png", () -> {
                 GameBoard.sPrintln("The enemies rally up");
                 GameBoard.sPrintln("All stats of enemies by raised 10");
-                GameBoard.addToPermanentStatChange(new int[] {10,10,10});
+                GameBoard.addToPermanentStatChange(new int[]{10, 10, 10});
             }),
 
     };
