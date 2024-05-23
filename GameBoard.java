@@ -14,7 +14,6 @@ public class GameBoard {
     private static final JLabel[] CARD_IMAGES = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] ACTIVE_DISPLAYS = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
     private static final JLabel[] TARGET_DISPLAY = {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel(),};
-
     private static final int[][] INDEX_POSITIONS = {{170, 90}, {555, 90}, {960, 90}, {1350, 90}, {1740, 90}, {555, 570}, {960, 570}, {1340, 570}, {1360, 570},};
     private static final int[][] CARD_POSITIONS = {{30, 120}, {410, 120}, {820, 120}, {1200, 120}, {1590, 120}, {410, 600}, {820, 600}, {1200, 600},};
     private static final int[][] CARD_STATS = {{45, 315}, {425, 315}, {835, 315}, {1215, 315}, {1605, 315}, {425, 797}, {835, 797}, {1215, 797},};
@@ -35,6 +34,10 @@ public class GameBoard {
 
 
     public GameBoard() {
+        for (int i = 0; i < Cards.AVAILABLE_PARTY_MEMBERS.length; i++) {
+            Cards.AVAILABLE_PARTY_MEMBERS[i].getItems().clear();
+        }
+        score=0;
         wantsToKeepGoing = true;
         //party member shuffle
 

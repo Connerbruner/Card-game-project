@@ -43,13 +43,16 @@ public class Deck {
             new Item(Cards.DIFFERENT_ITEMS[12]),
 
             new Item(Cards.DIFFERENT_ITEMS[13]), new Item(Cards.DIFFERENT_ITEMS[13]),
-            new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]),
-            new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]),
-            new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]),
-            new Item(Cards.DIFFERENT_ITEMS[17]), new Item(Cards.DIFFERENT_ITEMS[17]), new Item(Cards.DIFFERENT_ITEMS[17]), new Item(Cards.DIFFERENT_ITEMS[17]),
-            new Item(Cards.DIFFERENT_ITEMS[18]), new Item(Cards.DIFFERENT_ITEMS[18]), new Item(Cards.DIFFERENT_ITEMS[18]), new Item(Cards.DIFFERENT_ITEMS[18]),
+            new Item(Cards.DIFFERENT_ITEMS[14]), new Item(Cards.DIFFERENT_ITEMS[14]),
+            new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]), new Item(Cards.DIFFERENT_ITEMS[15]),
+            new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]), new Item(Cards.DIFFERENT_ITEMS[16]),
+            new Item(Cards.DIFFERENT_ITEMS[17]), new Item(Cards.DIFFERENT_ITEMS[17]), new Item(Cards.DIFFERENT_ITEMS[17]),
+            new Item(Cards.DIFFERENT_ITEMS[18]), new Item(Cards.DIFFERENT_ITEMS[18]), new Item(Cards.DIFFERENT_ITEMS[18]),
             new Item(Cards.DIFFERENT_ITEMS[19]), new Item(Cards.DIFFERENT_ITEMS[19]), new Item(Cards.DIFFERENT_ITEMS[19]),
             new Item(Cards.DIFFERENT_ITEMS[20]), new Item(Cards.DIFFERENT_ITEMS[20]),
+            new Item(Cards.DIFFERENT_ITEMS[21]),new Item(Cards.DIFFERENT_ITEMS[21]),
+            new Item(Cards.DIFFERENT_ITEMS[22]),new Item(Cards.DIFFERENT_ITEMS[22]),
+            new Item(Cards.DIFFERENT_ITEMS[23]),new Item(Cards.DIFFERENT_ITEMS[23]),
     });
     private final ArrayList<Card> deck;
     private final ArrayList<Double> data;
