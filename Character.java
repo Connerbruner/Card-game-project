@@ -24,6 +24,7 @@ public class Character extends Card {
         agility = a;
         strength = s;
         abilityStrings = new String[]{"", ""};
+        damage=0;
 
     }
 
@@ -34,6 +35,7 @@ public class Character extends Card {
         agility = a;
         strength = s;
         abilityStrings = aS;
+        damage=0;
 
     }
 
@@ -45,6 +47,7 @@ public class Character extends Card {
         strength = c.strength;
         abilityStrings = c.abilityStrings;
         isPlayer = c.isPlayer;
+        damage=0;
     }
 
     public static boolean basicAttack(int damage, Character target, Character user) {
@@ -84,8 +87,9 @@ public class Character extends Card {
                 item.attack(this, team, enemies);
                 if (item.isDiscardAfter()) {
                     items.remove(item);
+                    GameBoard.sPrintln("You get a extra turn");
+                    this.attack(team,enemies);
                 }
-
             }
         } else {
             abilities[Main.random(abilities)].run(this, team, enemies);

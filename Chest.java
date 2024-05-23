@@ -19,7 +19,6 @@ public class Chest extends Event {
             GameBoard.setTargetDisplay(-1);
             for (Item item : loot) {
                 GameBoard.setCardsInDisplay(display);
-
                 GameBoard.setChoicesToTeam();
                 if (item.getType() == 3) {
                     GameBoard.setNextTargetDisplay();

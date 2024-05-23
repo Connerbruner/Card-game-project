@@ -84,17 +84,19 @@ public class Cards {
                 teamMate.changeHp(-20);
                 GameBoard.sPrintln(teamMate.getName() + " healed 20 damage");
             }, false),
-            new Item("Insta Smoke", "Cards/Cards/LockOnGlasses.png", (user, team, enemies) -> {
+            new Item("Insta Smoke", "Cards/instaSmoke.png", (user, team, enemies) -> {
                 for (int i = 0; i < enemies.size(); i++) {
                     enemies.get(i).addStatChange(new StatChange(new int[] {0,0,-50},3));
                 }
                 for (int i = 0; i < team.size(); i++) {
-                    enemies.get(i).addStatChange(new StatChange(new int[] {0,0,-50},3));
+                    team.get(i).addStatChange(new StatChange(new int[] {0,0,-50},3));
 
                 }
-                GameBoard.sPrintln("Defense raised by 30 for 3 turns");
+                GameBoard.sPrintln("Everyone loses 50% dodge chance");
             }, true),
-            new Item("Lock on Glasses", "Cards/Cards/LockOnGlasses.png", (user, team, enemies) -> {
+            new Item("Lock on Glasses", "Cards/LockOnGlasses.png", (user, team, enemies) -> {
+                GameBoard.setChoicesToEnemies();
+                GameBoard.setCardsInDisplay(2);
                 Character target = (Character) GameBoard.choice("who would you like to lock on to", team.toArray());
                 target.addStatChange(new StatChange(new int[] {0,0,-100},1));
             }, false),
@@ -332,21 +334,14 @@ public class Cards {
             },}, 0.6, 55, 55, new String[]{"20 damage to all enemies", "double all damage on enemies"}),
 
             new Character("Vela", "Cards/Vela.png", new CharacterVoid[]{(user, team, enemies) -> {
-                Card[] display = new Card[]{GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD};
                 ArrayList<Card> loot = Deck.BASE_DECK.search(7, 3);
-                GameBoard.setChoicesToTeam();
-                for (int i = 0; i < loot.size() && i < 5; i++) {
-                    display[i] = loot.get(i);
+                Deck.BASE_DECK.removeRange(0,7);
+                while (loot.size()>5) {
+                    loot.remove(0);
                 }
-                for (int i = 0; i < team.size(); i++) {
-                    display[i + 5] = team.get(i);
-                }
-                for (Card card : loot) {
-                    GameBoard.setCardsInDisplay(display);
-                    Character character = (Character) GameBoard.choice("Which party member should get the " + card.getName(), team.toArray());
-                    GameBoard.sPrintln(character.getName() + " got a " + card.getName());
-                    character.addItem((Item) card);
-                }
+                new Chest("Cards/chest.png", loot.toArray(Item[]::new)).trigger();
+
+
             }, (user, team, enemies) -> {
                 GameBoard.setChoicesToEnemies();
                 Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
@@ -391,7 +386,10 @@ public class Cards {
 
                 }
             }),
-            new Event("JACKPOT", "Cards/JACKPOT.png", () -> new Chest("Cards/chest.png", Deck.BASE_DECK.search(5, 3).toArray(Item[]::new)).trigger()),
+            new Event("JACKPOT", "Cards/JACKPOT.png", () -> {
+                new Chest("Cards/chest.png", Deck.BASE_DECK.search(5, 3).toArray(Item[]::new)).trigger();
+                Deck.BASE_DECK.removeRange(0,5);
+            }),
             new Event("Rally", "Cards/rally.png", () -> {
                 GameBoard.sPrintln("The enemies rally up");
                 GameBoard.sPrintln("All stats of enemies by raised 10");
