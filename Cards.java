@@ -56,11 +56,6 @@ public class Cards {
             new Item("Laser Rifle", "Cards/laser rifle.png", 5, 6, 6, false),
             new Item("Laser Trident", "Cards/Laser trident.png", 0, 50, false),
 
-            new Item("Plasma Trident", "Cards/plasma trident.png", 0, 70, false),
-            new Item("Plasma Axe", "Cards/Plasma axe.png", 10, 50, false),
-            new Item("Plasma Rifle", "Cards/plasma rifle.png", 6, 10, 10, false),
-            new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
-
             new Item("Cursed Cube", "Cards/cursedCube.png", -100, 100, false),
             new Item("Potion", "Cards/potionB.png", -30, 30),
             new Item("Potion", "Cards/potionP.png", 0, 10),
@@ -97,9 +92,13 @@ public class Cards {
             new Item("Lock on Glasses", "Cards/LockOnGlasses.png", (user, team, enemies) -> {
                 GameBoard.setChoicesToEnemies();
                 GameBoard.setCardsInDisplay(2);
-                Character target = (Character) GameBoard.choice("who would you like to lock on to", team.toArray());
+                Character target = (Character) GameBoard.choice("who would you like to lock on to", enemies.toArray());
                 target.addStatChange(new StatChange(new int[] {0,0,-100},1));
             }, false),
+            new Item("Plasma Trident", "Cards/plasma trident.png", 0, 70, false),
+            new Item("Plasma Axe", "Cards/Plasma axe.png", 10, 50, false),
+            new Item("Plasma Rifle", "Cards/plasma rifle.png", 6, 10, 10, false),
+            new Item("Plasma Sword", "Cards/plasmaSword.png", 30, 35, false),
 
 
     };
@@ -202,7 +201,7 @@ public class Cards {
                             GameBoard.sPrintln(user.getName() + " took 5 damage");
                             user.changeHp(5);
                         }
-                    },
+                        },
                     (user, team, enemies) -> Character.basicAttack(user.getDamage(), enemies.get(Main.random(enemies.toArray())), user)
             }, 0.7, 10, 50)
 
@@ -210,6 +209,25 @@ public class Cards {
 
 
     public static final Character[] AVAILABLE_PARTY_MEMBERS = new Character[]{
+            new Character("Andromda","Cards/andromda.png",new CharacterVoid[] {
+                    (user, team, enemies) -> {
+                        GameBoard.setChoicesToEnemies();
+                        Character target = (Character) GameBoard.choice("Who would you like to attack? ", enemies.toArray());
+                        if(target.evadeCheck(user)) {
+                            target.changeHp((int) (30 * user.getStrength()));
+                            GameBoard.sPrintln("dealt " + (int) (30 * user.getStrength()) + " damage");
+                            user.changeHp((int) (-30 * user.getStrength()));
+                        }
+
+                    },
+                    (user, team, enemies) -> {
+                        user.changeHp(50);
+                        GameBoard.sPrintln("You take 50 damage");
+                        for (int i = 0; i < team.indexOf(user); i++) {
+                            team.get(i).attack(team,enemies);
+                        }
+                    },
+            },1.25,90,0),
 
             new Character("Mir", "Cards/mir.png", new CharacterVoid[]{(user, team, enemies) -> {
                 GameBoard.setCardsInDisplay(2);
@@ -367,13 +385,6 @@ public class Cards {
             new Document("Joe Biden's shopping list", "Cards/shopping list.png", 1000)
     };
     public static final Event[] DIFFERENT_EVENTS = new Event[]{
-//            new Chest("Cards/chest.png", 0, DIFFERENT_ITEMS.length, 3),
-//            new Chest("Cards/chest rare.png", 0, DIFFERENT_ITEMS.length - 4, 3),
-//            new Chest("Cards/chest legendary.png", 8, DIFFERENT_ITEMS.length, 5),
-//            new Chest("Cards/chest power.png", 0, DIFFERENT_ITEMS.length - 4, 4),
-//            new Chest("Cards/power chest rare.png", 8, DIFFERENT_ITEMS.length - 4, 4),
-//            new Chest("Cards/fridge.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17]}),
-//            new Chest("Cards/fridge chest.png",new Item[] {DIFFERENT_ITEMS[16],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[17],DIFFERENT_ITEMS[16]}),
             new Event("ALARM", "Cards/alarm.png", () -> {
                 Deck.BASE_DECK.removeRange(0, 20, 2);
                 GameBoard.sPrintln("all items and events removed from the top 20 cards of the deck");
@@ -392,9 +403,16 @@ public class Cards {
             }),
             new Event("Rally", "Cards/rally.png", () -> {
                 GameBoard.sPrintln("The enemies rally up");
-                GameBoard.sPrintln("All stats of enemies by raised 10");
-                GameBoard.addToPermanentStatChange(new int[]{10, 10, 10});
+                GameBoard.sPrintln("All stats of enemies by raised 5");
+                GameBoard.addToPermanentStatChange(new int[]{5, 5, 5});
             }),
+            new Chest("Cards/chest.png",  3,0),
+            new Chest("Cards/chest rare.png",  3,5),
+            new Chest("Cards/chest legendary.png", 5,10),
+            new Chest("Cards/chest power.png", 4,0),
+            new Chest("Cards/power chest rare.png", 6,5),
+            new Chest("Cards/fridge.png",new Item[] {DIFFERENT_ITEMS[12],DIFFERENT_ITEMS[13]}),
+            new Chest("Cards/fridge chest.png",new Item[] {DIFFERENT_ITEMS[12],DIFFERENT_ITEMS[12],DIFFERENT_ITEMS[13],DIFFERENT_ITEMS[13]}),
 
     };
 

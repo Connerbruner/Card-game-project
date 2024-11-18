@@ -3,18 +3,21 @@ import java.util.ArrayList;
 public class Battle {
     private ArrayList<Character> team;
     private ArrayList<Character> enemies;
-
+    private int turnsLasted;
+    private int enemyCount;
 
     public Battle(ArrayList<Character> t, ArrayList<Character> e) {
+        turnsLasted=0;
         team = t;
         enemies = e;
+        enemyCount = e.size();
         if(GameBoard.getPermanentStatChange()[0]!=0) {
             for (int i = 0; i < enemies.size(); i++) {
                 enemies.get(i).addStatChange(new StatChange(GameBoard.getPermanentStatChange(),99));
             }
         }
         while (!team.isEmpty() && !enemies.isEmpty()) {
-
+            turnsLasted++;
             for (int i = 0; i < team.size(); i++) {
                 updateHP();
                 GameBoard.setChoices(new ArrayList<>());
@@ -33,7 +36,6 @@ public class Battle {
                 }
 
             }
-            System.out.println("round over");
 
             for (int i = 0; i < enemies.size(); i++) {
 
@@ -52,7 +54,15 @@ public class Battle {
 
 
             }
+
         }
+        int score = 150-((turnsLasted-1)*15);
+        for(int i=0; i<enemyCount; i++) {
+            score+=Main.random(i*10,100);
+        }
+        GameBoard.sPrintln("Score +"+score);
+        GameBoard.addScore(score);
+
     }
 
     public void updateHP() {
@@ -69,12 +79,12 @@ public class Battle {
                 GameBoard.sPrintln(enemies.get(i).getName() + " died");
                 GameBoard.removeFromLoot(enemies.get(i));
                 enemies.remove(i);
-                int score = Main.random(0,100);
-                GameBoard.sPrintln("Score +"+score);
-                GameBoard.addScore(score);
+
             }
 
 
         }
     }
+
+
 }

@@ -1,14 +1,10 @@
 public class Chest extends Event {
     public Chest(String path, Item[] items) {
         super("Chest", path, () -> {
-            Item[] loot = new Item[items.length];
-            for (int i = 0; i < items.length; i++) {
-                loot[i] = items[Main.randomExponential(0, items.length - 1, 25)];
-            }
             Card[] display = new Card[]{GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD, GameBoard.BLANK_CARD};
             GameBoard.setChoicesToTeam();
-            for (int i = 0; i < loot.length && i < 5; i++) {
-                display[i] = loot[i];
+            for (int i = 0; i < items.length && i < 5; i++) {
+                display[i] = items[i];
             }
             for (int i = 0; i < GameBoard.getTeam().size(); i++) {
                 display[i + 5] = GameBoard.getTeam().get(i);
@@ -17,7 +13,7 @@ public class Chest extends Event {
             GameBoard.sPrintln("Found a chest");
 
             GameBoard.setTargetDisplay(-1);
-            for (Item item : loot) {
+            for (Item item : items) {
                 GameBoard.setCardsInDisplay(display);
                 GameBoard.setChoicesToTeam();
                 if (item.getType() == 3) {
@@ -29,6 +25,16 @@ public class Chest extends Event {
                 }
             }
         });
+    }
+    public Chest(String path,int count,int rarity) {
+        super("Chest",path,()-> {
+            Item[] arr = new Item[count];
+            for(int i=0; i<count; i++) {
+                arr[i]=Cards.DIFFERENT_ITEMS[Main.random(rarity,Cards.DIFFERENT_ITEMS.length-1)];
+            }
+            new Chest(path,arr);
+        });
+
     }
 
 

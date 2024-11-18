@@ -87,8 +87,8 @@ public class Character extends Card {
                 item.attack(this, team, enemies);
                 if (item.isDiscardAfter()) {
                     items.remove(item);
-                    GameBoard.sPrintln("You get a extra turn");
-                    this.attack(team,enemies);
+                    //GameBoard.sPrintln("You get a extra turn");
+                    //this.attack(team,enemies);
                 }
             }
         } else {

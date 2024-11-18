@@ -36,6 +36,7 @@ public class GameBoard {
     public GameBoard() {
         for (int i = 0; i < Cards.AVAILABLE_PARTY_MEMBERS.length; i++) {
             Cards.AVAILABLE_PARTY_MEMBERS[i].getItems().clear();
+            Cards.AVAILABLE_PARTY_MEMBERS[i].changeHp(-200);
         }
         score=0;
         wantsToKeepGoing = true;
@@ -398,10 +399,17 @@ public class GameBoard {
 
     public static void setTeam() {
         team.clear();
-        setCardsInDisplay(Cards.AVAILABLE_PARTY_MEMBERS);
+        ArrayList<Character> characters = new ArrayList<>();
+        for (int i = 0; i < Cards.AVAILABLE_PARTY_MEMBERS.length; i++) {
+            characters.add(Cards.AVAILABLE_PARTY_MEMBERS[i]);
+        }
+        while (characters.size()>8) {
+            characters.remove(Main.random(0,characters.size()-1));
+        }
+        setCardsInDisplay(characters.toArray(Card[]::new));
         while (team.size() < 3) {
             setChoices(new int[]{0, 1, 2, 3, 4, 5, 6, 7});
-            Character character = (Character) choice("Pick a team member (1-8)", Cards.AVAILABLE_PARTY_MEMBERS);
+            Character character = (Character) choice("Pick a team member (1-8)", characters.toArray());
 
             boolean inParty = false;
             for (Character value : team) {
